@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<constraint-mapping
+    xmlns="http://symfony.com/schema/dic/constraint-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
+                        http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+
+    <class name="Ekyna\Bundle\MediaBundle\Entity\File">
+        <constraint name="Ekyna\Bundle\MediaBundle\Validator\Constraints\File" />
+        <property name="file">
+            <constraint name="File" />
+        </property>
+    </class>
+
+    <class name="Ekyna\Bundle\MediaBundle\Entity\Image">
+        <constraint name="Ekyna\Bundle\MediaBundle\Validator\Constraints\File" />
+        <constraint name="Ekyna\Bundle\MediaBundle\Validator\Constraints\Image" />
+        <property name="file">
+            <constraint name="Image">
+                <option name="maxSize">2M</option>
+                <option name="mimeTypes">
+                    <value>image/gif</value>
+                    <value>image/jpeg</value>
+                    <value>image/png</value>
+                </option>
+                <option name="mimeTypesMessage">ekyna_media.image.invalid_mime_type</option>
+            </constraint>
+        </property>
+    </class>
+
+    <class name="Ekyna\Bundle\MediaBundle\Entity\Gallery">
+        <property name="images">
+            <constraint name="Valid" />
+        </property>
+    </class>
+
+    <class name="Ekyna\Bundle\MediaBundle\Entity\GalleryImage">
+        <property name="position">
+            <constraint name="NotNull" />
+            <constraint name="GreaterThanOrEqual">
+	            <option name="value">0</option>
+	        </constraint>
+        </property>
+        <property name="image">
+            <constraint name="NotNull" />
+            <constraint name="Valid" />
+        </property>
+    </class>
+
+</constraint-mapping>

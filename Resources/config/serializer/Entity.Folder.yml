@@ -1,0 +1,35 @@
+Ekyna\Bundle\MediaBundle\Entity\Folder:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+            type: string
+        name:
+            expose: true
+            type: string
+        level:
+            expose: true
+            groups: [Manager]
+            type: integer
+        children:
+            expose: true
+            groups: [Manager]
+    virtual_properties:
+        getKey:
+            expose: true
+            groups: [Manager]
+            serialized_name: key
+            type: string
+        getTitle:
+            expose: true
+            groups: [Manager]
+            serialized_name: title
+            type: string
+        getFolder:
+            expose: true
+            groups: [Manager]
+            serialized_name: folder
+            type: boolean
+#        getIcon:
+#            expose: true
+#            type: string

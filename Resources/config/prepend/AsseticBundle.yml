@@ -1,0 +1,20 @@
+assetic:
+    bundles: [EkynaMediaBundle]
+    assets:
+        media_manager_css:
+            inputs:
+                - "%kernel.root_dir%/../web/assets/jstree/dist/themes/default/style.min.css"
+                - "@EkynaMediaBundle/Resources/asset/css/media-manager.css"
+            filters:
+                - "cssrewrite"
+                - "?yui_css"
+            output: "css/media-manager.css"
+#            debug:  false
+        media_manager_js:
+            inputs:
+                - "%kernel.root_dir%/../web/assets/jstree/dist/jstree.min.js"
+                - "@EkynaMediaBundle/Resources/asset/js/media-manager.js"
+            filters:
+                - "?yui_js"
+            output: "js/media-manager.js"
+#            debug: false

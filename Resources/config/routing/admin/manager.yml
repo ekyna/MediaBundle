@@ -1,0 +1,43 @@
+ekyna_media_manager_admin_list:
+    path: /list
+    defaults: { _controller: "EkynaMediaBundle:Admin/Manager:list" }
+    requirements:
+        _method: GET
+        root: \w+
+    options: { i18n: false, expose: true }
+
+ekyna_media_manager_admin_create:
+    path: /{id}/create
+    defaults: { _controller: "EkynaMediaBundle:Admin/Manager:create" }
+    requirements:
+        _method: POST
+        root: \w+
+        id: \d+
+    options: { i18n: false, expose: true }
+
+ekyna_media_manager_admin_rename:
+    path: /{id}/rename
+    defaults: { _controller: "EkynaMediaBundle:Admin/Manager:rename" }
+    requirements:
+        _method: POST
+        root: \w+
+        id: \d+
+    options: { i18n: false, expose: true }
+
+ekyna_media_manager_admin_delete:
+    path: /{id}/delete
+    defaults: { _controller: "EkynaMediaBundle:Admin/Manager:delete" }
+    requirements:
+        _method: POST
+        root: \w+
+        id: \d+
+    options: { i18n: false, expose: true }
+
+ekyna_media_manager_admin_move:
+    path: /{id}/move
+    defaults: { _controller: "EkynaMediaBundle:Admin/Manager:move" }
+    requirements:
+        _method: POST
+        root: \w+
+        id: \d+
+    options: { i18n: false, expose: true }

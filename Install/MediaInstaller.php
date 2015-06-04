@@ -1,0 +1,90 @@
+<?php
+
+namespace Ekyna\Bundle\MediaBundle\Install;
+
+use Ekyna\Bundle\MediaBundle\Entity\Folder;
+use Ekyna\Bundle\MediaBundle\Entity\Image;
+use Ekyna\Bundle\InstallBundle\Install\OrderedInstallerInterface;
+use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
+use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\File\File;
+
+/**
+ * Class MediaInstaller
+ * @package Ekyna\Bundle\MediaBundle\Install
+ * @author Étienne Dauvergne <contact@ekyna.com>
+ */
+class MediaInstaller implements OrderedInstallerInterface, ContainerAwareInterface
+{
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * Sets the container.
+     *
+     * @param ContainerInterface $container
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function install(Command $command, InputInterface $input, OutputInterface $output)
+    {
+        $output->writeln('<info>[Media] Creating root folders:</info>');
+        $this->createRootFolders($output);
+        $output->writeln('');
+    }
+
+    /**
+     * Creates root folders.
+     *
+     * @param OutputInterface $output
+     */
+    private function createRootFolders(OutputInterface $output)
+    {
+        $em = $this->container->get('doctrine.orm.default_entity_manager');
+        $repository = $this->container->get('ekyna_media.folder.repository');
+
+        $roots = array(MediaTypes::FILE, MediaTypes::IMAGE);
+
+        foreach ($roots as $name) {
+            $output->write(sprintf(
+                '- <comment>%s</comment> %s ',
+                ucfirst($name),
+                str_pad('.', 44 - mb_strlen($name), '.', STR_PAD_LEFT)
+            ));
+
+            if (null !== $folder = $repository->findOneBy(array('name' => $name))) {
+                $output->writeln('already exists.');
+                continue;
+            }
+
+            $folder = new Folder();
+            $folder->setName($name);
+
+            $em->persist($folder);
+
+            $output->writeln('created.');
+        }
+        $em->flush();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOrder()
+    {
+        return -512;
+    }
+}

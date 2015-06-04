@@ -1,0 +1,13 @@
+# Liip Imagine
+liip_imagine:
+    cache: ekyna_web_path
+    resolvers:
+        default:
+            web_path: ~
+    loaders:
+        default:
+            filesystem:
+                data_root: "%kernel.root_dir%/../web"
+        local_image:
+            filesystem:
+                data_root: "%kernel.root_dir%/../media/image"

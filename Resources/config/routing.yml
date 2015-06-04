@@ -1,0 +1,17 @@
+ekyna_media_admin:
+    resource: "routing/admin.yml"
+    prefix:   /admin/content
+
+ekyna_media_file:
+    path: /media/file/{key}
+    defaults: { _controller: "EkynaMediaBundle:Media:file" }
+    requirements:
+        _method: GET
+        key: "[a-z0-9-\./]+"
+
+_liip_imagine:
+    resource: "@LiipImagineBundle/Resources/config/routing.xml"
+
+_oneup_uploader:
+    resource: .
+    type: uploader
