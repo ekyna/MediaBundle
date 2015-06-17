@@ -27,18 +27,11 @@ class AdminMenuPass implements CompilerPassInterface
             'position' => 20,
         )));
         $pool->addMethodCall('createEntry', array('content', array(
-            'name'     => 'files',
-            'route'    => 'ekyna_media_file_admin_home',
-            'label'    => 'ekyna_media.file.label.plural',
-            'resource' => 'ekyna_media_file',
+            'name'     => 'medias',
+            'route'    => 'ekyna_media_media_admin_home',
+            'label'    => 'ekyna_media.media.label.plural',
+            'resource' => 'ekyna_media_media',
             'position' => 91,
-        )));
-        $pool->addMethodCall('createEntry', array('content', array(
-            'name'     => 'images',
-            'route'    => 'ekyna_media_image_admin_home',
-            'label'    => 'ekyna_media.image.label.plural',
-            'resource' => 'ekyna_media_image',
-            'position' => 92,
         )));
         /* TODO $pool->addMethodCall('createEntry', array('content', array(
             'name'     => 'gallery',

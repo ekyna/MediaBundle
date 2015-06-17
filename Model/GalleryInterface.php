@@ -3,6 +3,7 @@
 namespace Ekyna\Bundle\MediaBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Ekyna\Bundle\AdminBundle\Model\TranslatableInterface;
 use Ekyna\Bundle\CoreBundle\Model as Core;
 
 /**
@@ -10,7 +11,7 @@ use Ekyna\Bundle\CoreBundle\Model as Core;
  * @package Ekyna\Bundle\MediaBundle\Model
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
-interface GalleryInterface extends Core\TimestampableInterface, Core\TaggedEntityInterface
+interface GalleryInterface extends TranslatableInterface, Core\TimestampableInterface, Core\TaggedEntityInterface
 {
     /**
      * Returns the id.
@@ -20,56 +21,71 @@ interface GalleryInterface extends Core\TimestampableInterface, Core\TaggedEntit
     public function getId();
 
     /**
-     * Sets the name.
+     * Sets the title.
      *
-     * @param string $name
+     * @param string $title
      * @return GalleryInterface|$this
      */
-    public function setName($name);
+    public function setTitle($title);
 
     /**
-     * Returns the name.
+     * Returns the title.
      *
      * @return string
      */
-    public function getName();
+    public function getTitle();
 
     /**
-     * Sets the images.
+     * Sets the description.
      *
-     * @param ArrayCollection|GalleryImageInterface[] $images
+     * @param string $description
      * @return GalleryInterface|$this
      */
-    public function setImages(ArrayCollection $images);
+    public function setDescription($description);
 
     /**
-     * Returns whether the gallery contains the image or not.
+     * Returns the description.
      *
-     * @param GalleryImageInterface $image
+     * @return string
+     */
+    public function getDescription();
+
+    /**
+     * Sets the medias.
+     *
+     * @param ArrayCollection|GalleryMediaInterface[] $medias
+     * @return GalleryInterface|$this
+     */
+    public function setMedias(ArrayCollection $medias);
+
+    /**
+     * Returns whether the gallery contains the media or not.
+     *
+     * @param GalleryMediaInterface $media
      * @return bool
      */
-    public function hasImage(GalleryImageInterface $image);
+    public function hasMedia(GalleryMediaInterface $media);
 
     /**
-     * Adds the image.
+     * Adds the media.
      *
-     * @param GalleryImageInterface $image
+     * @param GalleryMediaInterface $media
      * @return GalleryInterface|$this
      */
-    public function addImage(GalleryImageInterface $image);
+    public function addMedia(GalleryMediaInterface $media);
 
     /**
-     * Removes the image.
+     * Removes the media.
      *
-     * @param GalleryImageInterface $image
+     * @param GalleryMediaInterface $media
      * @return GalleryInterface|$this
      */
-    public function removeImage(GalleryImageInterface $image);
+    public function removeMedia(GalleryMediaInterface $media);
 
     /**
-     * Returns the images.
+     * Returns the medias.
      *
-     * @return ArrayCollection|GalleryImageInterface[]
+     * @return ArrayCollection|GalleryMediaInterface[]
      */
-    public function getImages();
+    public function getMedias();
 }

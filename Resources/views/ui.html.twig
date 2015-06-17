@@ -1,0 +1,13 @@
+{% block thumb %}
+{% if media is not sameas(null) %}
+    {% set thumb = media.thumb %}
+    {% set title = media.title %}
+{% else %}
+    {% set thumb = '/bundles/ekynamedia/img/media-none.gif' %}
+    {% set title = 'ekyna_core.value.none'|trans %}
+{% endif %}
+<div class="media-choice">
+    <img class="thumb" src="{{ thumb }}">
+    <span class="name">{{ title }}</span>
+</div>
+{% endblock thumb %}

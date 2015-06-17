@@ -1,0 +1,16 @@
+config:
+    shim:
+        'fancytree':
+            deps: ['jquery', 'jquery-ui']
+        'ekyna-media-browser/media':
+            deps: ['twig']
+        'ekyna-media-browser':
+            deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'fancytree', 'ekyna-media-browser/media']
+            exports: 'EkynaMediaBrowser'
+        'ekyna-form/media-choice':
+            deps: ['jquery', 'ekyna-modal', 'ekyna-media-browser', 'routing']
+    paths:
+        'fancytree': 'js/fancytree'
+        'ekyna-media-browser/media': 'js/media-browser-media'
+        'ekyna-media-browser': 'bundles/ekynamedia/js/media-browser'
+        'ekyna-form/media-choice': 'bundles/ekynamedia/js/media-choice'

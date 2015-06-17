@@ -37,6 +37,8 @@
             <gedmo:tree-level />
         </field>
 
+        <one-to-many field="medias" target-entity="Ekyna\Bundle\MediaBundle\Entity\Media" mapped-by="folder" fetch="EXTRA_LAZY" />
+
         <one-to-many field="children" target-entity="Ekyna\Bundle\MediaBundle\Entity\Folder" mapped-by="parent" fetch="EXTRA_LAZY">
             <order-by>
                 <order-by-field name="left" direction="ASC" />

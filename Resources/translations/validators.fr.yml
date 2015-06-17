@@ -1,7 +1,5 @@
-ekyna_core:
-    uploadable:
-        name_is_mandatory: Veuillez saisir un nom de fichier.
-        file_is_mandatory: Veuillez sélectionner un fichier.
-        leave_blank: Ce champ doit être vide s'il n'y a pas de fichier associé.
+ekyna_media:
+    media:
+        invalid_type: Type de média invalide.
     image:
         invalid_mime_type: Les formats acceptés sont JPEG, GIF et PNG.

@@ -21,8 +21,8 @@ class GalleryType extends ResourceTableType
             ->addColumn('id', 'number', array(
                 'sortable' => true,
             ))
-            ->addColumn('name', 'anchor', array(
-                'label' => 'ekyna_core.field.name',
+            ->addColumn('title', 'anchor', array(
+                'label' => 'ekyna_core.field.title',
                 'sortable' => true,
                 'route_name' => 'ekyna_media_gallery_admin_show',
                 'route_parameters_map' => array(
@@ -55,10 +55,10 @@ class GalleryType extends ResourceTableType
                     ),
                 ),
             ))
-            ->addFilter('id', 'number')
+            /*->addFilter('id', 'number')
             ->addFilter('name', 'text', array(
                 'label' => 'ekyna_core.field.name'
-            ))
+            ))*/
         ;
     }
 

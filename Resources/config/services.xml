@@ -5,9 +5,14 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="ekyna_media.upload_directory">%kernel.cache_dir%/upload</parameter>
+        <parameter key="ekyna_media.browser.thumbs_directory">media/browser-thumbs</parameter>
 
-        <parameter key="ekyna_media.file.form_type.class">Ekyna\Bundle\CoreBundle\Form\Type\FileType</parameter>
+        <!--<parameter key="ekyna_media.media.class">Ekyna\Bundle\MediaBundle\Entity\Media</parameter>
+        <parameter key="ekyna_media.media.form_type.class">Ekyna\Bundle\MediaBundle\Form\Type\MediaType</parameter>-->
+        <parameter key="ekyna_media.media_choice.form_type.class">Ekyna\Bundle\MediaBundle\Form\Type\MediaChoiceType</parameter>
+
+        <!--<parameter key="ekyna_media.gallery_media.class">Ekyna\Bundle\MediaBundle\Entity\GalleryMedia</parameter>
+        <parameter key="ekyna_media.gallery_media.form_type.class">Ekyna\Bundle\MediaBundle\Form\Type\GalleryMediaType</parameter>-->
     </parameters>
 
     <services>
@@ -21,34 +26,29 @@
         </service>
 
         <!-- Form types -->
-        <service id="ekyna_media.file.form_type" class="%ekyna_media.file.form_type.class%">
-            <argument>%ekyna_media.file.class%</argument>
-            <argument>%ekyna_media.upload_directory%</argument>
-            <tag name="form.type" alias="ekyna_media_file" />
+        <!--<service id="ekyna_media.media.form_type" class="%ekyna_media.media.form_type.class%">
+            <argument>%ekyna_media.media.class%</argument>
+            <tag name="form.type" alias="ekyna_media_media" />
+        </service>
+        <service id="ekyna_media.gallery_media.form_type" class="%ekyna_media.gallery_media.form_type.class%">
+            <argument>%ekyna_media.gallery_media.class%</argument>
+            <tag name="form.type" alias="ekyna_media_gallery_media" />
+        </service>-->
+
+        <service id="ekyna_media.media_choice.form_type" class="%ekyna_media.media_choice.form_type.class%">
+            <argument type="service" id="ekyna_media.media.repository" />
+            <tag name="form.type" alias="ekyna_media_choice" />
+            <tag name="form.js" selector=".media-choice-widget" path="ekyna-form/media-choice" />
         </service>
 
-        <!-- Uploaders -->
-        <service id="ekyna_media.uploader" abstract="true">
-            <argument>%ekyna_media.upload_directory%</argument>
-        </service>
-        <service id="ekyna_media.image.uploader" class="Ekyna\Bundle\MediaBundle\Uploader\Uploader" parent="ekyna_media.uploader">
-            <call method="setTargetFilesystem">
+        <!-- Uploader -->
+        <service id="ekyna_media.media.uploader" class="Ekyna\Bundle\CoreBundle\Uploader\Uploader" parent="ekyna_core.uploader">
+            <call method="setFilesystem">
                 <argument type="service">
                     <service class="Gaufrette\Filesystem"
                              factory-service="knp_gaufrette.filesystem_map"
                              factory-method="get">
-                        <argument>local_image</argument>
-                    </service>
-                </argument>
-            </call>
-        </service>
-        <service id="ekyna_media.file.uploader" class="Ekyna\Bundle\MediaBundle\Uploader\Uploader" parent="ekyna_media.uploader">
-            <call method="setTargetFilesystem">
-                <argument type="service">
-                    <service class="Gaufrette\Filesystem"
-                             factory-service="knp_gaufrette.filesystem_map"
-                             factory-method="get">
-                        <argument>local_file</argument>
+                        <argument>local_media</argument>
                     </service>
                 </argument>
             </call>
@@ -59,37 +59,16 @@
             <argument type="service" id="filesystem" />
             <argument>%assets_base_urls%</argument>
             <argument>%kernel.root_dir%/../web</argument>
-            <argument>media/images</argument>
+            <argument>media</argument>
             <tag name="liip_imagine.cache.resolver" resolver="ekyna_web_path" />
         </service>
 
-        <!-- Event listeners -->
-        <service id="ekyna_media.image.event_subscriber" class="Ekyna\Bundle\MediaBundle\EventListener\ImageEventSubscriber">
-            <argument type="service" id="ekyna_media.image.uploader" />
-            <tag name="kernel.event_subscriber" />
-        </service>
-        <service id="ekyna_media.file.event_subscriber" class="Ekyna\Bundle\MediaBundle\EventListener\FileEventSubscriber">
-            <argument type="service" id="ekyna_media.file.uploader" />
-            <tag name="kernel.event_subscriber" />
-        </service>
-        <service id="ekyna_media.upload.event_subscriber" class="Ekyna\Bundle\MediaBundle\EventListener\UploadListener">
-            <tag name="kernel.event_subscriber" />
-        </service>
-
         <!-- Doctrine event listeners -->
-        <service id="ekyna_media.image.listener" class="Ekyna\Bundle\MediaBundle\Listener\ImageListener" public="false">
-            <argument type="service" id="ekyna_media.image.uploader" />
+        <service id="ekyna_media.media.listener" class="Ekyna\Bundle\MediaBundle\Listener\MediaListener" public="false">
+            <argument type="service" id="ekyna_media.media.uploader" />
             <tag name="doctrine.event_subscriber" connection="default" />
         </service>
-        <service id="ekyna_media.file.listener" class="Ekyna\Bundle\MediaBundle\Listener\FileListener" public="false">
-            <argument type="service" id="ekyna_media.file.uploader" />
-            <tag name="doctrine.event_subscriber" connection="default" />
-        </service>
-
-        <service id="ekyna_media.file.subject_subscriber" class="Ekyna\Bundle\MediaBundle\Listener\FileSubjectSubscriber" public="false">
-            <tag name="doctrine.event_subscriber" connection="default" />
-        </service>
-        <service id="ekyna_media.image.subject_subscriber" class="Ekyna\Bundle\MediaBundle\Listener\ImageSubjectSubscriber" public="false">
+        <service id="ekyna_media.media.subject_subscriber" class="Ekyna\Bundle\MediaBundle\Listener\MediaSubjectSubscriber" public="false">
             <tag name="doctrine.event_subscriber" connection="default" />
         </service>
         <service id="ekyna_media.gallery.subject_subscriber" class="Ekyna\Bundle\MediaBundle\Listener\GallerySubjectSubscriber" public="false">
@@ -98,10 +77,24 @@
 
         <!-- Twig extensions -->
         <service id="ekyna_media.twig.media_extension" class="Ekyna\Bundle\MediaBundle\Twig\MediaExtension">
-            <argument type="service" id="gaufrette.local_file_filesystem" />
+            <argument type="service" id="gaufrette.local_media_filesystem" />
             <argument type="service" id="router" />
             <argument type="service" id="ekyna_media.folder.repository" />
+            <argument type="service" id="ekyna_media.browser.thumb_generator" />
             <tag name="twig.extension" />
+        </service>
+
+        <!-- Browser -->
+        <service id="ekyna_media.browser.thumb_generator" class="Ekyna\Bundle\MediaBundle\Browser\ThumbGenerator">
+            <argument type="service" id="liip_imagine" />
+            <argument type="service" id="liip_imagine.cache.manager" />
+            <argument>%kernel.root_dir%/../web</argument>
+            <argument>%ekyna_media.browser.thumbs_directory%</argument>
+        </service>
+        <service id="ekyna_media.browser" class="Ekyna\Bundle\MediaBundle\Browser\Browser">
+            <argument type="service" id="doctrine.orm.default_entity_manager" />
+            <argument type="service" id="ekyna_media.media.repository" />
+            <argument type="service" id="ekyna_media.browser.thumb_generator" />
         </service>
 
     </services>

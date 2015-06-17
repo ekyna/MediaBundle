@@ -1,0 +1,21 @@
+{% extends "EkynaAdminBundle:Entity:layout.html.twig" %}
+
+{% block title %}
+    <h1>{{ 'ekyna_media.media.header.list'|trans|raw }}</h1>
+{% endblock title %}
+
+{% block actions %}{% endblock actions %}
+
+{% block main %}
+    {{ render_media_manager() }}
+{% endblock main %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        requirejs(['ekyna-media-browser'], function(MediaBrowser) {
+            var browser = new MediaBrowser('#media-browser');
+            browser.init();
+        });
+    </script>
+{% endblock javascripts %}

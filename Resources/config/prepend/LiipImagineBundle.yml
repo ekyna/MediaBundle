@@ -8,6 +8,36 @@ liip_imagine:
         default:
             filesystem:
                 data_root: "%kernel.root_dir%/../web"
-        local_image:
+        local_media:
             filesystem:
-                data_root: "%kernel.root_dir%/../media/image"
+                data_root: "%kernel.root_dir%/../var/media"
+    filter_sets:
+        media_thumb:
+            quality: 70
+            data_loader: local_media
+            filters:
+                thumbnail: { size: [120, 90], mode: outbound }
+            post_processors:
+                jpegoptim: {}
+#        admin_thumb:
+#            quality: 70
+#            data_loader: local_media
+#            filters:
+#                thumbnail: { size: [145, 109], mode: outbound }
+#            post_processors:
+#                jpegoptim: {}
+        media_modal:
+            quality: 70
+            data_loader: local_media
+            filters:
+                thumbnail: { size: [800, 600], mode: inset }
+                background: { size: [800, 600], color: '#fff' }
+            post_processors:
+                jpegoptim: {}
+        media_table:
+            quality: 70
+            data_loader: local_media
+            filters:
+                thumbnail: { size: [24, 24], mode: outbound }
+            post_processors:
+                jpegoptim: {}

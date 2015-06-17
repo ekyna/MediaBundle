@@ -11,6 +11,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 interface FolderInterface
 {
+    const ROOT = 'Medias';
+
     /**
      * Get id
      *
@@ -141,7 +143,7 @@ interface FolderInterface
     public function removeChild(FolderInterface $child);
 
     /**
-     * Returns whether the folder as children or not.
+     * Returns whether the folder has children or not.
      *
      * @return bool
      */
@@ -153,4 +155,50 @@ interface FolderInterface
      * @return ArrayCollection|FolderInterface[]
      */
     public function getChildren();
+
+    /**
+     * Sets the medias.
+     *
+     * @param ArrayCollection|MediaInterface[] $medias
+     * @return FolderInterface|$this
+     */
+    public function setMedias(ArrayCollection $medias);
+
+    /**
+     * Returns whether the folder has the given media or not.
+     *
+     * @param MediaInterface $media
+     * @return bool
+     */
+    public function hasMedia(MediaInterface $media);
+
+    /**
+     * Adds the media.
+     *
+     * @param MediaInterface $media
+     * @return FolderInterface|$this
+     */
+    public function addMedia(MediaInterface $media);
+
+    /**
+     * Removes the media.
+     *
+     * @param MediaInterface $media
+     * @return FolderInterface|$this
+     */
+    public function removeMedia(MediaInterface $media);
+
+    /**
+     * Returns whether the folder has medias or not.
+     *
+     * @return bool
+     */
+    public function hasMedias();
+
+    /**
+     * Returns the medias.
+     *
+     * @return ArrayCollection|MediaInterface[]
+     */
+    public function getMedias();
 }

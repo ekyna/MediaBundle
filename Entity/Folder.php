@@ -4,6 +4,7 @@ namespace Ekyna\Bundle\MediaBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
+use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 
 /**
  * Class Folder
@@ -48,9 +49,14 @@ class Folder implements FolderInterface
     protected $parent;
 
     /**
-     * @var ArrayCollection|Folder[]
+     * @var ArrayCollection|FolderInterface[]
      */
     protected $children;
+
+    /**
+     * @var ArrayCollection|MediaInterface[]
+     */
+    protected $medias;
 
 
     /**
@@ -59,6 +65,7 @@ class Folder implements FolderInterface
     public function __construct()
     {
         $this->children = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
     /**
@@ -227,6 +234,68 @@ class Folder implements FolderInterface
     public function getChildren()
     {
         return $this->children;
+    }
+
+    /**
+     * Sets the medias.
+     *
+     * @param ArrayCollection|MediaInterface[] $medias
+     * @return Folder
+     */
+    public function setMedias(ArrayCollection $medias)
+    {
+        $this->medias = $medias;
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasMedia(MediaInterface $media)
+    {
+        return $this->medias->contains($media);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addMedia(MediaInterface $media)
+    {
+        if (!$this->hasMedia($media)) {
+            $this->medias->add($media);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeMedia(MediaInterface $media)
+    {
+        if ($this->hasMedia($media)) {
+            $this->medias->removeElement($media);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasMedias()
+    {
+        return 0 < $this->children->count();
+    }
+
+    /**
+     * Returns the medias.
+     *
+     * @return ArrayCollection|MediaInterface[]
+     */
+    public function getMedias()
+    {
+        return $this->medias;
     }
 
     /**

@@ -1,11 +1,7 @@
-ekyna_media_file_admin:
-    resource: "admin/file.yml"
-    prefix:   /files
+ekyna_media_browser_admin:
+    resource: "admin/browser.yml"
+    prefix:   /media-browser
 
-ekyna_media_image_admin:
-    resource: "admin/image.yml"
-    prefix:   /images
-
-ekyna_media_manager_admin:
-    resource: "admin/manager.yml"
-    prefix:   /media-manager/{root}
+ekyna_media_media_admin:
+    resource: "admin/media.yml"
+    prefix:   /medias

@@ -1,0 +1,42 @@
+ekyna_media_media_admin_home:
+    path: /
+    defaults: { _controller: "ekyna_media.media.controller:homeAction" }
+    requirements:
+        _method: GET
+
+ekyna_media_media_admin_list:
+    path: /list
+    defaults: { _controller: "ekyna_media.media.controller:listAction" }
+    requirements:
+        _method: GET|POST
+
+ekyna_media_media_admin_new:
+    path: /new
+    defaults: { _controller: "ekyna_media.media.controller:newAction" }
+    requirements:
+        _method: GET|POST
+    options: { expose: true }
+
+ekyna_media_media_admin_show:
+    path: /{mediaId}/show
+    defaults: { _controller: "ekyna_media.media.controller:showAction" }
+    requirements:
+        _method: GET
+        mediaId:  \d+
+    options: { expose: true }
+
+ekyna_media_media_admin_edit:
+    path: /{mediaId}/edit
+    defaults: { _controller: "ekyna_media.media.controller:editAction" }
+    requirements:
+        _method: GET|POST
+        mediaId:  \d+
+    options: { expose: true }
+
+ekyna_media_media_admin_remove:
+    path: /{mediaId}/remove
+    defaults: { _controller: "ekyna_media.media.controller:removeAction" }
+    requirements:
+        _method: GET|POST
+        mediaId:  \d+
+    options: { expose: true }

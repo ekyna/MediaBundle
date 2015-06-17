@@ -41,7 +41,7 @@ class MediaInstaller implements OrderedInstallerInterface, ContainerAwareInterfa
      */
     public function install(Command $command, InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('<info>[Media] Creating root folders:</info>');
+        $output->writeln('<info>[Media] Creating root folder:</info>');
         $this->createRootFolders($output);
         $output->writeln('');
     }
@@ -56,28 +56,24 @@ class MediaInstaller implements OrderedInstallerInterface, ContainerAwareInterfa
         $em = $this->container->get('doctrine.orm.default_entity_manager');
         $repository = $this->container->get('ekyna_media.folder.repository');
 
-        $roots = array(MediaTypes::FILE, MediaTypes::IMAGE);
+        $name = FolderInterface::ROOT;
+        $output->write(sprintf(
+            '- <comment>%s</comment> %s ',
+            ucfirst($name),
+            str_pad('.', 44 - mb_strlen($name), '.', STR_PAD_LEFT)
+        ));
 
-        foreach ($roots as $name) {
-            $output->write(sprintf(
-                '- <comment>%s</comment> %s ',
-                ucfirst($name),
-                str_pad('.', 44 - mb_strlen($name), '.', STR_PAD_LEFT)
-            ));
-
-            if (null !== $folder = $repository->findOneBy(array('name' => $name))) {
-                $output->writeln('already exists.');
-                continue;
-            }
-
+        if (null !== $folder = $repository->findRoot()) {
+            $output->writeln('already exists.');
+        } else {
             $folder = new Folder();
             $folder->setName($name);
 
             $em->persist($folder);
+            $em->flush();
 
             $output->writeln('created.');
         }
-        $em->flush();
     }
 
     /**

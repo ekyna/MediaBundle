@@ -7,9 +7,9 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * This is the class that validates and merges configuration from your app/config files
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
+ * Class Configuration
+ * @package Ekyna\Bundle\MediaBundle\DependencyInjection
+ * @author Étienne Dauvergne <contact@ekyna.com>
  */
 class Configuration implements ConfigurationInterface
 {
@@ -20,6 +20,12 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('ekyna_media');
+
+        $rootNode
+            ->children()
+                ->scalarNode('output_dir')->defaultValue('')->end()
+            ->end()
+        ;
 
         $this->addPoolsSection($rootNode);
 
@@ -38,33 +44,30 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('pools')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->arrayNode('file')
+                        ->arrayNode('media')
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->variableNode('templates')->defaultValue(array(
-                                    'show.html'  => 'EkynaMediaBundle:Admin/File:show.html',
+                                    'list.html'  => 'EkynaMediaBundle:Admin/Media:list.html',
+                                    'show.html'  => 'EkynaMediaBundle:Admin/Media:show.html',
                                 ))->end()
-                                ->scalarNode('entity')->defaultValue('Ekyna\Bundle\MediaBundle\Entity\File')->end()
-                                ->scalarNode('controller')->end()
-                                ->scalarNode('repository')->end()
-                                ->scalarNode('form')->defaultValue('Ekyna\Bundle\MediaBundle\Form\Type\FileType')->end()
-                                ->scalarNode('table')->defaultValue('Ekyna\Bundle\MediaBundle\Table\Type\FileType')->end()
+                                ->scalarNode('entity')->defaultValue('Ekyna\Bundle\MediaBundle\Entity\Media')->end()
+                                ->scalarNode('controller')->defaultValue('Ekyna\Bundle\MediaBundle\Controller\Admin\MediaController')->end()
+                                ->scalarNode('repository')->defaultValue('Ekyna\Bundle\MediaBundle\Entity\MediaRepository')->end()
+                                ->scalarNode('form')->defaultValue('Ekyna\Bundle\MediaBundle\Form\Type\MediaType')->end()
+                                ->scalarNode('table')->defaultValue('Ekyna\Bundle\MediaBundle\Table\Type\MediaType')->end()
                                 ->scalarNode('parent')->end()
-                            ->end()
-                        ->end()
-                        ->arrayNode('image')
-                            ->addDefaultsIfNotSet()
-                            ->children()
-                                ->variableNode('templates')->defaultValue(array(
-                                    'list.html'  => 'EkynaMediaBundle:Admin/Image:list.html',
-                                    'show.html'  => 'EkynaMediaBundle:Admin/Image:show.html',
-                                ))->end()
-                                ->scalarNode('entity')->defaultValue('Ekyna\Bundle\MediaBundle\Entity\Image')->end()
-                                ->scalarNode('controller')->defaultValue('Ekyna\Bundle\MediaBundle\Controller\Admin\ImageController')->end()
-                                ->scalarNode('repository')->end()
-                                ->scalarNode('form')->defaultValue('Ekyna\Bundle\MediaBundle\Form\Type\ImageType')->end()
-                                ->scalarNode('table')->defaultValue('Ekyna\Bundle\MediaBundle\Table\Type\ImageType')->end()
-                                ->scalarNode('parent')->end()
+                                ->arrayNode('translation')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('entity')->defaultValue('Ekyna\Bundle\MediaBundle\Entity\MediaTranslation')->end()
+                                        ->scalarNode('repository')->end()
+                                        ->arrayNode('fields')
+                                            ->prototype('scalar')->end()
+                                                ->defaultValue(array('title', 'description'))
+                                        ->end()
+                                    ->end()
+                                ->end()
                             ->end()
                         ->end()
                         ->arrayNode('gallery')
@@ -75,10 +78,21 @@ class Configuration implements ConfigurationInterface
                                 ))->end()
                                 ->scalarNode('entity')->defaultValue('Ekyna\Bundle\MediaBundle\Entity\Gallery')->end()
                                 ->scalarNode('controller')->end()
-                                ->scalarNode('repository')->end()
+                                ->scalarNode('repository')->defaultValue('Ekyna\Bundle\MediaBundle\Entity\GalleryRepository')->end()
                                 ->scalarNode('form')->defaultValue('Ekyna\Bundle\MediaBundle\Form\Type\GalleryType')->end()
                                 ->scalarNode('table')->defaultValue('Ekyna\Bundle\MediaBundle\Table\Type\GalleryType')->end()
                                 ->scalarNode('parent')->end()
+                                ->arrayNode('translation')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('entity')->defaultValue('Ekyna\Bundle\MediaBundle\Entity\GalleryTranslation')->end()
+                                        ->scalarNode('repository')->end()
+                                        ->arrayNode('fields')
+                                            ->prototype('scalar')->end()
+                                            ->defaultValue(array('title', 'description'))
+                                        ->end()
+                                    ->end()
+                                ->end()
                             ->end()
                         ->end()
                     ->end()

@@ -18,18 +18,17 @@ class GalleryType extends ResourceFormType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($options['name_field']) {
-            $builder
-                ->add('name', 'text', array(
-                    'label' => 'ekyna_core.field.name',
-                ))
-            ;
-        }
-
         $builder
-            ->add('images', 'ekyna_core_collection', array(
+            ->add('translations', 'a2lix_translationsForms', array(
+                'form_type' => new MediaTranslationType(),
+                'label'     => false,
+                'attr' => array(
+                    'widget_col' => 12,
+                ),
+            ))
+            ->add('medias', 'ekyna_collection', array(
                 'label'        => 'ekyna_core.field.images',
-                'type'         => 'ekyna_media_gallery_image',
+                'type'         => 'ekyna_media_gallery_media',
                 'allow_add'    => $options['allow_add'],
                 'allow_delete' => $options['allow_delete'],
                 'allow_sort'   => $options['allow_sort'],

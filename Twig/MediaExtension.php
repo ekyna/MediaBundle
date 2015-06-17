@@ -2,11 +2,10 @@
 
 namespace Ekyna\Bundle\MediaBundle\Twig;
 
+use Ekyna\Bundle\MediaBundle\Browser\ThumbGenerator;
 use Ekyna\Bundle\MediaBundle\Entity\FolderRepository;
-use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
-use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
+use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 use Gaufrette\Filesystem;
-use Ekyna\Bundle\MediaBundle\Model\FileInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -41,9 +40,19 @@ HTML;
     private $folderRepository;
 
     /**
+     * @var ThumbGenerator
+     */
+    private $thumbGenerator;
+
+    /**
      * @var \Twig_Template
      */
     private $managerTemplate;
+
+    /**
+     * @var \Twig_Template
+     */
+    private $uiTemplate;
 
 
     /**
@@ -52,15 +61,18 @@ HTML;
      * @param Filesystem            $filesystem
      * @param UrlGeneratorInterface $urlGenerator
      * @param FolderRepository      $folderRepository
+     * @param ThumbGenerator        $thumbGenerator
      */
     public function __construct(
         Filesystem $filesystem,
         UrlGeneratorInterface $urlGenerator,
-        FolderRepository $folderRepository
+        FolderRepository $folderRepository,
+        ThumbGenerator $thumbGenerator
     ) {
         $this->filesystem       = $filesystem;
         $this->urlGenerator     = $urlGenerator;
         $this->folderRepository = $folderRepository;
+        $this->thumbGenerator   = $thumbGenerator;
     }
 
     /**
@@ -69,6 +81,7 @@ HTML;
     public function initRuntime(\Twig_Environment $twig)
     {
         $this->managerTemplate = $twig->loadTemplate('EkynaMediaBundle:Manager:render.html.twig');
+        $this->uiTemplate = $twig->loadTemplate('EkynaMediaBundle::ui.html.twig');
     }
 
     /**
@@ -96,22 +109,25 @@ HTML;
     {
         return array(
             new \Twig_SimpleFunction('render_media_manager', array($this, 'renderManager'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('render_media_thumb', array($this, 'renderMediaThumb'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('get_media_thumb_path', array($this, 'getMediaThumbPath')),
         );
     }
 
     /**
      * Renders the video.
      *
-     * @param FileInterface $video
+     * @param MediaInterface $video
      * @return string
      */
-    public function renderVideo(FileInterface $video)
+    public function renderVideo(MediaInterface $video)
     {
+        // TODO check type
         return strtr(self::VIDEO_HTML5, array(
             '%aspect_ratio%' => '16by9',
             '%width%' => '720',
             '%height%' => '480',
-            '%src%' => $this->urlGenerator->generate('ekyna_media_file', array('key' => $video->getPath())),
+            '%src%' => $this->urlGenerator->generate('ekyna_media_download', array('key' => $video->getPath())),
             '%mime_type%' => $this->filesystem->mimeType($video->getPath()),
         ));
     }
@@ -119,23 +135,37 @@ HTML;
     /**
      * Renders the media manager.
      *
-     * @param string $root
+     * @param array $config
      * @return string
-     * @throws \Exception
      */
-    public function renderManager($root = MediaTypes::IMAGE)
+    public function renderManager(array $config = array())
     {
-        if (!MediaTypes::isValid($root)) {
-            throw new \InvalidArgumentException(sprintf('Undefined media manager "%s" root.', $root));
-        }
+        return $this->managerTemplate->render(array('config' => $config));
+    }
 
-        if (null === $rootFolder = $this->folderRepository->findRootByName($root)) {
-            throw new \RuntimeException('Root folder not found.');
+    /**
+     * Renders the media thumb.
+     *
+     * @param MediaInterface $media
+     * @return string
+     */
+    public function renderMediaThumb(MediaInterface $media = null)
+    {
+        if (null !== $media) {
+            $media->setThumb($this->thumbGenerator->generate($media));
         }
+        return $this->uiTemplate->renderBlock('thumb', array('media' => $media));
+    }
 
-        return $this->managerTemplate->render(array(
-            'root' => $root,
-        ));
+    /**
+     * Renders the media thumb.
+     *
+     * @param MediaInterface $media
+     * @return string
+     */
+    public function getMediaThumbPath(MediaInterface $media)
+    {
+        return $this->thumbGenerator->generate($media);
     }
 
     /**

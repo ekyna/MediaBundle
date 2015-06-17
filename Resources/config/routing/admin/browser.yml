@@ -1,0 +1,70 @@
+ekyna_media_browser_admin_modal:
+    path: /modal
+    defaults: { _controller: "EkynaMediaBundle:Admin/Browser:modal" }
+    requirements:
+        _method: GET
+    options: { i18n: false, expose: true }
+
+ekyna_media_browser_admin_list:
+    path: /list
+    defaults: { _controller: "EkynaMediaBundle:Admin/Browser:list" }
+    requirements:
+        _method: GET
+    options: { i18n: false, expose: true }
+
+ekyna_media_browser_admin_create:
+    path: /{id}/create
+    defaults: { _controller: "EkynaMediaBundle:Admin/Browser:create" }
+    requirements:
+        _method: POST
+        id: \d+
+    options: { i18n: false, expose: true }
+
+ekyna_media_browser_admin_rename:
+    path: /{id}/rename
+    defaults: { _controller: "EkynaMediaBundle:Admin/Browser:rename" }
+    requirements:
+        _method: POST
+        id: \d+
+    options: { i18n: false, expose: true }
+
+ekyna_media_browser_admin_delete:
+    path: /{id}/delete
+    defaults: { _controller: "EkynaMediaBundle:Admin/Browser:delete" }
+    requirements:
+        _method: POST
+        id: \d+
+    options: { i18n: false, expose: true }
+
+ekyna_media_browser_admin_move:
+    path: /{id}/move
+    defaults: { _controller: "EkynaMediaBundle:Admin/Browser:move" }
+    requirements:
+        _method: POST
+        id: \d+
+    options: { i18n: false, expose: true }
+
+ekyna_media_browser_admin_list_media:
+    path: /{id}/medias
+    defaults: { _controller: "EkynaMediaBundle:Admin/Browser:listMedia" }
+    requirements:
+        _method: GET
+        id: \d+
+    options: { i18n: false, expose: true }
+
+ekyna_media_browser_admin_create_media:
+    path: /{id}/medias/create
+    defaults: { _controller: "EkynaMediaBundle:Admin/Browser:createMedia" }
+    requirements:
+        _method: GET|POST
+        id: \d+
+    options: { i18n: false, expose: true }
+
+ekyna_media_browser_admin_move_media:
+    path: /{id}/medias/move/{mediaId}
+    defaults: { _controller: "EkynaMediaBundle:Admin/Browser:moveMedia" }
+    requirements:
+        _method: POST
+        id: \d+
+        mediaId: \d+
+    options: { i18n: false, expose: true }

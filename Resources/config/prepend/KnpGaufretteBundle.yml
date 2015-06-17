@@ -1,19 +1,13 @@
 knp_gaufrette:
     adapters:
-        local_image:
+        local_media:
             local:
-                directory:  "%kernel.root_dir%/../media/image"
-                create:     true
-        local_file:
-            local:
-                directory:  "%kernel.root_dir%/../media/file"
+                directory:  "%kernel.root_dir%/../var/media"
                 create:     true
     filesystems:
-        local_image:
-            adapter: local_image
-        local_file:
-            adapter: local_file
-    stream_wrapper:
-        protocol: media
-        filesystems:
-            - local_file
+        local_media:
+            adapter: local_media
+#    stream_wrapper:
+#        protocol: file
+#        filesystems:
+#            media: local_media

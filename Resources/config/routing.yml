@@ -2,12 +2,13 @@ ekyna_media_admin:
     resource: "routing/admin.yml"
     prefix:   /admin/content
 
-ekyna_media_file:
-    path: /media/file/{key}
-    defaults: { _controller: "EkynaMediaBundle:Media:file" }
+ekyna_media_download:
+    path: /download/media/{key}
+    defaults: { _controller: "EkynaMediaBundle:Media:download" }
     requirements:
         _method: GET
         key: "[a-z0-9-\./]+"
+    options: { expose: true }
 
 _liip_imagine:
     resource: "@LiipImagineBundle/Resources/config/routing.xml"

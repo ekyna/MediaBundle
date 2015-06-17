@@ -1,37 +1,19 @@
 ekyna_media:
-    file:
+    media:
         label:
-            singular: Fichier
-            plural: Fichiers
+            singular: Média
+            plural: Médias
         header:
-            list: Fichiers <small>Liste des fichiers</small>
-            show: Détail du fichier
-            new: Créer un nouveau fichier
-            edit: Modifier le fichier
-            remove: Supprimer le fichier
+            list: Médias <small>Liste des médias</small>
+            show: Détail du média
+            new: Créer un nouveau média
+            edit: Modifier le média
+            remove: Supprimer le média
         button:
-            list: Liste des fichiers
-            show: Détail du fichier
-            new: Nouveau fichier
-            edit: Modifier le fichier
-            remove: Supprimer le fichier
+            list: Liste des médias
+            show: Détail du média
+            new: Nouveau média
+            edit: Modifier le média
+            remove: Supprimer le média
         alert:
-            no_item: Aucun fichier configuré
-    image:
-        label:
-            singular: Image
-            plural: Images
-        header:
-            list: Images <small>Liste des images</small>
-            show: Détail de l'image
-            new: Créer une nouvelle image
-            edit: Modifier l'image
-            remove: Supprimer l'image
-        button:
-            list: Liste des images
-            show: Détail de l'image
-            new: Nouvelle image
-            edit: Modifier l'image
-            remove: Supprimer l'image
-        alert:
-            no_item: Aucune image configuré
+            no_item: Aucun média configuré

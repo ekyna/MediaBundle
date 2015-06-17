@@ -1,4 +1,97 @@
-<div id="media-manager" data-root="{{ root }}">
-    <div id="media-manager-tree"></div>
-    <div id="media-manager-list"></div>
+{% spaceless %}
+<div id="media-browser" data-config="{{ config|json_encode }}">
+    <div class="media-browser-side">
+        <div class="media-browser-container">
+            <div class="media-browser-tree"></div>
+        </div>
+    </div>
+    <div class="media-browser-main">
+        <div class="media-browser-controls">
+            {# --- CREATE --- #}
+            <div class="media-browser-controls-group">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-default" data-role="create">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        <span class="glyphicon glyphicon-file"></span>
+                    </button>
+                </div>
+            </div>
+            {# --- TEXT SEARCH --- #}
+            <div class="media-browser-controls-group">
+                <div class="input-group" style="max-width: 200px;">
+                    <input type="text" name="search" class="form-control input-sm" data-role="search"
+                           placeholder="Rechercher">
+                    <span class="input-group-btn">
+                        <button class="btn btn-sm btn-default" type="button" data-role="clear-search">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            {# --- DISPLAY MODE --- #}
+            {#<div class="media-browser-controls-group">
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-sm btn-default">
+                       <input type="radio" name="options" id="option1">
+                       <span class="glyphicon glyphicon-th-large"></span>
+                    </label>
+                    <label class="btn btn-sm btn-default">
+                       <input type="radio" name="options" id="option1">
+                       <span class="glyphicon glyphicon-align-justify"></span>
+                    </label>
+                </div>
+            </div>#}
+            {# --- TYPE FILTER --- #}
+            {% if config.types is not defined %}
+            <div class="media-browser-controls-group">
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-sm btn-default" data-role="filter">
+                        <input type="checkbox" name="filters[]" value="file">
+                        <span class="glyphicon glyphicon-file"></span>
+                    </label>
+                    <label class="btn btn-sm btn-default" data-role="filter">
+                        <input type="checkbox" name="filters[]" value="image">
+                        <span class="glyphicon glyphicon-picture"></span>
+                    </label>
+                    <label class="btn btn-sm btn-default" data-role="filter">
+                        <input type="checkbox" name="filters[]" value="video">
+                        <span class="glyphicon glyphicon-film"></span>
+                    </label>
+                    <label class="btn btn-sm btn-default" data-role="filter">
+                        <input type="checkbox" name="filters[]" value="audio">
+                        <span class="glyphicon glyphicon-music"></span>
+                    </label>
+                    <label class="btn btn-sm btn-default" data-role="filter">
+                        <input type="checkbox" name="filters[]" value="archive">
+                        <span class="glyphicon glyphicon-compressed"></span>
+                    </label>
+                </div>
+            </div>
+            {% endif %}
+            {# --- SORTING --- #}
+            <div class="media-browser-controls-group">
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-sm btn-default active" data-role="sort">
+                        <input type="radio" id="sort-by-filename" name="sort" value="title" data-dir="asc">
+                        <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                    </label>
+                    <label class="btn btn-sm btn-default" data-role="sort">
+                        <input type="radio" id="sort-by-size" name="sort" value="size" data-dir="asc">
+                        <span class="glyphicon glyphicon-sort-by-attributes"></span>
+                    </label>
+                </div>
+            </div>
+            {# --- REFRESH --- #}
+            <div class="media-browser-controls-group">
+                <button class="btn btn-sm btn-default" type="button" data-role="refresh">
+                    <span class="glyphicon glyphicon-refresh"></span>
+                </button>
+            </div>
+        </div>
+        <div class="media-browser-container">
+            <div class="media-browser-flash"></div>
+            <div class="media-browser-content"></div>
+        </div>
+    </div>
 </div>
+{% endspaceless %}

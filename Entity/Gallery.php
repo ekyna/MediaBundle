@@ -3,18 +3,23 @@
 namespace Ekyna\Bundle\MediaBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Ekyna\Bundle\MediaBundle\Model as Media;
+use Ekyna\Bundle\AdminBundle\Model\TranslatableTrait;
 use Ekyna\Bundle\CoreBundle\Model as Core;
+use Ekyna\Bundle\MediaBundle\Model\GalleryInterface;
+use Ekyna\Bundle\MediaBundle\Model\GalleryMediaInterface;
 
 /**
  * Class Gallery
  * @package Ekyna\Bundle\MediaBundle\Entity
  * @author Étienne Dauvergne <contact@ekyna.com>
+ *
+ * @method GalleryTranslation translate($locale = null, $create = false)
  */
-class Gallery implements Media\GalleryInterface
+class Gallery implements GalleryInterface
 {
-    use Core\TimestampableTrait;
-    use Core\TaggedEntityTrait;
+    use TranslatableTrait,
+        Core\TimestampableTrait,
+        Core\TaggedEntityTrait;
 
     /**
      * @var int
@@ -22,14 +27,9 @@ class Gallery implements Media\GalleryInterface
     private $id;
 
     /**
-     * @var string
+     * @var ArrayCollection|GalleryMediaInterface[]
      */
-    private $name;
-
-    /**
-     * @var ArrayCollection|Media\GalleryImageInterface[]
-     */
-    private $images;
+    private $medias;
 
 
     /**
@@ -37,7 +37,8 @@ class Gallery implements Media\GalleryInterface
      */
     public function __construct()
     {
-        $this->images = new ArrayCollection();
+        $this->translations = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
     /**
@@ -47,7 +48,7 @@ class Gallery implements Media\GalleryInterface
      */
     public function __toString()
     {
-        return $this->getName();
+        return $this->getTitle();
     }
 
     /**
@@ -61,48 +62,65 @@ class Gallery implements Media\GalleryInterface
     /**
      * {@inheritdoc}
      */
-    public function setName($name)
+    public function setTitle($title)
     {
-        $this->name = $name;
+        $this->translate()->setTitle($title);
         return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getTitle()
     {
-        return $this->name;
+        return $this->translate()->getTitle();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setImages(ArrayCollection $images)
+    public function setDescription($description)
     {
-        foreach ($images as $image) {
-            $image->setGallery($this);
+        $this->translate()->setDescription($description);
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDescription()
+    {
+        return $this->translate()->getDescription();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setMedias(ArrayCollection $medias)
+    {
+        foreach ($medias as $media) {
+            $media->setGallery($this);
         }
-        $this->images = $images;
+        $this->medias = $medias;
         return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasImage(Media\GalleryImageInterface $image)
+    public function hasMedia(GalleryMediaInterface $media)
     {
-        return $this->images->contains($image);
+        return $this->medias->contains($media);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addImage(Media\GalleryImageInterface $image)
+    public function addMedia(GalleryMediaInterface $media)
     {
-        if (!$this->hasImage($image)) {
-            $image->setGallery($this);
-            $this->images->add($image);
+        if (!$this->hasMedia($media)) {
+            $media->setGallery($this);
+            $this->medias->add($media);
             $this->setUpdatedAt(new \DateTime());
         }
         return $this;
@@ -111,11 +129,11 @@ class Gallery implements Media\GalleryInterface
     /**
      * {@inheritdoc}
      */
-    public function removeImage(Media\GalleryImageInterface $image)
+    public function removeMedia(GalleryMediaInterface $media)
     {
-        if ($this->hasImage($image)) {
-            $image->setGallery(null);
-            $this->images->removeElement($image);
+        if ($this->hasMedia($media)) {
+            $media->setGallery(null);
+            $this->medias->removeElement($media);
             $this->setUpdatedAt(new \DateTime());
         }
         return $this;
@@ -124,9 +142,9 @@ class Gallery implements Media\GalleryInterface
     /**
      * {@inheritdoc}
      */
-    public function getImages()
+    public function getMedias()
     {
-        return $this->images;
+        return $this->medias;
     }
 
     /**
@@ -135,8 +153,8 @@ class Gallery implements Media\GalleryInterface
     public function getEntityTags()
     {
         $tags = [$this->getEntityTag()];
-        foreach ($this->images as $image) {
-            $tags = array_merge($tags, $image->getEntityTags());
+        foreach ($this->medias as $media) {
+            $tags = array_merge($tags, $media->getEntityTags());
         }
         return $tags;
     }

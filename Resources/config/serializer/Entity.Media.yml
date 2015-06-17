@@ -1,0 +1,26 @@
+Ekyna\Bundle\MediaBundle\Entity\Media:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+            type: string
+            groups: [Default, Manager]
+        path:
+            expose: true
+            groups: [Manager]
+            type: string
+        type:
+            expose: true
+            groups: [Manager]
+            type: string
+    virtual_properties:
+        getTitle:
+            expose: true
+            groups: [Default, Manager]
+            serialized_name: title
+            type: string
+        getThumb:
+            expose: true
+            groups: [Manager]
+            serialized_name: thumb
+            type: string

@@ -27,7 +27,7 @@ class WebPathResolver extends BaseResolver
         Filesystem $filesystem,
         $baseUrl,
         $webRootDir,
-        $cachePrefix = 'media/cache'
+        $cachePrefix = 'media'
     ) {
         $this->filesystem = $filesystem;
 

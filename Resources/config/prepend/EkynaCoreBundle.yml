@@ -1,0 +1,5 @@
+ekyna_core:
+    assets:
+        form_css:
+            inputs:
+                - "@EkynaMediaBundle/Resources/asset/css/media-choice-form.css"

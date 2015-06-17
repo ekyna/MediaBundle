@@ -1,8 +1,0 @@
-oneup_uploader:
-    mappings:
-        local_upload:
-            frontend: blueimp
-            max_size: 137438953472 # 128M
-            storage:
-                type: filesystem
-                directory: %ekyna_media.upload_directory%

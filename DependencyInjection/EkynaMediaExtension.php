@@ -28,10 +28,30 @@ class EkynaMediaExtension extends AbstractExtension
         parent::prepend($container);
 
         $bundles = $container->getParameter('kernel.bundles');
+        $configs = $container->getExtensionConfig($this->getAlias());
+        $config = $this->processConfiguration(new Configuration(), $configs);
 
+        if (array_key_exists('AsseticBundle', $bundles)) {
+            $this->configureAsseticBundle($container, $config['output_dir']);
+        }
         if (array_key_exists('TwigBundle', $bundles)) {
             $this->configureTwigBundle($container);
         }
+    }
+
+    /**
+     * Configures the AsseticBundle.
+     *
+     * @param ContainerBuilder $container
+     * @param string           $outputDir
+     */
+    protected function configureAsseticBundle(ContainerBuilder $container, $outputDir)
+    {
+        $asseticConfig = new AsseticConfiguration();
+        $container->prependExtensionConfig('assetic', array(
+            'assets' => $asseticConfig->build($outputDir),
+            'bundles' => array('EkynaMediaBundle'),
+        ));
     }
 
     /**
