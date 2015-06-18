@@ -14,8 +14,8 @@
     }
     // AMD module is defined
     else if (typeof define === 'function' && define.amd) {
-        define('ekyna-media-browser', ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'fancytree'], function($, routing, twig, modal, form) {
-            return factory($, routing, twig, modal, form);
+        define('ekyna-media-browser', ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'fancytree'], function($, Router, Twig, Modal, Form) {
+            return factory($, Router, Twig, Modal, Form);
         });
     } else {
         // planted over the root!
@@ -28,7 +28,7 @@
         );
     }
 
-}(this, function($, routing, twig, modal, form) {
+}(this, function($, Router, Twig, Modal, Form) {
     "use strict";
 
     // http://james.padolsey.com/javascript/sorting-elements-with-jquery/
@@ -74,7 +74,7 @@
         this.$tree = this.$browser.find('.media-browser-tree');
         this.$content = this.$browser.find('.media-browser-content');
         this.$controls = this.$browser.find('.media-browser-controls');
-        this.modal = new modal();
+        this.modal = new Modal();
         this.busy = false;
         this.folderId = null;
         this.browseXhr = null;
@@ -233,7 +233,7 @@
             if (this.folderId) {
                 that.setBusy(true);
                 that.browseXhr = $.ajax({
-                    url: Routing.generate('ekyna_media_browser_admin_list_media', {'id': this.folderId}),
+                    url: Router.generate('ekyna_media_browser_admin_list_media', {'id': this.folderId}),
                     method: 'GET',
                     dataType: 'json',
                     data: {types: that.config.types}
@@ -290,12 +290,12 @@
             that.setBusy(true);
 
             var $form;
-            that.modal = new modal();
+            that.modal = new Modal();
             $(that.modal).on('ekyna.modal.content', function (e) {
                 settings.onShow(e);
                 if (e.contentType == 'form') {
                     $form = e.content;
-                    form.init($form);
+                    Form.create($form);
                 } else if (e.contentType == 'data') {
                     that.modal.getDialog().close();
                     that.browse();
@@ -305,7 +305,7 @@
             });
 
             $(that.modal).on('ekyna.modal.button_click', function (e) {
-                if (e.buttonId == 'submit' && $form.size() == 1) {
+                if (e.buttonId == 'submit' && $form) {
                     $form.ajaxSubmit({
                         dataType: 'xml',
                         success: function(response) {
@@ -327,7 +327,7 @@
         },
         newMedia: function() {
             this.openModal({
-                url: Routing.generate(
+                url: Router.generate(
                     'ekyna_media_browser_admin_create_media',
                     {'id': this.folderId}
                 )
@@ -335,7 +335,7 @@
         },
         showMedia: function($media) {
             this.openModal({
-                url: Routing.generate(
+                url: Router.generate(
                     'ekyna_media_media_admin_show',
                     {'mediaId': $media.data('id')}
                 )
@@ -343,7 +343,7 @@
         },
         editMedia: function($media) {
             this.openModal({
-                url: Routing.generate(
+                url: Router.generate(
                     'ekyna_media_media_admin_edit',
                     {'mediaId': $media.data('id')}
                 )
@@ -351,14 +351,14 @@
         },
         removeMedia: function($media) {
             this.openModal({
-                url: Routing.generate(
+                url: Router.generate(
                     'ekyna_media_media_admin_remove',
                     {'mediaId': $media.data('id')}
                 )
             });
         },
         downloadMedia: function($media) {
-            var url = Routing.generate('ekyna_media_download', {'key': $media.data('path')});
+            var url = Router.generate('ekyna_media_download', {'key': $media.data('path')});
             window.open(url,'_blank');
         },
         filterList: function() {
@@ -402,7 +402,7 @@
             var that = this;
             this.$tree.fancytree({
                 source: {
-                    url: Routing.generate('ekyna_media_browser_admin_list')
+                    url: Router.generate('ekyna_media_browser_admin_list')
                 },
                 extensions: ["edit", "dnd"],
                 dnd: {
@@ -428,7 +428,7 @@
                             var $draggable = $(data.draggable.element);
                             if ($draggable.hasClass('media-thumb')) {
                                 $.ajax({
-                                    url: Routing.generate('ekyna_media_browser_admin_move_media', {
+                                    url: Router.generate('ekyna_media_browser_admin_move_media', {
                                         'id': refNode.key,
                                         'mediaId': $draggable.data('id')
                                     }),
@@ -445,7 +445,7 @@
                         } else {
                             var node = data.otherNode;
                             $.ajax({
-                                url: Routing.generate('ekyna_media_browser_admin_move', {'id': node.key}),
+                                url: Router.generate('ekyna_media_browser_admin_move', {'id': node.key}),
                                 data: {
                                     'reference': refNode.key,
                                     'mode': data.hitMode
@@ -482,7 +482,7 @@
                         that.setBusy(true);
                         var node = data.node;
                         $.ajax({
-                            url: Routing.generate('ekyna_media_browser_admin_rename', {'id': node.key}),
+                            url: Router.generate('ekyna_media_browser_admin_rename', {'id': node.key}),
                             data : { 'name' : data.input.val() },
                             method: 'POST',
                             dataType: 'json'
@@ -519,7 +519,7 @@
                 that.setBusy(true);
                 mode = mode || "child";
                 $.ajax({
-                    url: Routing.generate('ekyna_media_browser_admin_create', {'id': node.key}),
+                    url: Router.generate('ekyna_media_browser_admin_create', {'id': node.key}),
                     data : {
                         'mode' : mode
                     },
@@ -547,7 +547,7 @@
                 message = message + ' ?';
                 if (confirm(message)) {
                     $.ajax({
-                        url: Routing.generate('ekyna_media_browser_admin_delete', {'id': node.key}),
+                        url: Router.generate('ekyna_media_browser_admin_delete', {'id': node.key}),
                         method: 'POST',
                         dataType: 'json'
                     })
