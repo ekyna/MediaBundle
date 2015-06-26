@@ -228,8 +228,6 @@
             that.$content.empty();
             this.folderId = id || this.folderId;
 
-            that.log('Browsing [' + this.folderId + ']');
-
             if (this.folderId) {
                 that.setBusy(true);
                 that.browseXhr = $.ajax({
@@ -289,13 +287,16 @@
             var that = this;
             that.setBusy(true);
 
-            var $form;
+            var form;
             that.modal = new Modal();
             $(that.modal).on('ekyna.modal.content', function (e) {
                 settings.onShow(e);
+                if (form) {
+                    form.destroy();
+                    form = null;
+                }
                 if (e.contentType == 'form') {
-                    $form = e.content;
-                    Form.create($form);
+                    form = Form.create(e.content);
                 } else if (e.contentType == 'data') {
                     that.modal.getDialog().close();
                     that.browse();
@@ -305,10 +306,12 @@
             });
 
             $(that.modal).on('ekyna.modal.button_click', function (e) {
-                if (e.buttonId == 'submit' && $form) {
-                    $form.ajaxSubmit({
+                if (e.buttonId == 'submit' && form) {
+                    form.save();
+                    form.getElement().ajaxSubmit({
                         dataType: 'xml',
                         success: function(response) {
+                            form.destroy();
                             that.modal.handleResponse(response)
                         }
                     });
@@ -321,6 +324,10 @@
 
             that.modal.getDialog().onHide(function() {
                 settings.onHide();
+                if (form) {
+                    form.destroy();
+                    form = null;
+                }
             });
 
             that.modal.load({url: settings.url});
@@ -620,14 +627,6 @@
                     }, 100);
                 }
             });
-        },
-        log: function(data) {
-            if (!this.config.debug) return;
-            if (typeof data === 'string') {
-                console.log('[MediaBrowser] ' + data);
-            } else {
-                console.log(data);
-            }
         }
     };
 
