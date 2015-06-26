@@ -40,9 +40,9 @@ class GalleryType extends ResourceFormType
                     'label'        => false,
                     'required'     => false,
                     'file_path'    => $options['file_path'],
-                    'thumb_col'    => $options['thumb_col'],
+//                    'thumb_col'    => $options['thumb_col'],
                     'rename_field' => $options['rename_field'],
-                    'alt_field'    => $options['alt_field'],
+//                    'alt_field'    => $options['alt_field'],
                     'js_upload'    => $options['js_upload'],
                     'attr'         => array(
                         'widget_col' => 12
@@ -69,9 +69,9 @@ class GalleryType extends ResourceFormType
                 'allow_sort'   => true,
                 'name_field'   => false,
                 'file_path'    => 'path',
-                'thumb_col'    => 3,
+//                'thumb_col'    => 3,
                 'rename_field' => true,
-                'alt_field'    => true,
+//                'alt_field'    => true,
                 'required'     => false,
                 'js_upload'    => false,
             ))
@@ -82,12 +82,12 @@ class GalleryType extends ResourceFormType
                 'allow_sort'   => 'bool',
                 'name_field'   => 'bool',
                 'file_path'    => array('null', 'string'),
-                'thumb_col'    => 'int',
+//                'thumb_col'    => 'int',
                 'rename_field' => 'bool',
-                'alt_field'    => 'bool',
+//                'alt_field'    => 'bool',
                 'js_upload'    => 'bool',
             ))
-            ->setNormalizers(array(
+            /*->setNormalizers(array(
                 'thumb_col' => function($options, $value) {
                     if (0 == strlen($options['file_path'])) {
                         return 0;
@@ -97,7 +97,7 @@ class GalleryType extends ResourceFormType
                     }
                     return $value;
                 },
-            ))
+            ))*/
         ;
     }
 

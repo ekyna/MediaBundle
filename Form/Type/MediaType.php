@@ -36,7 +36,7 @@ class MediaType extends ResourceFormType
                 /** @var \Ekyna\Bundle\MediaBundle\Model\MediaInterface $media */
                 $media = $event->getData();
 
-                if (null == $media->getFolder()) {
+                if (null !== $media && null === $media->getFolder()) {
                     // TODO folder select
                 }
             }

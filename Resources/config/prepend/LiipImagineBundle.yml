@@ -1,19 +1,17 @@
 # Liip Imagine
 liip_imagine:
-    cache: ekyna_web_path
     resolvers:
-        default:
-            web_path: ~
+        local_media:
+            web_path:
+                cache_prefix: cache/media
     loaders:
-        default:
-            filesystem:
-                data_root: "%kernel.root_dir%/../web"
         local_media:
             filesystem:
                 data_root: "%kernel.root_dir%/../var/media"
     filter_sets:
         media_thumb:
             quality: 70
+            cache: local_media
             data_loader: local_media
             filters:
                 thumbnail: { size: [120, 90], mode: outbound }
@@ -28,6 +26,7 @@ liip_imagine:
 #                jpegoptim: {}
         media_modal:
             quality: 70
+            cache: local_media
             data_loader: local_media
             filters:
                 thumbnail: { size: [800, 600], mode: inset }
@@ -36,6 +35,7 @@ liip_imagine:
                 jpegoptim: {}
         media_table:
             quality: 70
+            cache: local_media
             data_loader: local_media
             filters:
                 thumbnail: { size: [24, 24], mode: outbound }

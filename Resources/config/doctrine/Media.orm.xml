@@ -10,6 +10,10 @@
             table="media_media"
             repository-class="Ekyna\Bundle\MediaBundle\Entity\MediaRepository">
 
+        <entity-listeners>
+            <entity-listener class="Ekyna\Bundle\MediaBundle\Listener\MediaListener" />
+        </entity-listeners>
+
         <id name="id" column="id" type="integer">
             <generator strategy="AUTO" />
         </id>

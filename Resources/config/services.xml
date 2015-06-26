@@ -7,12 +7,10 @@
     <parameters>
         <parameter key="ekyna_media.browser.thumbs_directory">media/browser-thumbs</parameter>
 
-        <!--<parameter key="ekyna_media.media.class">Ekyna\Bundle\MediaBundle\Entity\Media</parameter>
-        <parameter key="ekyna_media.media.form_type.class">Ekyna\Bundle\MediaBundle\Form\Type\MediaType</parameter>-->
         <parameter key="ekyna_media.media_choice.form_type.class">Ekyna\Bundle\MediaBundle\Form\Type\MediaChoiceType</parameter>
 
-        <!--<parameter key="ekyna_media.gallery_media.class">Ekyna\Bundle\MediaBundle\Entity\GalleryMedia</parameter>
-        <parameter key="ekyna_media.gallery_media.form_type.class">Ekyna\Bundle\MediaBundle\Form\Type\GalleryMediaType</parameter>-->
+        <parameter key="ekyna_media.gallery_media.class">Ekyna\Bundle\MediaBundle\Entity\GalleryMedia</parameter>
+        <parameter key="ekyna_media.gallery_media.form_type.class">Ekyna\Bundle\MediaBundle\Form\Type\GalleryMediaType</parameter>
     </parameters>
 
     <services>
@@ -26,20 +24,24 @@
         </service>
 
         <!-- Form types -->
-        <!--<service id="ekyna_media.media.form_type" class="%ekyna_media.media.form_type.class%">
-            <argument>%ekyna_media.media.class%</argument>
-            <tag name="form.type" alias="ekyna_media_media" />
-        </service>
         <service id="ekyna_media.gallery_media.form_type" class="%ekyna_media.gallery_media.form_type.class%">
             <argument>%ekyna_media.gallery_media.class%</argument>
             <tag name="form.type" alias="ekyna_media_gallery_media" />
-        </service>-->
-
+        </service>
         <service id="ekyna_media.media_choice.form_type" class="%ekyna_media.media_choice.form_type.class%">
             <argument type="service" id="ekyna_media.media.repository" />
             <tag name="form.type" alias="ekyna_media_choice" />
             <tag name="form.js" selector=".media-choice-widget" path="ekyna-form/media-choice" />
         </service>
+
+        <!-- Imagine cache resolver -->
+        <!--<service id="ekyna_media.imagine.cache.resolver.web_path" class="Ekyna\Bundle\MediaBundle\Imagine\Cache\Resolver\WebPathResolver">
+            <argument type="service" id="filesystem" />
+            <argument>%assets_base_urls%</argument>
+            <argument>%kernel.root_dir%/../web</argument>
+            <argument>media</argument>
+            <tag name="liip_imagine.cache.resolver" resolver="ekyna_web_path" />
+        </service>-->
 
         <!-- Uploader -->
         <service id="ekyna_media.media.uploader" class="Ekyna\Bundle\CoreBundle\Uploader\Uploader" parent="ekyna_core.uploader">
@@ -54,20 +56,13 @@
             </call>
         </service>
 
-        <!-- Imagine cache resolver -->
-        <service id="ekyna_media.imagine.cache.resolver.web_path" class="Ekyna\Bundle\MediaBundle\Imagine\Cache\Resolver\WebPathResolver">
-            <argument type="service" id="filesystem" />
-            <argument>%assets_base_urls%</argument>
-            <argument>%kernel.root_dir%/../web</argument>
-            <argument>media</argument>
-            <tag name="liip_imagine.cache.resolver" resolver="ekyna_web_path" />
+        <!-- Doctrine entity listeners -->
+        <service id="ekyna_media.media.listener" class="Ekyna\Bundle\MediaBundle\Listener\MediaListener">
+            <argument type="service" id="ekyna_media.media.uploader" />
+            <tag name="doctrine.entity_listener" />
         </service>
 
         <!-- Doctrine event listeners -->
-        <service id="ekyna_media.media.listener" class="Ekyna\Bundle\MediaBundle\Listener\MediaListener" public="false">
-            <argument type="service" id="ekyna_media.media.uploader" />
-            <tag name="doctrine.event_subscriber" connection="default" />
-        </service>
         <service id="ekyna_media.media.subject_subscriber" class="Ekyna\Bundle\MediaBundle\Listener\MediaSubjectSubscriber" public="false">
             <tag name="doctrine.event_subscriber" connection="default" />
         </service>

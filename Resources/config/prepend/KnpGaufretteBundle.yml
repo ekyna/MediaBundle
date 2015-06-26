@@ -7,7 +7,3 @@ knp_gaufrette:
     filesystems:
         local_media:
             adapter: local_media
-#    stream_wrapper:
-#        protocol: file
-#        filesystems:
-#            media: local_media

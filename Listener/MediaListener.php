@@ -2,10 +2,6 @@
 
 namespace Ekyna\Bundle\MediaBundle\Listener;
 
-use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Events;
-use Doctrine\ORM\Event\LifecycleEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Ekyna\Bundle\CoreBundle\Uploader\UploaderInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 
@@ -14,7 +10,7 @@ use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
  * @package Ekyna\Bundle\MediaBundle\Listener
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
-class MediaListener implements EventSubscriber
+class MediaListener
 {
     /**
      * @var UploaderInterface
@@ -33,99 +29,60 @@ class MediaListener implements EventSubscriber
     /**
      * Pre persist event handler.
      *
-     * @param LifecycleEventArgs $eventArgs
+     * @param MediaInterface $media
      */
-    public function prePersist(LifecycleEventArgs $eventArgs)
+    public function prePersist(MediaInterface $media)
     {
-        $entity = $eventArgs->getObject();
-
-        if ($entity instanceof MediaInterface) {
-            $this->uploader->prepare($entity);
-        }
+        $this->uploader->prepare($media);
     }
 
     /**
      * Post persist event handler.
      *
-     * @param LifecycleEventArgs $eventArgs
+     * @param MediaInterface $media
      */
-    public function postPersist(LifecycleEventArgs $eventArgs)
+    public function postPersist(MediaInterface $media)
     {
-        $entity = $eventArgs->getObject();
-
-        if ($entity instanceof MediaInterface) {
-            $this->uploader->upload($entity);
-        }
+        $this->uploader->upload($media);
     }
 
     /**
      * Pre update event handler.
      *
-     * @param PreUpdateEventArgs $eventArgs
+     * @param MediaInterface $media
      */
-    public function preUpdate(PreUpdateEventArgs $eventArgs)
+    public function preUpdate(MediaInterface $media)
     {
-        $entity = $eventArgs->getObject();
-
-        if ($entity instanceof MediaInterface) {
-            $this->uploader->prepare($entity);
-        }
+        $this->uploader->prepare($media);
     }
 
     /**
      * Post update event handler.
      *
-     * @param LifecycleEventArgs $eventArgs
+     * @param MediaInterface $media
      */
-    public function postUpdate(LifecycleEventArgs $eventArgs)
+    public function postUpdate(MediaInterface $media)
     {
-        $entity = $eventArgs->getObject();
-
-        if ($entity instanceof MediaInterface) {
-            $this->uploader->upload($entity);
-        }
+        $this->uploader->upload($media);
     }
 
     /**
      * Pre remove event handler.
      *
-     * @param LifecycleEventArgs $eventArgs
+     * @param MediaInterface $media
      */
-    public function preRemove(LifecycleEventArgs $eventArgs)
+    public function preRemove(MediaInterface $media)
     {
-        $entity = $eventArgs->getObject();
-
-        if ($entity instanceof MediaInterface) {
-            $entity->setOldPath($entity->getPath());
-        }
+        $media->setOldPath($media->getPath());
     }
 
     /**
      * Post remove event handler.
      *
-     * @param LifecycleEventArgs $eventArgs
+     * @param MediaInterface $media
      */
-    public function postRemove(LifecycleEventArgs $eventArgs)
+    public function postRemove(MediaInterface $media)
     {
-        $entity = $eventArgs->getObject();
-
-        if ($entity instanceof MediaInterface) {
-            $this->uploader->remove($entity);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSubscribedEvents()
-    {
-        return array(
-            Events::prePersist,
-            Events::postPersist,
-            Events::preUpdate,
-            Events::postUpdate,
-            Events::preRemove,
-            Events::postRemove,
-        );
+        $this->uploader->remove($media);
     }
 }
