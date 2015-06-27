@@ -1,4 +1,6 @@
-define('ekyna-form/media-choice', ['jquery', 'routing', 'ekyna-modal', 'ekyna-media-browser'], function($, Router, Modal, Browser) {
+define('ekyna-form/media-choice',
+    ['jquery', 'routing', 'ekyna-modal', 'ekyna-media-browser'],
+    function($, Router, Modal, Browser) {
     "use strict";
 
     var MediaChoiceWidget = function($elem) {
@@ -22,8 +24,8 @@ define('ekyna-form/media-choice', ['jquery', 'routing', 'ekyna-modal', 'ekyna-me
             });
         },
         addMedia: function() {
-            var that = this,
-                modal = new Modal();
+            var that = this, modal = new Modal();
+
             $(modal).on('ekyna.modal.content', function (e) {
                 if (e.contentType == 'html') {
                     var browser = new Browser(e.content);
@@ -42,6 +44,7 @@ define('ekyna-form/media-choice', ['jquery', 'routing', 'ekyna-modal', 'ekyna-me
             /*$(modal).on('ekyna.modal.load_fail', function () {
 
             });*/
+
             var params = {};
             if (that.config.types.length > 0) {
                 params = {types: this.config.types};
