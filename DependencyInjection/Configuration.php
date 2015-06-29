@@ -70,10 +70,11 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                         ->end()
-                        ->arrayNode('gallery')
+                        /*->arrayNode('gallery')
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->variableNode('templates')->defaultValue(array(
+                                    '_form.html'  => 'EkynaMediaBundle:Admin/Gallery:_form.html',
                                     'show.html'  => 'EkynaMediaBundle:Admin/Gallery:show.html',
                                 ))->end()
                                 ->scalarNode('entity')->defaultValue('Ekyna\Bundle\MediaBundle\Entity\Gallery')->end()
@@ -94,7 +95,7 @@ class Configuration implements ConfigurationInterface
                                     ->end()
                                 ->end()
                             ->end()
-                        ->end()
+                        ->end()*/
                     ->end()
                 ->end()
             ->end()

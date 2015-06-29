@@ -6,7 +6,7 @@ use Ekyna\Bundle\AdminBundle\Table\Type\ResourceTableType;
 use Ekyna\Component\Table\TableBuilderInterface;
 
 /**
- * Class ImageType
+ * Class GalleryType
  * @package Ekyna\Bundle\MediaBundle\Table\Type
  * @author Étienne Dauvergne <contact@ekyna.com>
  */

@@ -6,6 +6,6 @@ ekyna_media_media_admin:
     resource: "admin/media.yml"
     prefix:   /medias
 
-ekyna_media_gallery_admin:
-    resource: "admin/gallery.yml"
-    prefix:   /galleries
+#ekyna_media_gallery_admin:
+#    resource: "admin/gallery.yml"
+#    prefix:   /galleries
