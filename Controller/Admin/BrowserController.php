@@ -82,8 +82,9 @@ class BrowserController extends Controller
         }
 
         $refFolder = $this->findFolderById($request->attributes->get('id'));
+        $repo = $this->getFolderRepository();
 
-        $newFolder = new Folder();
+        $newFolder = $repo->createNew();
         $newFolder->setName('New folder');
 
         $mode = strtolower($request->request->get('mode'));
@@ -94,9 +95,9 @@ class BrowserController extends Controller
             ), JSON_FORCE_OBJECT));
         } else {
             if ($mode === 'after') {
-                $this->getFolderRepository()->persistAsNextSiblingOf($newFolder, $refFolder);
+                $repo->persistAsNextSiblingOf($newFolder, $refFolder);
             } else {
-                $this->getFolderRepository()->persistAsFirstChildOf($newFolder, $refFolder);
+                $repo->persistAsFirstChildOf($newFolder, $refFolder);
             }
 
             if (true !== $message = $this->validateFolder($newFolder)) {

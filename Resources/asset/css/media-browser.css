@@ -63,10 +63,12 @@
 /* ---------------------- TREE ---------------------- */
 .media-browser-tree {
     overflow: auto;
+    min-height: 320px;
 }
 
 .media-browser-tree ul.fancytree-container {
     border: none !important;
+    min-height: 320px;
 }
 
 /* ---------------------- CONTENT ---------------------- */

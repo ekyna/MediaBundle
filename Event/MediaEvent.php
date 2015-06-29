@@ -2,21 +2,16 @@
 
 namespace Ekyna\Bundle\MediaBundle\Event;
 
+use Ekyna\Bundle\AdminBundle\Event\ResourceEvent;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
-use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Class MediaEvent
  * @package Ekyna\Bundle\MediaBundle\Event
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
-class MediaEvent extends Event
+class MediaEvent extends ResourceEvent
 {
-    /**
-     * @var MediaInterface
-     */
-    protected $media;
-
     /**
      * Constructor.
      *
@@ -24,7 +19,7 @@ class MediaEvent extends Event
      */
     public function __construct(MediaInterface $media)
     {
-        $this->media = $media;
+        $this->setResource($media);
     }
 
     /**
@@ -34,6 +29,6 @@ class MediaEvent extends Event
      */
     public function getMedia()
     {
-        return $this->media;
+        return $this->getResource();
     }
 }

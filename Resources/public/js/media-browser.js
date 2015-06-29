@@ -211,7 +211,7 @@
             });
 
             // Media remove
-            this.$content.on('click', '.media-thumb [data-role="remove"]', function(e) {
+            this.$content.on('click', '.media-thumb [data-role="delete"]', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 var $media = $(e.currentTarget).parents('.media-thumb');
@@ -319,7 +319,7 @@
                             success: function(response) {
                                 form.destroy();
                                 form = null;
-                                modal.handleResponse(response);
+                                that.modal.handleResponse(response);
                             }
                         });
                     }, 100);
@@ -509,6 +509,7 @@
                                 return;
                             }
                             node.setTitle(d.name);
+                            node.setActive();
                         })
                         .fail(function () {
                             node.setTitle(data.orgTitle);
@@ -548,7 +549,7 @@
                     }
                     node.editCreateNode(mode, d.node);
                 })
-                .fail(function () {
+                .always(function () {
                     that.setBusy(false);
                 });
             };
@@ -556,7 +557,7 @@
             var removeNode = function(node) {
                 that.setBusy(true);
                 var message = 'Êtes-vous sûr de vouloir supprimer le dossier "' + node.title + '"';
-                if (node.children.length) {
+                if (node.children && node.children.length) {
                     message = message + ' et tous ses sous-dossiers';
                 }
                 message = message + ' ?';
@@ -577,7 +578,7 @@
                             refNode.setActive();
                         }
                     })
-                    .fail(function () {
+                    .always(function () {
                         that.setBusy(false);
                     });
                 }

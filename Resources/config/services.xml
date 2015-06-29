@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="ekyna_media.browser.thumbs_directory">media/browser-thumbs</parameter>
+        <parameter key="ekyna_media.browser.thumbs_directory">cache/media/media_thumb</parameter>
 
         <parameter key="ekyna_media.media_choice.form_type.class">Ekyna\Bundle\MediaBundle\Form\Type\MediaChoiceType</parameter>
         <parameter key="ekyna_media.media_collection.form_type.class">Ekyna\Bundle\MediaBundle\Form\Type\MediaCollectionType</parameter>
@@ -36,7 +36,6 @@
             <tag name="form.type" alias="ekyna_media_collection_media" />
         </service>
 
-
         <!-- Uploader -->
         <service id="ekyna_media.media.uploader" class="Ekyna\Bundle\CoreBundle\Uploader\Uploader" parent="ekyna_core.uploader">
             <call method="setFilesystem">
@@ -48,6 +47,13 @@
                     </service>
                 </argument>
             </call>
+        </service>
+
+        <!-- Event listeners -->
+        <service id="ekyna_media.media.event_listener" class="Ekyna\Bundle\MediaBundle\EventListener\MediaEventListener">
+            <argument type="service" id="doctrine.orm.default_entity_manager" />
+            <argument type="service" id="ekyna_media.folder.repository" />
+            <tag name="kernel.event_subscriber" />
         </service>
 
         <!-- Doctrine entity listeners -->
