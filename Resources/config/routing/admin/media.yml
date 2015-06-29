@@ -25,6 +25,13 @@ ekyna_media_media_admin_show:
         mediaId:  \d+
     options: { expose: true }
 
+ekyna_media_media_admin_tinymce:
+    path: /{mediaId}/tinymce
+    defaults: { _controller: "ekyna_media.media.controller:tinymceAction", field: description }
+    requirements:
+        _method: GET
+        mediaId: \d+
+
 ekyna_media_media_admin_edit:
     path: /{mediaId}/edit
     defaults: { _controller: "ekyna_media.media.controller:editAction" }

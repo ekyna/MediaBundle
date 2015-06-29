@@ -23,6 +23,13 @@ ekyna_media_gallery_admin_show:
         _method: GET
         galleryId:  \d+
 
+ekyna_media_gallery_admin_tinymce:
+    path: /{galleryId}/tinymce
+    defaults: { _controller: "ekyna_media.gallery.controller:tinymceAction", field: description }
+    requirements:
+        _method: GET
+        galleryId: \d+
+
 ekyna_media_gallery_admin_edit:
     path: /{galleryId}/edit
     defaults: { _controller: "ekyna_media.gallery.controller:editAction" }

@@ -21,19 +21,11 @@
 
 {% block ekyna_media_choice_widget %}
 {% spaceless %}
-<div class="media-choice-widget" data-config="{{ config|json_encode }}">
-    <div class="media-choice">
-        {% if media is not sameas(null) %}
-        <img class="thumb" src="{{ get_media_thumb_path(media) }}">
-        <span class="name">{{ media.title }}</span>
-        {% else %}
-        <img class="thumb" src="{{ asset('bundles/ekynamedia/img/media-add.gif') }}">
-        <span class="name">{{ 'ekyna_core.button.browse'|trans }}&hellip;</span>
-        {% endif %}
+    <div class="ekyna-media-choice" data-config="{{ config|json_encode }}">
+        {{ render_media_thumb(media, (media is not sameas(null) ? config.controls : [])) }}
         {% set type = type|default('hidden') %}
         {{ block('form_widget_simple') }}
     </div>
-</div>
 {% endspaceless %}
 {% endblock ekyna_media_choice_widget %}
 
@@ -43,57 +35,31 @@
 {% endspaceless %}
 {% endblock ekyna_media_choice_row %}
 
-{#{% block ekyna_media_image_widget %}
-    {% spaceless %}
-        <div class="row image-widget modal-gallery">
-            {% if 0 < thumb_col %}
-                <div class="col-md-{{ thumb_col }}">
-                    {{ block('ekyna_media_image_thumb') }}
-                </div>
-            {% endif %}
-            {% set attr = attr|merge({'class': 'col-md-' ~ (12 - thumb_col) }) %}
-            {{ block('ekyna_media_image_compound') }}
-        </div>
-    {% endspaceless %}
-{% endblock ekyna_media_image_widget %}
+{% block ekyna_media_collection_media_widget %}
+{% spaceless %}
+    {% set attr = attr|merge({'class': ('ekyna-media-collection-media ' ~ attr.class|default(''))|trim }) %}
+    <div {{ block('widget_container_attributes') }}>
+        {{ form_widget(form.media) }}
+        {{ form_widget(form.position) }}
+        {{ form_errors(form) }}
+    </div>
+{% endspaceless %}
+{% endblock ekyna_media_collection_media_widget %}
 
-{% block ekyna_media_image_thumb %}
-    {% spaceless %}
-        {% if current_file_path is not null %}
-            <a href="{{ current_file_path|imagine_filter('admin_modal') }}" class="thumbnail" data-preview="{{ id }}_file">
-                <img src="{{ current_file_path|imagine_filter('admin_thumb') }}" class="img-responsive" />
-            </a>
-        {% else %}
-            <span class="thumbnail" data-preview="{{ id }}_file">{{ ui_no_image({'class': 'img-responsive'}) }}</span>
-        {% endif %}
-    {% endspaceless %}
-{% endblock ekyna_media_image_thumb %}
+{% block ekyna_media_collection_widget %}
+{% spaceless %}
+    {% if prototype is defined %}
+        {% set prototype_vars = {'attr': {'class': 'ekyna-media-collection-add'}} %}
+        {% set prototype_html = form_widget(prototype, prototype_vars) %}
 
-{% block ekyna_media_image_compound %}
-    {% spaceless %}
-        <div {{ block('widget_container_attributes') }}>
-            {% if form.parent is empty %}
-                {{ block('global_form_errors') }}
-            {% endif %}
-            <div class="children">
-                {{ form_row(form.file, {'style': 'horizontal'}) }}
-                {% if form.key is defined %}
-                    {{ form_row(form.key) }}
-                {% endif %}
-                {% if form.rename is defined %}
-                    {{ form_row(form.rename, {'style': 'horizontal'}) }}
-                {% endif %}
-                {% if form.alt is defined %}
-                    {{ form_row(form.alt, {'style': 'horizontal'}) }}
-                {% endif %}
-                {% if form.unlink is defined %}
-                    {{ form_row(form.unlink, {'style': 'horizontal'}) }}
-                {% endif %}
-                {% if form.position is defined %}
-                    {{ form_row(form.position) }}
-                {% endif %}
-                &#123;&#35;{ form_rest(form) }&#35;&#125;
-            </div>
-        </div>
-    {% endspaceless %}
-{% endblock ekyna_media_image_compound %}#}
+        {% set attr = attr|merge({'data-prototype': prototype_html }) %}
+        {% set attr = attr|merge({'data-prototype-name': prototype_name }) %}
+        {% set attr = attr|merge({'class': 'ekyna-media-collection' }) %}
+    {% endif %}
+    <div {{ block('widget_container_attributes') }} data-config="{{ config|json_encode }}">
+        {% for media in form %}
+            {{ form_widget(media) }}
+        {% endfor %}
+    </div>
+{% endspaceless %}
+{% endblock ekyna_media_collection_widget %}

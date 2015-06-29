@@ -1,29 +1,32 @@
 define('ekyna-form/media-choice',
-    ['jquery', 'routing', 'ekyna-modal', 'ekyna-media-browser'],
-    function($, Router, Modal, Browser) {
+    ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-media-browser'],
+    function($, Router, Twig, Modal, Browser) {
     "use strict";
 
     var MediaChoiceWidget = function($elem) {
         this.$elem = $($elem);
-        this.defaults = {};
+        this.defaults = {types: [], controls: []};
         this.config = $.extend({}, this.defaults, this.$elem.data('config'));
-        this.$thumb = this.$elem.find('.media-choice');
     };
 
     MediaChoiceWidget.prototype = {
         constructor: MediaChoiceWidget,
-        defaults: {
-            multiple: false,
-            types: [],
-            limit: 1
-        },
         init: function () {
             var that = this;
-            this.$thumb.bind('click', function() {
-                that.addMedia();
+            this.$elem.on('click', '.media-thumb [data-role="select"]', function() {
+                that.selectMedia();
+            });
+            /*this.$elem.on('click', '.media-thumb [data-role="show"]', function() {
+
+            });*/
+            this.$elem.on('click', '.media-thumb [data-role="edit"]', function() {
+                /* TODO */
+            });
+            this.$elem.on('click', '.media-thumb [data-role="download"]', function() {
+                /* TODO */
             });
         },
-        addMedia: function() {
+        selectMedia: function() {
             var that = this, modal = new Modal();
 
             $(modal).on('ekyna.modal.content', function (e) {
@@ -31,9 +34,18 @@ define('ekyna-form/media-choice',
                     var browser = new Browser(e.content);
                     browser.init();
                     $(browser).bind('ekyna.media-browser.selection', function(e) {
-                        that.$thumb.find('img').attr('src', e.media.thumb);
-                        that.$thumb.find('.name').text(e.media.title);
-                        that.$thumb.find('input').val(e.media.id);
+                        if (e.hasOwnProperty('media')) {
+                            var $thumb = $(Twig.render(media_thumb_template, {
+                                media: e.media,
+                                controls: that.config.controls
+                            }));
+                            $thumb.data(e.media);
+
+                            that.$elem.find('.media-thumb').replaceWith($thumb);
+                            that.$elem.find('input').val(e.media.id);
+
+                            $(that.$elem).trigger(jQuery.Event('ekyna.media-choice.selection'));
+                        }
                         modal.getDialog().close();
                     });
                 } else {
@@ -52,8 +64,6 @@ define('ekyna-form/media-choice',
             modal.load({url: Router.generate('ekyna_media_browser_admin_modal', params)});
         }
     };
-
-    MediaChoiceWidget.defaults = MediaChoiceWidget.prototype.defaults;
 
     return {
         init: function($element) {

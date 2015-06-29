@@ -1,4 +1,5 @@
 ekyna_admin:
     css_inputs:
         - "@fancytree_css"
+        - "@EkynaMediaBundle/Resources/asset/css/media-thumb.css"
         - "@EkynaMediaBundle/Resources/asset/css/media-browser.css"

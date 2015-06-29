@@ -1,0 +1,30 @@
+.ekyna-media-choice {
+    height: 120px;
+    width: 120px;
+}
+
+.has-error .ekyna-media-choice {
+    border: 1px solid #a94442;
+}
+
+/* Media Collection Form Widget */
+
+.ekyna-media-collection {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 12px 0 0 12px;
+}
+
+.ekyna-media-collection-media {
+    margin: 0 12px 12px 0;
+    float: left;
+}
+
+.ekyna-media-collection-placeholder {
+    height: 120px;
+    width: 120px;
+    margin: 0 12px 12px 0;
+    float: left;
+    border: 1px dotted #ccc;
+}

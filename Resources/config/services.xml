@@ -9,8 +9,11 @@
 
         <parameter key="ekyna_media.media_choice.form_type.class">Ekyna\Bundle\MediaBundle\Form\Type\MediaChoiceType</parameter>
 
-        <parameter key="ekyna_media.gallery_media.class">Ekyna\Bundle\MediaBundle\Entity\GalleryMedia</parameter>
-        <parameter key="ekyna_media.gallery_media.form_type.class">Ekyna\Bundle\MediaBundle\Form\Type\GalleryMediaType</parameter>
+        <!--<parameter key="ekyna_media.gallery_media.class">Ekyna\Bundle\MediaBundle\Entity\GalleryMedia</parameter>
+        <parameter key="ekyna_media.gallery_media.form_type.class">Ekyna\Bundle\MediaBundle\Form\Type\GalleryMediaType</parameter>-->
+
+        <parameter key="ekyna_media.media_collection.form_type.class">Ekyna\Bundle\MediaBundle\Form\Type\MediaCollectionType</parameter>
+        <parameter key="ekyna_media.media_collection_media.form_type.class">Ekyna\Bundle\MediaBundle\Form\Type\MediaCollectionMediaType</parameter>
     </parameters>
 
     <services>
@@ -24,14 +27,22 @@
         </service>
 
         <!-- Form types -->
-        <service id="ekyna_media.gallery_media.form_type" class="%ekyna_media.gallery_media.form_type.class%">
+        <!--<service id="ekyna_media.gallery_media.form_type" class="%ekyna_media.gallery_media.form_type.class%">
             <argument>%ekyna_media.gallery_media.class%</argument>
             <tag name="form.type" alias="ekyna_media_gallery_media" />
-        </service>
+        </service>-->
         <service id="ekyna_media.media_choice.form_type" class="%ekyna_media.media_choice.form_type.class%">
             <argument type="service" id="ekyna_media.media.repository" />
             <tag name="form.type" alias="ekyna_media_choice" />
-            <tag name="form.js" selector=".media-choice-widget" path="ekyna-form/media-choice" />
+            <tag name="form.js" selector=".ekyna-media-choice" path="ekyna-form/media-choice" />
+        </service>
+
+        <service id="ekyna_media.media_collection.form_type" class="%ekyna_media.media_collection.form_type.class%">
+            <tag name="form.type" alias="ekyna_media_collection" />
+            <tag name="form.js" selector=".ekyna-media-collection" path="ekyna-form/media-collection" />
+        </service>
+        <service id="ekyna_media.media_collection_media.form_type" class="%ekyna_media.media_collection_media.form_type.class%">
+            <tag name="form.type" alias="ekyna_media_collection_media" />
         </service>
 
         <!-- Imagine cache resolver -->

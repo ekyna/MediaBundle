@@ -242,8 +242,13 @@
                         return;
                     }
                     if (d.hasOwnProperty('medias')) {
+                        var controls = [
+                            {role: 'edit', icon: 'pencil'},
+                            {role: 'delete', icon: 'trash'},
+                            {role: 'download', icon: 'download'}
+                        ];
                         $(d['medias']).each(function (index, media) {
-                            $(Twig.render(media_browser_media, {media: media}))
+                            $(Twig.render(media_thumb_template, {media: media, controls: controls}))
                                 .data(media)
                                 .appendTo(that.$content)
                                 .draggable({

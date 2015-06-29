@@ -52,7 +52,7 @@ HTML;
     /**
      * @var \Twig_Template
      */
-    private $uiTemplate;
+    private $thumbTemplate;
 
 
     /**
@@ -81,7 +81,7 @@ HTML;
     public function initRuntime(\Twig_Environment $twig)
     {
         $this->managerTemplate = $twig->loadTemplate('EkynaMediaBundle:Manager:render.html.twig');
-        $this->uiTemplate = $twig->loadTemplate('EkynaMediaBundle::ui.html.twig');
+        $this->thumbTemplate = $twig->loadTemplate('EkynaMediaBundle::thumb.html.twig');
     }
 
     /**
@@ -147,14 +147,26 @@ HTML;
      * Renders the media thumb.
      *
      * @param MediaInterface $media
+     * @param array          $controls
      * @return string
      */
-    public function renderMediaThumb(MediaInterface $media = null)
+    public function renderMediaThumb(MediaInterface $media = null, array $controls = array())
     {
         if (null !== $media) {
             $media->setThumb($this->thumbGenerator->generate($media));
         }
-        return $this->uiTemplate->renderBlock('thumb', array('media' => $media));
+        /*if (empty($controls)) {
+            $controls = array(
+                array('role' => 'edit',     'icon' => 'pencil'),
+                //array('role' => 'delete',   'icon' => 'trash'),
+                array('role' => 'download', 'icon' => 'download'),
+            );
+        }*/
+        // TODO validate controls
+        return $this->thumbTemplate->render(array(
+            'media'    => $media,
+            'controls' => $controls
+        ));
     }
 
     /**

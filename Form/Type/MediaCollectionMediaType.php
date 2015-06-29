@@ -2,43 +2,38 @@
 
 namespace Ekyna\Bundle\MediaBundle\Form\Type;
 
-use Doctrine\ORM\EntityRepository;
-use Ekyna\Bundle\CoreBundle\Form\DataTransformer\ObjectToIdentifierTransformer;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Class MediaChoiceType
+ * Class MediaCollectionMediaType
  * @package Ekyna\Bundle\MediaBundle\Form\Type
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
-class MediaChoiceType extends AbstractType
+class MediaCollectionMediaType extends AbstractType
 {
-    /**
-     * @var EntityRepository
-     */
-    protected $repository;
-
-
-    /**
-     * @param EntityRepository $repository
-     */
-    public function __construct(EntityRepository $repository)
-    {
-        $this->repository = $repository;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options = array())
     {
-        $transformer = new ObjectToIdentifierTransformer($this->repository);
-        $builder->addViewTransformer($transformer);
+        $builder
+            ->add('media', 'ekyna_media_choice', array(
+                'types' => $options['types'],
+                'controls' => array(
+                    array('role' => 'move-left', 'icon' => 'arrow-left'),
+                    array('role' => 'remove', 'icon' => 'remove'),
+                    array('role' => 'move-right', 'icon' => 'arrow-right'),
+                ),
+            ))
+            ->add('position', 'hidden', array(
+                'attr' => array(
+                    'data-role' => 'position'
+                )
+            ))
+        ;
     }
 
     /**
@@ -48,14 +43,12 @@ class MediaChoiceType extends AbstractType
     {
         $resolver
             ->setDefaults(array(
-                'label' => 'ekyna_media.media.label.singular',
-                'types' => null,
-                'error_bubbling' => false,
-                'controls' => array(),
+                'label'    => false,
+                'required' => false,
+                'types'    => null,
             ))
             ->setAllowedTypes(array(
                 'types' => array('null', 'string', 'array'),
-                'controls' => 'array',
             ))
             ->setAllowedValues(array(
                 'types' => function($value) {
@@ -77,28 +70,8 @@ class MediaChoiceType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options = array())
-    {
-        $view->vars['media'] = $form->getData();
-        $view->vars['config'] = array(
-            'types' => (array) $options['types'],
-            'controls' => $options['controls'],
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return 'hidden';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
-        return 'ekyna_media_choice';
+        return 'ekyna_media_collection_media';
     }
 }

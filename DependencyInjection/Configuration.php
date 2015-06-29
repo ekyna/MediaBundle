@@ -77,7 +77,7 @@ class Configuration implements ConfigurationInterface
                                     'show.html'  => 'EkynaMediaBundle:Admin/Gallery:show.html',
                                 ))->end()
                                 ->scalarNode('entity')->defaultValue('Ekyna\Bundle\MediaBundle\Entity\Gallery')->end()
-                                ->scalarNode('controller')->end()
+                                ->scalarNode('controller')->defaultValue('Ekyna\Bundle\MediaBundle\Controller\Admin\GalleryController')->end()
                                 ->scalarNode('repository')->defaultValue('Ekyna\Bundle\MediaBundle\Entity\GalleryRepository')->end()
                                 ->scalarNode('form')->defaultValue('Ekyna\Bundle\MediaBundle\Form\Type\GalleryType')->end()
                                 ->scalarNode('table')->defaultValue('Ekyna\Bundle\MediaBundle\Table\Type\GalleryType')->end()

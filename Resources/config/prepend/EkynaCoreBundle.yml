@@ -2,4 +2,5 @@ ekyna_core:
     assets:
         form_css:
             inputs:
-                - "@EkynaMediaBundle/Resources/asset/css/media-choice-form.css"
+                - "@EkynaMediaBundle/Resources/asset/css/media-thumb.css"
+                - "@EkynaMediaBundle/Resources/asset/css/media-form.css"

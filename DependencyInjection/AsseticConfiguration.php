@@ -24,7 +24,7 @@ class AsseticConfiguration
 
         $output['fancytree_css'] = $this->buildFancyTreeCss($outputDir);
         $output['fancytree_js'] = $this->buildFancyTreeJs($outputDir);
-        $output['media_browser_media_js'] = $this->buildBrowserMediaJs($outputDir);
+        $output['media_thumb_js'] = $this->buildMediaThumbJs($outputDir);
 
         return $output;
     }
@@ -78,15 +78,15 @@ class AsseticConfiguration
      * @param string $outputDir
      * @return array
      */
-    protected function buildBrowserMediaJs($outputDir)
+    protected function buildMediaThumbJs($outputDir)
     {
         $inputs = array(
-            '@EkynaMediaBundle/Resources/views/Manager/media.html.twig',
+            '@EkynaMediaBundle/Resources/views/thumb.html.twig',
         );
         return array(
             'inputs'  => $inputs,
             'filters' => array('twig_js'),
-            'output'  => $outputDir . 'js/media-browser-media.js',
+            'output'  => $outputDir . 'js/media-thumb.js',
             'debug'   => false,
         );
     }
