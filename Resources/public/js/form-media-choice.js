@@ -67,7 +67,9 @@ define('ekyna-form/media-choice',
 
     return {
         init: function($element) {
-            new MediaChoiceWidget($element).init();
+            $element.each(function() {
+                new MediaChoiceWidget($(this)).init();
+            });
         }
     };
 });

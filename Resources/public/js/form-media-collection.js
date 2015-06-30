@@ -3,13 +3,12 @@ define('ekyna-form/media-collection', ['jquery', 'ekyna-form/media-choice', 'jqu
 
     var MediaCollectionWidget = function($elem) {
         this.$elem = $($elem);
-        this.defaults = {};
+        this.defaults = {limit: 0};
         this.config = $.extend({}, this.defaults, this.$elem.data('config'));
     };
 
     MediaCollectionWidget.prototype = {
         constructor: MediaCollectionWidget,
-        defaults: {limit: 0},
         init: function () {
             var that = this;
 
@@ -109,11 +108,11 @@ define('ekyna-form/media-collection', ['jquery', 'ekyna-form/media-choice', 'jqu
         }
     };
 
-    MediaCollectionWidget.defaults = MediaCollectionWidget.prototype.defaults;
-
     return {
         init: function($element) {
-            new MediaCollectionWidget($element).init();
+            $element.each(function() {
+                new MediaCollectionWidget($(this)).init();
+            });
         }
     };
 });

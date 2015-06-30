@@ -17,21 +17,3 @@ ekyna_media:
             remove: Supprimer le média
         alert:
             no_item: Aucun média configuré
-#    gallery:
-#        label:
-#            singular: Galerie
-#            plural: Galeries
-#        header:
-#            list: Galeries <small>Liste des galeries</small>
-#            show: Détail de la galerie
-#            new: Créer une nouvelle galerie
-#            edit: Modifier la galerie
-#            remove: Supprimer la galerie
-#        button:
-#            list: Liste des galeries
-#            show: Détail de la galerie
-#            new: Nouvelle galerie
-#            edit: Modifier la galerie
-#            remove: Supprimer la galerie
-#        alert:
-#            no_item: Aucune galerie configuré

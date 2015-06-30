@@ -42,8 +42,7 @@ class MediaSubjectSubscriber implements EventSubscriber
         $metadata->mapManyToOne(array(
             'fieldName'     => 'media',
             'targetEntity'  => self::MEDIA_FQCN,
-            'cascade'       => array('persist', 'refresh', 'detach', 'merge'),
-            //'orphanRemoval' => true,
+            'cascade'       => array('merge', 'refresh', 'detach'),
             'joinColumns' => array(
                 array(
                     'name'                  => 'media_id',
