@@ -302,6 +302,7 @@
                 }
                 if (e.contentType == 'form') {
                     form = Form.create(e.content);
+                    form.init();
                 } else if (e.contentType == 'data') {
                     that.modal.getDialog().close();
                     that.browse();
