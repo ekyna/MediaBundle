@@ -19,7 +19,7 @@ class MediaCollectionType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options = array())
+    public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['config'] = array(
             'limit' => $options['limit'],

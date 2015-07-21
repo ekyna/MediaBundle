@@ -17,7 +17,7 @@ class MediaCollectionMediaType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options = array())
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('media', 'ekyna_media_choice', array(

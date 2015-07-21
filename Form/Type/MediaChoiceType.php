@@ -35,7 +35,7 @@ class MediaChoiceType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options = array())
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $transformer = new ObjectToIdentifierTransformer($this->repository);
         $builder->addViewTransformer($transformer);
@@ -77,7 +77,7 @@ class MediaChoiceType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options = array())
+    public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['media'] = $form->getData();
         $view->vars['config'] = array(
