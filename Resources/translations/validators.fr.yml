@@ -1,5 +1,6 @@
 ekyna_media:
     media:
         invalid_type: Type de média invalide.
+        type_miss_match: Le type de média ne peut pas être changé, veuillez créer un nouveau média pour ce fichier.
     image:
         invalid_mime_type: Les formats acceptés sont JPEG, GIF et PNG.

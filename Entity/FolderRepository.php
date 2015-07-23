@@ -12,10 +12,10 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
  * @package Ekyna\Bundle\MediaBundle\Entity
  * @author Étienne Dauvergne <contact@ekyna.com>
  *
- * @method persistAsPrevSiblingOf()
- * @method persistAsNextSiblingOf()
- * @method persistAsFirstChildOf()
- * @method persistAsLastChildOf()
+ * @method persistAsPrevSiblingOf($node, $sibling)
+ * @method persistAsNextSiblingOf($node, $sibling)
+ * @method persistAsFirstChildOf($node, $parent)
+ * @method persistAsLastChildOf($node, $parent)
  */
 class FolderRepository extends NestedTreeRepository implements ResourceRepositoryInterface
 {

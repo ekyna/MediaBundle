@@ -149,7 +149,7 @@ class Media implements MediaInterface
      */
     public function setFile(File $file = null)
     {
-        if (null !== $file) {
+        if (null !== $file && null === $this->type) {
             $this->setType(MediaTypes::guessByMimeType($file->getMimeType()));
         }
 

@@ -32,12 +32,19 @@ class MediaValidator extends ConstraintValidator
 		 * @var MediaInterface $media
 		 */
     	if ($media->hasFile()) {
-            if (!MediaTypes::isValid($media->getType())) {
-                $this->context->addViolationAt(
-                    'type',
-                    $constraint->invalidType
-                );
-            }
+			if (!MediaTypes::isValid($media->getType())) {
+				$this->context->addViolationAt(
+					'file',
+					$constraint->invalidType
+				);
+			}
+			$type = MediaTypes::guessByMimeType($media->getFile()->getMimeType());
+			if ($type !== $media->getType()) {
+				$this->context->addViolationAt(
+					'file',
+					$constraint->typeMissMatch
+				);
+			}
     	}
     }
 }

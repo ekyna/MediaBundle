@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraint;
 class Media extends Constraint
 {
     public $invalidType = 'ekyna_media.media.invalid_type';
+    public $typeMissMatch = 'ekyna_media.media.type_miss_match';
 
     /**
      * {@inheritdoc}

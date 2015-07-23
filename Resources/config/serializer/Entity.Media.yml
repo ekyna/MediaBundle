@@ -14,6 +14,11 @@ Ekyna\Bundle\MediaBundle\Entity\Media:
             groups: [Manager]
             type: string
     virtual_properties:
+        guessFilename:
+            expose: true
+            groups: [Manager]
+            serialized_name: filename
+            type: string
         getTitle:
             expose: true
             groups: [Default, Manager]
