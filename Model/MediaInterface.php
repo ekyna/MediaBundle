@@ -90,4 +90,11 @@ interface MediaInterface extends
      * @return string
      */
     public function getThumb();
+
+    /**
+     * Returns the filename.
+     *
+     * @return string
+     */
+    public function getFilename();
 }

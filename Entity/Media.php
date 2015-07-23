@@ -176,6 +176,14 @@ class Media implements MediaInterface
     /**
      * {@inheritdoc}
      */
+    public function getFilename()
+    {
+        return $this->guessFilename();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public static function getEntityTagPrefix()
     {
         return 'ekyna_media.media';
