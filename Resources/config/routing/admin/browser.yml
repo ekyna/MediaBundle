@@ -60,6 +60,14 @@ ekyna_media_browser_admin_create_media:
         id: \d+
     options: { i18n: false, expose: true }
 
+ekyna_media_browser_admin_import_media:
+    path: /{id}/medias/import
+    defaults: { _controller: "EkynaMediaBundle:Admin/Browser:importMedia" }
+    requirements:
+        _method: GET|POST
+        id: \d+
+    options: { i18n: false, expose: true }
+
 ekyna_media_browser_admin_move_media:
     path: /{id}/medias/move/{mediaId}
     defaults: { _controller: "EkynaMediaBundle:Admin/Browser:moveMedia" }

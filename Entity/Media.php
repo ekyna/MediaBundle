@@ -7,8 +7,6 @@ use Ekyna\Bundle\AdminBundle\Model\TranslatableTrait;
 use Ekyna\Bundle\CoreBundle\Model as Core;
 use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
-use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
-use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Class Media
@@ -147,18 +145,6 @@ class Media implements MediaInterface
     /**
      * {@inheritdoc}
      */
-    public function setFile(File $file = null)
-    {
-        if (null !== $file && null === $this->type) {
-            $this->setType(MediaTypes::guessByMimeType($file->getMimeType()));
-        }
-
-        return $this->uploadableSetFile($file);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function setThumb($thumb)
     {
         $this->thumb = $thumb;
@@ -171,14 +157,6 @@ class Media implements MediaInterface
     public function getThumb()
     {
         return $this->thumb;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFilename()
-    {
-        return $this->guessFilename();
     }
 
     /**

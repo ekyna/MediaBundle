@@ -1,9 +1,0 @@
-knp_gaufrette:
-    adapters:
-        local_media:
-            local:
-                directory:  "%kernel.root_dir%/../var/media"
-                create:     true
-    filesystems:
-        local_media:
-            adapter: local_media

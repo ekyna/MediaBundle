@@ -11,8 +11,17 @@ use Symfony\Component\Validator\Constraint;
  */
 class Media extends Constraint
 {
+    public $invalidKey = 'ekyna_media.media.invalid_key';
     public $invalidType = 'ekyna_media.media.invalid_type';
     public $typeMissMatch = 'ekyna_media.media.type_miss_match';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validatedBy()
+    {
+        return 'ekyna_media_media';
+    }
 
     /**
      * {@inheritdoc}

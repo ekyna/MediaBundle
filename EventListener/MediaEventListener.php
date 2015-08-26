@@ -2,7 +2,7 @@
 
 namespace Ekyna\Bundle\MediaBundle\EventListener;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Ekyna\Bundle\MediaBundle\Entity\FolderRepository;
 use Ekyna\Bundle\MediaBundle\Event\MediaEvent;
 use Ekyna\Bundle\MediaBundle\Event\MediaEvents;
@@ -16,9 +16,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class MediaEventListener implements EventSubscriberInterface
 {
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
-    private $manager;
+    private $entityManager;
 
     /**
      * @var FolderRepository
@@ -29,12 +29,12 @@ class MediaEventListener implements EventSubscriberInterface
     /**
      * Constructor.
      *
-     * @param ObjectManager    $manager
-     * @param FolderRepository $repository
+     * @param EntityManagerInterface $entityManager
+     * @param FolderRepository       $repository
      */
-    public function __construct(ObjectManager $manager, FolderRepository $repository)
+    public function __construct(EntityManagerInterface $entityManager, FolderRepository $repository)
     {
-        $this->manager          = $manager;
+        $this->entityManager    = $entityManager;
         $this->folderRepository = $repository;
     }
 
@@ -52,8 +52,9 @@ class MediaEventListener implements EventSubscriberInterface
             /* Move media to the root folder so that the current folder can be deleted */
             $media->setFolder($this->folderRepository->findRoot());
 
-            $this->manager->persist($media);
-            $this->manager->flush($media);
+            $this->entityManager->persist($media);
+            /** @noinspection PhpMethodParametersCountMismatchInspection */
+            $this->entityManager->flush($media);
         }
     }
 
@@ -63,7 +64,7 @@ class MediaEventListener implements EventSubscriberInterface
     static public function getSubscribedEvents()
     {
         return array(
-            MediaEvents::PRE_DELETE => array('onPreDelete', 1024),
+            MediaEvents::PRE_DELETE => array('onPreDelete',  1024),
         );
     }
 }

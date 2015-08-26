@@ -23,7 +23,7 @@ class MediaType extends ResourceFormType
             ->add('translations', 'a2lix_translationsForms', array(
                 'form_type' => new MediaTranslationType(),
                 'label'     => false,
-                'attr' => array(
+                'attr'      => array(
                     'widget_col' => 12,
                 ),
             ))
@@ -31,8 +31,8 @@ class MediaType extends ResourceFormType
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            function(FormEvent $event) use ($options) {
-                $form = $event->getForm();
+            function (FormEvent $event) use ($options) {
+                //$form = $event->getForm();
                 /** @var \Ekyna\Bundle\MediaBundle\Model\MediaInterface $media */
                 $media = $event->getData();
 
@@ -43,6 +43,9 @@ class MediaType extends ResourceFormType
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getParent()
     {
         return 'ekyna_upload';

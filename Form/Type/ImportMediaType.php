@@ -7,27 +7,44 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Class MediaTranslationType
+ * Class ImportMediaType
  * @package Ekyna\Bundle\MediaBundle\Form\Type
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
-class MediaTranslationType extends AbstractType
+class ImportMediaType extends AbstractType
 {
+    /**
+     * @var string
+     */
+    private $dataClass;
+
+
+    /**
+     * Constructor.
+     *
+     * @param string $dataClass
+     */
+    public function __construct($dataClass)
+    {
+        $this->dataClass = $dataClass;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', 'text', array(
-                'label' => 'ekyna_core.field.title',
-                'required' => true,
+            ->add('key', 'bs_static', array(
+                'label' => 'Fichier',
             ))
-            /*->add('description', 'tinymce', array(
-                'label' => 'ekyna_core.field.description',
-                'theme' => 'advanced',
-                'required' => false,
-            ))*/
+            ->add('translations', 'a2lix_translationsForms', array(
+                'form_type' => new MediaTranslationType(),
+                'label'     => false,
+                'attr' => array(
+                    'widget_col' => 12,
+                ),
+            ))
         ;
     }
 
@@ -38,7 +55,7 @@ class MediaTranslationType extends AbstractType
     {
         $resolver
             ->setDefaults(array(
-                'data_class' => 'Ekyna\Bundle\MediaBundle\Entity\MediaTranslation',
+                'data_class' => $this->dataClass
             ))
         ;
     }
@@ -48,6 +65,6 @@ class MediaTranslationType extends AbstractType
      */
     public function getName()
     {
-        return 'ekyna_media_media_translation';
+        return 'ekyna_media_import';
     }
 }

@@ -17,3 +17,7 @@ ekyna_media:
             remove: Supprimer le média
         alert:
             no_item: Aucun média configuré
+    manager:
+        title: Gestionnaire de médias
+    import:
+        title: Importer des médias
