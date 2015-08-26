@@ -4,6 +4,7 @@ namespace Ekyna\Bundle\MediaBundle\Validator\Constraints;
 
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
+use League\Flysystem\MountManager;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -15,6 +16,21 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class MediaValidator extends ConstraintValidator
 {
+	/**
+	 * @var MountManager
+	 */
+	private $mountManager;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param MountManager $mountManager
+	 */
+	public function __construct(MountManager $mountManager)
+	{
+		$this->mountManager = $mountManager;
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -31,20 +47,38 @@ class MediaValidator extends ConstraintValidator
 		 * @var Media          $constraint
 		 * @var MediaInterface $media
 		 */
-    	if ($media->hasFile()) {
-			if (!MediaTypes::isValid($media->getType())) {
-				$this->context->addViolationAt(
-					'file',
-					$constraint->invalidType
-				);
+		if ($media->hasFile() || $media->hasKey()) {
+
+			$mimeType = null;
+			if ($media->hasFile()) {
+				$mimeType = $media->getFile()->getMimeType();
+			} elseif ($media->hasKey()) {
+                try {
+                    if (!$this->mountManager->has($media->getKey())) {
+                        throw new \InvalidArgumentException();
+                    }
+                    $mimeType = $this->mountManager->getMimetype($media->getKey());
+                } catch(\InvalidArgumentException $e) {
+                    $this->context->addViolationAt('key', $constraint->invalidKey);
+                }
 			}
-			$type = MediaTypes::guessByMimeType($media->getFile()->getMimeType());
-			if ($type !== $media->getType()) {
-				$this->context->addViolationAt(
-					'file',
-					$constraint->typeMissMatch
-				);
+
+			$type = MediaTypes::guessByMimeType($mimeType);
+			if (null !== $media->getType() && $media->getType() != $type) {
+				$propertyPath = $media->hasFile() ? 'file' : 'key';
+				$this->context->addViolationAt($propertyPath, $constraint->typeMissMatch);
+			} elseif (null === $media->getType()) {
+				$media->setType($type);
 			}
-    	}
+		}
+
+		if (!MediaTypes::isValid($media->getType())) {
+			if ($media->hasFile() || $media->hasKey()) {
+				$propertyPath = $media->hasFile() ? 'file' : 'key';
+				$this->context->addViolationAt($propertyPath, $constraint->invalidType);
+			} else {
+				$this->context->addViolation($constraint->invalidType);
+			}
+		}
     }
 }

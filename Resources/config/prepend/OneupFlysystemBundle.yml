@@ -1,0 +1,19 @@
+oneup_flysystem:
+    adapters:
+        local_media:
+            local:
+                directory:  "%kernel.root_dir%/../var/media"
+#                create:     true
+        local_ftp:
+            local:
+                directory:  "%kernel.root_dir%/../var/ftp"
+#                create:     true
+    filesystems:
+        local_media:
+            adapter: local_media
+            alias: local_media_filesystem
+            mount: local_media
+        local_ftp:
+            adapter: local_ftp
+            alias: local_ftp_filesystem
+            mount: local_ftp

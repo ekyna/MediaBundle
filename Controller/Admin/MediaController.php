@@ -22,14 +22,6 @@ class MediaController extends ResourceController
 
         $context = $this->loadContext($request);
 
-        /*$table = $this->getTableFactory()
-            ->createBuilder($this->config->getTableType(), array(
-                'name' => $this->config->getId(),
-                'selector' => (bool)$request->get('selector', false), // TODO use constants (single/multiple)
-                'multiple' => (bool)$request->get('multiple', false),
-            ))
-            ->getTable($request);*/
-
         $response = new Response();
 
         $format = 'html';
@@ -42,9 +34,7 @@ class MediaController extends ResourceController
 
         $response->setContent($this->renderView(
             $this->config->getTemplate('list.' . $format),
-            $context->getTemplateVars(array(
-                //$this->config->getResourceName(true) => $table->createView()
-            ))
+            $context->getTemplateVars()
         ));
 
         return $response;

@@ -6,6 +6,8 @@ use Doctrine\DBAL\DBALException;
 use Ekyna\Bundle\CoreBundle\Controller\Controller;
 use Ekyna\Bundle\CoreBundle\Modal\Modal;
 use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
+use Ekyna\Bundle\MediaBundle\Model\Import\MediaImport;
+use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,7 +39,7 @@ class BrowserController extends Controller
         $browser = $this->renderView('EkynaMediaBundle:Manager:render.html.twig', array('config' => $config));
 
         $modal = new Modal();
-        $modal->setTitle('Choisissez un média'); // TODO Translation
+        $modal->setTitle('ekyna_media.manager.title');
         $modal->setContent($browser);
 
         return $this->get('ekyna_core.modal')->render($modal);
@@ -291,7 +293,7 @@ class BrowserController extends Controller
     }
 
     /**
-     * Creates the media in the folder.
+     * Creates the media into the folder.
      *
      * @param Request $request
      * @return Response
@@ -334,6 +336,114 @@ class BrowserController extends Controller
         }
 
         return $this->get('ekyna_core.modal')->render($modal);
+    }
+
+    /**
+     * Imports the media into the folder.
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function importMediaAction(Request $request)
+    {
+        /*if (!$request->isXmlHttpRequest()) {
+            throw new NotFoundHttpException();
+        }*/
+
+        $modal = $this->createModal();
+        $modal->setTitle('ekyna_media.import.title');
+
+        $folderId = $request->attributes->get('id');
+        $folder = $this->findFolderById($folderId);
+
+        $import = new MediaImport($folder);
+
+        $flow = $this->get('ekyna_media.import_media.form_flow');
+        $flow->bind($import);
+
+        $form = $flow->createForm();
+        if ($flow->isValid($form)) {
+            $flow->saveCurrentStepData($form);
+
+            if ($flow->nextStep()) {
+                $form = $flow->createForm();
+            } else {
+                $operator     = $this->get('ekyna_media.media.operator');
+                //$mountManager = $this->get('oneup_flysystem.mount_manager');
+                //$uploader     = $this->get('ekyna_media.media.uploader');
+                //$validator    = $this->get('validator');
+
+                foreach ($import->getMedias() as $media) {
+                    /*if (false !== $slashPos = strpos($media->getKey(), '/')) {
+                        $filename = substr($media->getKey(), $slashPos + 1);
+                    } else {
+                        $filename = $media->getKey();
+                    }
+                    $path = $uploader->generatePath($filename);
+                    $source = 'local_ftp://'.$media->getKey();
+                    $target = 'local_media://'.$path;
+
+                    $media
+                        ->setPath($path)
+                        ->setType(MediaTypes::guessByMimeType($mountManager->getMimetype($source)))
+                        ->setKey(null)
+                    ;
+
+                    $validationErrors = $validator->validate($media);
+                    if (0 < $validationErrors->count()) {
+                        $this->addFlash('Invalid media.', 'danger');
+                        continue;
+                    }
+
+                    if (!($mountManager->has($source) && $mountManager->move($source, $target))) {
+                        $this->addFlash(sprintf('Failed to move "%s".', $filename), 'danger');
+                        continue;
+                    }*/
+
+                    $event = $operator->create($media);
+                    if ($event->isPropagationStopped()) {
+                        $this->addFlash(sprintf('Failed to create "%s" media.', $media->getPath()), 'danger');
+                    }
+                }
+
+                $modal->setContent(array('success' => true));
+                return $this->get('ekyna_core.modal')->render($modal);
+            }
+        }
+
+        $modal->setContent($form->createView());
+
+        return $this->get('ekyna_core.modal')->render($modal);
+
+
+
+
+
+
+        /*$form = $this->createForm('ekyna_media_media', $media, array(
+            'action' => $this->generateUrl(
+                'ekyna_media_browser_admin_import_media',
+                array('id' => $folderId)
+            ),
+            'method' => 'POST',
+            'attr' => array(
+                'class' => 'form-horizontal form-with-tabs',
+            ),
+        ));
+
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            // TODO use ResourceManager
+            $event = $this->get('ekyna_media.media.operator')->create($media);
+            if (!$event->hasErrors()) {
+                $modal->setContent(array('success' => true));
+            }
+        } else {
+            $modal->setContent($form->createView());
+        }
+
+        return $this->get('ekyna_core.modal')->render($modal);*/
     }
 
     /**

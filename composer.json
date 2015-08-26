@@ -22,7 +22,8 @@
         "liip/imagine-bundle" : "1.2.*",
         "jms/serializer-bundle": "0.13.*",
         "jms/twig-js": "1.0.*",
-        "jms/twig-js-bundle": "1.0.*"
+        "jms/twig-js-bundle": "1.0.*",
+        "craue/formflow-bundle": "~2.1"
     },
     "autoload" : {
         "psr-0" : {

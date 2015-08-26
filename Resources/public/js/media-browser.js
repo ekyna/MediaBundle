@@ -111,11 +111,16 @@
         initHandlers: function () {
             var that = this;
 
-            // Create button
+            // Create/import buttons
             this.$controls.on('click', '[data-role="create"]', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 that.newMedia();
+            });
+            this.$controls.on('click', '[data-role="import"]', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                that.importMedia();
             });
 
             // Refresh button
@@ -345,6 +350,14 @@
             this.openModal({
                 url: Router.generate(
                     'ekyna_media_browser_admin_create_media',
+                    {'id': this.folderId}
+                )
+            });
+        },
+        importMedia: function() {
+            this.openModal({
+                url: Router.generate(
+                    'ekyna_media_browser_admin_import_media',
                     {'id': this.folderId}
                 )
             });

@@ -35,18 +35,31 @@
         <service id="ekyna_media.media_collection_media.form_type" class="%ekyna_media.media_collection_media.form_type.class%">
             <tag name="form.type" alias="ekyna_media_collection_media" />
         </service>
+        <service id="ekyna_media.media_import.form_type" class="Ekyna\Bundle\MediaBundle\Form\Type\ImportMediaType">
+            <argument>%ekyna_media.media.class%</argument>
+            <tag name="form.type" alias="ekyna_media_import" />
+        </service>
+
+        <!-- Form flows types -->
+        <service id="ekyna_media.import_media.form_flow"
+                 class="Ekyna\Bundle\MediaBundle\Form\Type\MediaImportFlow"
+                 parent="craue.form.flow"
+                 scope="request">
+            <argument id="router" type="service" />
+        </service>
+        <service id="ekyna_media.import_media.selection.form_type" class="Ekyna\Bundle\MediaBundle\Form\Type\Step\MediaImportSelectionType">
+            <argument id="oneup_flysystem.mount_manager" type="service" />
+            <tag name="form.type" alias="ekyna_media_import_selection" />
+        </service>
+        <service id="ekyna_media.import_media.creation.form_type" class="Ekyna\Bundle\MediaBundle\Form\Type\Step\MediaImportCreationType">
+            <argument id="ekyna_media.media.repository" type="service" />
+            <tag name="form.type" alias="ekyna_media_import_creation" />
+        </service>
 
         <!-- Uploader -->
-        <service id="ekyna_media.media.uploader" class="Ekyna\Bundle\CoreBundle\Uploader\Uploader" parent="ekyna_core.uploader">
-            <call method="setFilesystem">
-                <argument type="service">
-                    <service class="Gaufrette\Filesystem"
-                             factory-service="knp_gaufrette.filesystem_map"
-                             factory-method="get">
-                        <argument>local_media</argument>
-                    </service>
-                </argument>
-            </call>
+        <service id="ekyna_media.media.uploader" class="Ekyna\Bundle\CoreBundle\Uploader\Uploader">
+            <argument type="service" id="oneup_flysystem.mount_manager" />
+            <argument>local_media</argument><!-- TODO config -->
         </service>
 
         <!-- Event listeners -->
@@ -69,7 +82,7 @@
 
         <!-- Twig extensions -->
         <service id="ekyna_media.twig.media_extension" class="Ekyna\Bundle\MediaBundle\Twig\MediaExtension">
-            <argument type="service" id="gaufrette.local_media_filesystem" />
+            <argument type="service" id="local_media_filesystem" />
             <argument type="service" id="router" />
             <argument type="service" id="ekyna_media.folder.repository" />
             <argument type="service" id="ekyna_media.browser.thumb_generator" />
@@ -87,6 +100,12 @@
             <argument type="service" id="doctrine.orm.default_entity_manager" />
             <argument type="service" id="ekyna_media.media.repository" />
             <argument type="service" id="ekyna_media.browser.thumb_generator" />
+        </service>
+
+        <!-- Validator -->
+        <service id="ekyna_media.media.validator" class="Ekyna\Bundle\MediaBundle\Validator\Constraints\MediaValidator">
+            <argument type="service" id="oneup_flysystem.mount_manager" />
+            <tag name="validator.constraint_validator" alias="ekyna_media_media" />
         </service>
 
     </services>

@@ -5,7 +5,8 @@ namespace Ekyna\Bundle\MediaBundle\Twig;
 use Ekyna\Bundle\MediaBundle\Browser\ThumbGenerator;
 use Ekyna\Bundle\MediaBundle\Entity\FolderRepository;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
-use Gaufrette\Filesystem;
+use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
+use League\Flysystem\FilesystemInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -25,7 +26,7 @@ class MediaExtension extends \Twig_Extension
 HTML;
 
     /**
-     * @var Filesystem
+     * @var FilesystemInterface
      */
     private $filesystem;
 
@@ -58,13 +59,13 @@ HTML;
     /**
      * Constructor.
      *
-     * @param Filesystem            $filesystem
+     * @param FilesystemInterface   $filesystem
      * @param UrlGeneratorInterface $urlGenerator
      * @param FolderRepository      $folderRepository
      * @param ThumbGenerator        $thumbGenerator
      */
     public function __construct(
-        Filesystem $filesystem,
+        FilesystemInterface $filesystem,
         UrlGeneratorInterface $urlGenerator,
         FolderRepository $folderRepository,
         ThumbGenerator $thumbGenerator
@@ -119,16 +120,19 @@ HTML;
      *
      * @param MediaInterface $video
      * @return string
+     * @throws \InvalidArgumentException
      */
     public function renderVideo(MediaInterface $video)
     {
-        // TODO check type
+        if ($video->getType() !== MediaTypes::VIDEO) {
+            throw new \InvalidArgumentException('Expected media with "video" type.');
+        }
         return strtr(self::VIDEO_HTML5, array(
             '%aspect_ratio%' => '16by9',
             '%width%' => '720',
             '%height%' => '480',
             '%src%' => $this->urlGenerator->generate('ekyna_media_download', array('key' => $video->getPath())),
-            '%mime_type%' => $this->filesystem->mimeType($video->getPath()),
+            '%mime_type%' => $this->filesystem->getMimetype($video->getPath()),
         ));
     }
 
@@ -162,7 +166,11 @@ HTML;
                 array('role' => 'download', 'icon' => 'download'),
             );
         }*/
-        // TODO validate controls
+        foreach ($controls as $control) {
+            if (!(array_key_exists('role', $control) && array_key_exists('icon', $control))) {
+                throw new \InvalidArgumentException('Controls must have "role" and "icon" defined.');
+            }
+        }
         return $this->thumbTemplate->render(array(
             'media'    => $media,
             'controls' => $controls
