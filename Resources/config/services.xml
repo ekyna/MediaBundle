@@ -90,9 +90,10 @@
         </service>
 
         <!-- Browser -->
-        <service id="ekyna_media.browser.thumb_generator" class="Ekyna\Bundle\MediaBundle\Browser\ThumbGenerator">
+        <service id="ekyna_media.browser.thumb_generator" class="Ekyna\Bundle\MediaBundle\Browser\Generator">
             <argument type="service" id="liip_imagine" />
             <argument type="service" id="liip_imagine.cache.manager" />
+            <argument type="service" id="router" />
             <argument>%kernel.root_dir%/../web</argument>
             <argument>%ekyna_media.browser.thumbs_directory%</argument>
         </service>

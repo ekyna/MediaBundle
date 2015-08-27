@@ -2,7 +2,7 @@
 
 namespace Ekyna\Bundle\MediaBundle\Twig;
 
-use Ekyna\Bundle\MediaBundle\Browser\ThumbGenerator;
+use Ekyna\Bundle\MediaBundle\Browser\Generator;
 use Ekyna\Bundle\MediaBundle\Entity\FolderRepository;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
@@ -41,7 +41,7 @@ HTML;
     private $folderRepository;
 
     /**
-     * @var ThumbGenerator
+     * @var Generator
      */
     private $thumbGenerator;
 
@@ -62,13 +62,13 @@ HTML;
      * @param FilesystemInterface   $filesystem
      * @param UrlGeneratorInterface $urlGenerator
      * @param FolderRepository      $folderRepository
-     * @param ThumbGenerator        $thumbGenerator
+     * @param Generator        $thumbGenerator
      */
     public function __construct(
         FilesystemInterface $filesystem,
         UrlGeneratorInterface $urlGenerator,
         FolderRepository $folderRepository,
-        ThumbGenerator $thumbGenerator
+        Generator $thumbGenerator
     ) {
         $this->filesystem       = $filesystem;
         $this->urlGenerator     = $urlGenerator;
@@ -157,7 +157,7 @@ HTML;
     public function renderMediaThumb(MediaInterface $media = null, array $controls = array())
     {
         if (null !== $media) {
-            $media->setThumb($this->thumbGenerator->generate($media));
+            $media->setThumb($this->thumbGenerator->generateThumbUrl($media));
         }
         /*if (empty($controls)) {
             $controls = array(
@@ -185,7 +185,7 @@ HTML;
      */
     public function getMediaThumbPath(MediaInterface $media)
     {
-        return $this->thumbGenerator->generate($media);
+        return $this->thumbGenerator->generateThumbUrl($media);
     }
 
     /**

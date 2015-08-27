@@ -1,3 +1,10 @@
+ekyna_media_browser_admin_index:
+    path: ""
+    defaults: { _controller: "EkynaMediaBundle:Admin/Browser:index" }
+    requirements:
+        _method: GET
+    options: { i18n: false }
+
 ekyna_media_browser_admin_modal:
     path: /modal
     defaults: { _controller: "EkynaMediaBundle:Admin/Browser:modal" }

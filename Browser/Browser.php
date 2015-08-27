@@ -39,12 +39,12 @@ class Browser
      *
      * @param EntityManager $manager
      * @param MediaRepository $repository
-     * @param ThumbGenerator $thumbGenerator
+     * @param Generator $thumbGenerator
      */
     public function __construct(
         EntityManager $manager,
         MediaRepository $repository,
-        ThumbGenerator $thumbGenerator
+        Generator $thumbGenerator
     ) {
         $this->manager = $manager;
         $this->repository = $repository;
@@ -84,7 +84,10 @@ class Browser
         $medias = $this->repository->findBy($criteria);
 
         foreach ($medias as $media) {
-            $media->setThumb($this->thumbGenerator->generate($media));
+            $media
+                ->setThumb($this->thumbGenerator->generateThumbUrl($media))
+                ->setFront($this->thumbGenerator->generateFrontUrl($media))
+            ;
         }
 
         return $medias;

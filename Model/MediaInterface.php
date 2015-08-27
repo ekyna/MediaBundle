@@ -77,17 +77,32 @@ interface MediaInterface extends
     public function getDescription();
 
     /**
-     * Sets the thumb.
+     * Sets the thumb url.
      *
-     * @param string $thumb
+     * @param string $url
      * @return MediaInterface|$this
      */
-    public function setThumb($thumb);
+    public function setThumb($url);
 
     /**
-     * Returns the thumb.
+     * Returns the thumb url.
      *
      * @return string
      */
     public function getThumb();
+
+    /**
+     * Sets the front url.
+     *
+     * @param string $url
+     * @return MediaInterface|$this
+     */
+    public function setFront($url);
+
+    /**
+     * Returns the front url.
+     *
+     * @return string
+     */
+    public function getFront();
 }

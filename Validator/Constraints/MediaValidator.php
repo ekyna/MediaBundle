@@ -48,7 +48,6 @@ class MediaValidator extends ConstraintValidator
 		 * @var MediaInterface $media
 		 */
 		if ($media->hasFile() || $media->hasKey()) {
-
 			$mimeType = null;
 			if ($media->hasFile()) {
 				$mimeType = $media->getFile()->getMimeType();
@@ -63,22 +62,17 @@ class MediaValidator extends ConstraintValidator
                 }
 			}
 
+            $propertyPath = $media->hasFile() ? 'file' : 'key';
 			$type = MediaTypes::guessByMimeType($mimeType);
 			if (null !== $media->getType() && $media->getType() != $type) {
-				$propertyPath = $media->hasFile() ? 'file' : 'key';
 				$this->context->addViolationAt($propertyPath, $constraint->typeMissMatch);
 			} elseif (null === $media->getType()) {
 				$media->setType($type);
 			}
-		}
 
-		if (!MediaTypes::isValid($media->getType())) {
-			if ($media->hasFile() || $media->hasKey()) {
-				$propertyPath = $media->hasFile() ? 'file' : 'key';
-				$this->context->addViolationAt($propertyPath, $constraint->invalidType);
-			} else {
-				$this->context->addViolation($constraint->invalidType);
-			}
+            if (!MediaTypes::isValid($media->getType())) {
+                $this->context->addViolation($constraint->invalidType);
+            }
 		}
     }
 }

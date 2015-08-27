@@ -26,6 +26,22 @@ class BrowserController extends Controller
      * @param Request $request
      * @return Response
      */
+    public function indexAction(Request $request)
+    {
+        $config = array();
+        if ($request->query->has('types')) {
+            $config['types'] = $request->query->get('types');
+        }
+
+        return $this->render('EkynaMediaBundle:Manager:index.html.twig', array('config' => $config));
+    }
+
+    /**
+     * Renders the manager modal
+     *
+     * @param Request $request
+     * @return Response
+     */
     public function modalAction(Request $request)
     {
         if (!$request->isXmlHttpRequest()) {

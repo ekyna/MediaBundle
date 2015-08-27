@@ -11,13 +11,14 @@ use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Symfony\Component\Filesystem\Filesystem;
 use Imagine\Exception\RuntimeException as ImagineException;
 use Imagine\Image\Point;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Class ThumbGenerator
+ * Class Generator
  * @package Ekyna\Bundle\MediaBundle\Browser
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
-class ThumbGenerator
+class Generator
 {
     const DEFAULT_THUMB = '/bundles/ekynamedia/img/file.jpg';
     const NONE_THUMB = '/bundles/ekynamedia/img/media-none.jpg';
@@ -31,6 +32,11 @@ class ThumbGenerator
      * @var CacheManager
      */
     protected $cacheManager;
+
+    /**
+     * @var UrlGeneratorInterface
+     */
+    protected $urlGenerator;
 
     /**
      * @var string
@@ -52,17 +58,20 @@ class ThumbGenerator
      *
      * @param ImagineInterface $imagine
      * @param CacheManager $cacheManager
+     * @param UrlGeneratorInterface $urlGenerator
      * @param string $webRootDirectory
      * @param string $thumbsDirectory
      */
     public function __construct(
         ImagineInterface $imagine,
         CacheManager $cacheManager,
+        UrlGeneratorInterface $urlGenerator,
         $webRootDirectory,
         $thumbsDirectory
     ) {
         $this->imagine = $imagine;
         $this->cacheManager = $cacheManager;
+        $this->urlGenerator = $urlGenerator;
 
         $this->webRootDirectory = realpath($webRootDirectory);
         $this->thumbsDirectory = $thumbsDirectory;
@@ -77,21 +86,40 @@ class ThumbGenerator
      * @param MediaInterface $media
      * @return string
      */
-    public function generate(MediaInterface $media)
+    public function generateThumbUrl(MediaInterface $media)
     {
-        $thumbPath = null;
+        $path = null;
 
         if ($media->getType() === MediaTypes::IMAGE) {
-            $thumbPath = $this->cacheManager->getBrowserPath($media->getPath(), 'media_thumb');
+            $path = $this->cacheManager->getBrowserPath($media->getPath(), 'media_thumb');
         } else {
-            $thumbPath = $this->generateFileThumb($media);
+            $path = $this->generateFileThumb($media);
         }
 
-        if (null === $thumbPath) {
-            $thumbPath = '/bundles/ekynamedia/img/file.jpg';
+        if (null === $path) {
+            $path = '/bundles/ekynamedia/img/file.jpg';
         }
 
-        return $thumbPath;
+        return $path;
+    }
+
+    /**
+     * Generates the default front url.
+     *
+     * @param MediaInterface $media
+     * @return string
+     */
+    public function generateFrontUrl(MediaInterface $media)
+    {
+        $path = null;
+
+        if ($media->getType() === MediaTypes::IMAGE) {
+            $path = $this->cacheManager->getBrowserPath($media->getPath(), 'media_front');
+        } else {
+            $path = $this->urlGenerator->generate('ekyna_media_download', array('key' => $media->getPath()), true);
+        }
+
+        return $path;
     }
 
     /**

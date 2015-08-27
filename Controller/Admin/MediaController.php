@@ -6,6 +6,7 @@ use Ekyna\Bundle\AdminBundle\Controller\Resource\TinymceTrait;
 use Ekyna\Bundle\AdminBundle\Controller\ResourceController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class MediaController
@@ -16,6 +17,9 @@ class MediaController extends ResourceController
 {
     use TinymceTrait;
 
+    /**
+     * {@inheritdoc}
+     */
     public function listAction(Request $request)
     {
         $this->isGranted('VIEW');

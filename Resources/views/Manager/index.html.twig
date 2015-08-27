@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}">
+<head>
+    <title>{{ 'ekyna_media.manager.title'|trans }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    {% block stylesheets %}
+        {% stylesheets output='css/media-browser.css' filter='cssrewrite, ?yui_css' debug=false
+            'assets/bootstrap/css/bootstrap.min.css'
+            'assets/bootstrap-dialog/dist/css/bootstrap-dialog.min.css'
+            'assets/jquery-ui/themes/base/jquery-ui.min.css'
+            'assets/jquery-ui/themes/smoothness/jquery-ui.min.css'
+            '@fontawesome_css'
+            '@form_css'
+            '@fancytree_css'
+            '@EkynaMediaBundle/Resources/asset/css/media-thumb.css'
+            '@EkynaMediaBundle/Resources/asset/css/media-browser.css'
+        %}
+            <link href="{{ asset_url }}" rel="stylesheet" type="text/css" />
+        {% endstylesheets %}
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+        <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic,700italic,900italic" rel="stylesheet" type="text/css" />
+    {% endblock stylesheets %}
+
+    {% include 'EkynaCoreBundle:Ui:ie-fix.html.twig' %}
+
+    {{ require_js(not app.debug) }}
+</head>
+<body>
+
+    {{ render_media_manager(config) }}
+
+    {% block javascripts %}
+        <script type="text/javascript">
+            requirejs(['ekyna-media-browser'], function(MediaBrowser) {
+                var browser = new MediaBrowser('#media-browser');
+                browser.init();
+            });
+        </script>
+    {% endblock javascripts %}
+</body>
+</html>

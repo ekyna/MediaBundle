@@ -45,6 +45,11 @@ class Media implements MediaInterface
      */
     protected $thumb;
 
+    /**
+     * @var string
+     */
+    protected $front;
+
 
     /**
      * Constructor.
@@ -145,9 +150,9 @@ class Media implements MediaInterface
     /**
      * {@inheritdoc}
      */
-    public function setThumb($thumb)
+    public function setThumb($url)
     {
-        $this->thumb = $thumb;
+        $this->thumb = $url;
         return $this;
     }
 
@@ -157,6 +162,23 @@ class Media implements MediaInterface
     public function getThumb()
     {
         return $this->thumb;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFront($url)
+    {
+        $this->front = $url;
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFront()
+    {
+        return $this->front;
     }
 
     /**

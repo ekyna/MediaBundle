@@ -29,3 +29,8 @@ Ekyna\Bundle\MediaBundle\Entity\Media:
             groups: [Manager]
             serialized_name: thumb
             type: string
+        getFront:
+            expose: true
+            groups: [Default, Manager]
+            serialized_name: front
+            type: string

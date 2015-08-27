@@ -181,14 +181,16 @@
                 e.preventDefault();
                 e.stopPropagation();
                 var $element = $(e.currentTarget).parents('.media-thumb');
-                /* TODO if (parent.tinymce && parent.tinymce.activeEditor) {
-                    parent.tinymce.activeEditor.windowManager.getParams().setUrl($element.data('web_path'));
+                if (parent.tinymce && parent.tinymce.activeEditor) {
+                    parent.tinymce.activeEditor.windowManager.getParams().setUrl(
+                        $element.data('front')
+                    );
                     parent.tinymce.activeEditor.windowManager.close();
-                } else {*/
+                } else {
                     var event = jQuery.Event('ekyna.media-browser.selection');
                     event.media = $element.data();
                     $(that).trigger(event);
-                //}
+                }
             });
 
             // Media show
