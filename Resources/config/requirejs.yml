@@ -5,7 +5,7 @@ config:
         'ekyna-media-thumb':
             deps: ['twig']
         'ekyna-media-browser':
-            deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'fancytree', 'ekyna-media-thumb']
+            deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'ekyna-string', 'ekyna-media-thumb', 'fancytree']
             exports: 'EkynaMediaBrowser'
         'ekyna-form/media-choice':
             deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-media-browser']

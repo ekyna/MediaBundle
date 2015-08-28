@@ -1,32 +1,11 @@
 #media-browser {
     position: relative;
-    min-width: 320px;
-    min-height: 320px;
     margin: 0 auto 0 auto;
     background: white;
+    border: 1px solid #ddd;
     border-radius: 0;
     padding: 0;
     overflow: hidden;
-}
-
-.media-browser-side {
-    float: left;
-    min-height: 320px;
-    max-height: 600px;
-    min-width: 260px;
-    border: 1px solid #eee;
-}
-
-.media-browser-main {
-    min-height: 320px;
-    max-height: 600px;
-    margin-left: 260px;
-    border: 1px solid #eee;
-    border-left: none;
-}
-
-.media-browser-container {
-
 }
 
 /* ---------------------- CONTROLS ---------------------- */
@@ -60,22 +39,36 @@
     to { transform: scale(1) rotate(360deg);}
 }
 
+.media-browser-side {
+    border-right: 1px solid #ddd;
+    float: left;
+    height: 420px;
+    min-width: 260px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.media-browser-main {
+    height: 420px;
+    margin-left: 260px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 /* ---------------------- TREE ---------------------- */
 .media-browser-tree {
-    overflow: auto;
-    min-height: 320px;
+    overflow: hidden;
 }
 
 .media-browser-tree ul.fancytree-container {
+    overflow: hidden;
     border: none !important;
-    min-height: 320px;
 }
 
 /* ---------------------- CONTENT ---------------------- */
-
 .media-browser-content {
-    overflow: auto;
-    padding: 15px;
+    overflow: hidden;
+    padding: 15px 0 0 15px;
 }
 
 .media-browser-content .media-thumb {

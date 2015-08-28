@@ -21,7 +21,7 @@ class MediaTranslationType extends AbstractType
         $builder
             ->add('title', 'text', array(
                 'label' => 'ekyna_core.field.title',
-                'required' => true,
+                'required' => false,
             ))
             /*->add('description', 'tinymce', array(
                 'label' => 'ekyna_core.field.description',

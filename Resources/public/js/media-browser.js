@@ -9,12 +9,15 @@
             require('twig'),
             require('ekyna-modal'),
             require('ekyna-form'),
+            require('ekyna-string'),
+            require('ekyna-media-thumb'),
             require('fancytree')
         );
     }
     // AMD module is defined
     else if (typeof define === 'function' && define.amd) {
-        define('ekyna-media-browser', ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'fancytree'], function($, Router, Twig, Modal, Form) {
+        define('ekyna-media-browser', ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'ekyna-string', 'ekyna-media-thumb', 'fancytree'],
+            function($, Router, Twig, Modal, Form) {
             return factory($, Router, Twig, Modal, Form);
         });
     } else {
@@ -159,7 +162,7 @@
                 var $input = $(e.currentTarget).find('input');
                 var $icon = $(e.currentTarget).find('span.glyphicon');
                 if ($input.is(':checked')) {
-                    var icon = $input.val() == 'title' ? 'glyphicon-sort-by-alphabet' : 'glyphicon-sort-by-attributes';
+                    var icon = $input.val() == 'filename' ? 'glyphicon-sort-by-alphabet' : 'glyphicon-sort-by-attributes';
                     if ($input.data('dir') == 'asc') {
                         $icon.removeClass(icon).addClass(icon + '-alt');
                         $input.data('dir', 'desc');

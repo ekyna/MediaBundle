@@ -23,6 +23,7 @@ class MediaType extends ResourceFormType
             ->add('translations', 'a2lix_translationsForms', array(
                 'form_type' => new MediaTranslationType(),
                 'label'     => false,
+                'required'  => false,
                 'attr'      => array(
                     'widget_col' => 12,
                 ),

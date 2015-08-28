@@ -33,6 +33,7 @@ class MediaListener
      */
     public function prePersist(MediaInterface $media)
     {
+        $this->cleanTranslations($media);
         $this->uploader->prepare($media);
     }
 
@@ -53,6 +54,7 @@ class MediaListener
      */
     public function preUpdate(MediaInterface $media)
     {
+        $this->cleanTranslations($media);
         $this->uploader->prepare($media);
     }
 
@@ -84,5 +86,19 @@ class MediaListener
     public function postRemove(MediaInterface $media)
     {
         $this->uploader->remove($media);
+    }
+
+    /**
+     * Removes empty translations
+     *
+     * @param MediaInterface $media
+     */
+    private function cleanTranslations(MediaInterface $media)
+    {
+        foreach ($media->getTranslations() as $trans) {
+            if (0 == strlen($trans->getTitle()) && 0 == strlen($trans->getDescription())) {
+                $media->removeTranslation($trans);
+            }
+        }
     }
 }

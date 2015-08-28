@@ -23,9 +23,10 @@
         <property name="locale">
             <constraint name="NotBlank" />
         </property>
-        <property name="title">
+        <!-- TODO not blank title if description is not blank -->
+        <!--<property name="title">
             <constraint name="NotBlank" />
-        </property>
+        </property>-->
     </class>
 
     <class name="Ekyna\Bundle\MediaBundle\Model\Import\MediaImport">

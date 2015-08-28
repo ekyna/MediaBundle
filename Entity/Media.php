@@ -66,7 +66,7 @@ class Media implements MediaInterface
      */
     public function __toString()
     {
-        return $this->getTitle();
+        return $this->guessFilename();
     }
 
     /**
