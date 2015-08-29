@@ -70,6 +70,16 @@ class Media implements MediaInterface
     }
 
     /**
+     * GuessFilename alias.
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->guessFilename();
+    }
+
+    /**
      * Returns the id.
      *
      * @return int
