@@ -52,10 +52,12 @@ class MediaChoiceType extends AbstractType
                 'types' => null,
                 'error_bubbling' => false,
                 'controls' => array(),
+                'gallery' => false,
             ))
             ->setAllowedTypes(array(
                 'types' => array('null', 'string', 'array'),
                 'controls' => 'array',
+                'gallery' => 'bool',
             ))
             ->setAllowedValues(array(
                 'types' => function($value) {
@@ -84,6 +86,7 @@ class MediaChoiceType extends AbstractType
             'types' => (array) $options['types'],
             'controls' => $options['controls'],
         );
+        $view->vars['gallery'] = $options['gallery'];
     }
 
     /**

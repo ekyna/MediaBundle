@@ -27,12 +27,15 @@ define('ekyna-form/media-choice',
             });
         },
         selectMedia: function() {
-            var that = this, modal = new Modal();
+            var that = this,
+                modal = new Modal(),
+                browser;
 
             $(modal).on('ekyna.modal.content', function (e) {
                 if (e.contentType == 'html') {
-                    var browser = new Browser(e.content);
+                    browser = new Browser(e.content);
                     browser.init();
+                    // Handle browser selection
                     $(browser).bind('ekyna.media-browser.selection', function(e) {
                         if (e.hasOwnProperty('media')) {
                             var $thumb = $(Twig.render(media_thumb_template, {
@@ -44,11 +47,16 @@ define('ekyna-form/media-choice',
 
                             that.$elem.find('.media-thumb').replaceWith($thumb);
                             that.$elem.find('input').val(e.media.id);
-
-                            // TODO wtf ????
-                            //$(that.$elem).trigger(jQuery.Event('ekyna.media-choice.selection'));
                         }
                         modal.getDialog().close();
+                    });
+                    // Clear media if deleted in browser
+                    $(browser).bind('ekyna.media-browser.removal', function(e) {
+                        if (e.hasOwnProperty('media') && e.media.id == that.$elem.find('input').val()) {
+                            var $empty = $(that.$elem.data('empty-thumb'));
+                            that.$elem.find('.media-thumb').replaceWith($empty);
+                            that.$elem.find('input').val('');
+                        }
                     });
                 } else {
                     throw "Unexpected modal content type.";
@@ -57,6 +65,12 @@ define('ekyna-form/media-choice',
 
             $(modal).on('ekyna.modal.load_fail', function () {
                 alert('Failed to load media browser.');
+            });
+
+            modal.getDialog().onHide(function() {
+                if (browser) {
+                    browser = null;
+                }
             });
 
             var params = {mode: 'single_selection'};

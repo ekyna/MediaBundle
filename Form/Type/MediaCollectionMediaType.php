@@ -27,6 +27,7 @@ class MediaCollectionMediaType extends AbstractType
                     array('role' => 'remove', 'icon' => 'remove'),
                     array('role' => 'move-right', 'icon' => 'arrow-right'),
                 ),
+                'gallery' => true,
             ))
             ->add('position', 'hidden', array(
                 'attr' => array(

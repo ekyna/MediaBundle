@@ -2,8 +2,6 @@ tinymce.PluginManager.add('filemanager', function (editor) {
 
     function filemanager(id, value, type, win) {
 
-        console.log(id, value, type, win);
-
         var title = "Gestionnaire de médias"; // TODO
         if (typeof editor.settings.filemanager_title !== "undefined" && editor.settings.filemanager_title) {
             title = editor.settings.filemanager_title;
@@ -18,22 +16,12 @@ tinymce.PluginManager.add('filemanager', function (editor) {
         tinymce.activeEditor.windowManager.open({
             title: title,
             file: path,
-            width: 860,
-            height: 570/*,
-            resizable: true,
-            maximizable: true,
-            inline: 1*/
+            width: 900,
+            height: 470
         }, {
             setUrl: function (url) {
                 var fieldElm = win.document.getElementById(id);
                 fieldElm.value = editor.convertURL(url);
-                /*if ("fireEvent" in fieldElm) {
-                 fieldElm.fireEvent("onchange")
-                 } else {
-                 var evt = document.createEvent("HTMLEvents");
-                 evt.initEvent("change", false, true);
-                 fieldElm.dispatchEvent(evt);
-                 }*/
             }
         });
     }

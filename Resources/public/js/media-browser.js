@@ -305,7 +305,7 @@
             var settings = $.extend({}, {
                 url: null,
                 onData: function() {},
-                onShow: function() {},
+                onShow: function(data) {},
                 onHide: function() { that.setBusy(false); }
             }, options);
 
@@ -328,10 +328,9 @@
                     form = Form.create(e.content);
                     form.init();
                 } else if (e.contentType == 'data') {
+                    settings.onData(e.content);
                     that.modal.getDialog().close();
                     that.browse();
-                } else {
-                    settings.onData(e.content);
                 }
             });
 
@@ -398,11 +397,20 @@
             });
         },
         removeMedia: function($media) {
+            var that = this;
             this.openModal({
+                // TODO modal size
                 url: Router.generate(
                     'ekyna_media_media_admin_remove',
                     {'mediaId': $media.data('id')}
-                )
+                ),
+                onData: function(data) {
+                    if (data.hasOwnProperty('success') && data.success) {
+                        var event = jQuery.Event('ekyna.media-browser.removal');
+                        event.media = $media.data();
+                        $(that).trigger(event);
+                    }
+                }
             });
         },
         downloadMedia: function($media) {

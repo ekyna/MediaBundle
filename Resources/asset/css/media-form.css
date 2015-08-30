@@ -16,7 +16,13 @@
     padding: 12px 0 0 12px;
 }
 
+.has-error .ekyna-media-collection {
+    border: 1px solid #a94442;
+}
+
 .ekyna-media-collection-media {
+    height: 120px;
+    width: 120px;
     margin: 0 12px 12px 0;
     float: left;
 }

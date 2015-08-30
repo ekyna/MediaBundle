@@ -36,7 +36,7 @@ define('ekyna-form/media-collection',
             });
             that.$elem.on('click', '.ekyna-media-collection-media [data-role="remove"]', function(e) {
                 e.preventDefault();
-                that.removeMedia($(e.target).closest('.ekyna-media-collection-media'));
+                that.removeMedia($(e.target).closest('.ekyna-media-collection-media'), true);
             });
 
             that.$elem.on('click', '.ekyna-media-collection-add', function(e) {
@@ -63,6 +63,18 @@ define('ekyna-form/media-collection',
                 if (e.contentType == 'html') {
                     browser = new Browser(e.content);
                     browser.init();
+                    // Remove media if deleted in browser
+                    $(browser).bind('ekyna.media-browser.removal', function(e) {
+                        if (e.hasOwnProperty('media')) {
+                            var $medias = that.$elem.find('.ekyna-media-collection-media').not('.ekyna-media-collection-add');
+                            $medias.each(function (i) {
+                                var $media = $(this);
+                                if (e.media.id == $media.find('input').val()) {
+                                    that.removeMedia($media, false);
+                                }
+                            });
+                        }
+                    });
                 } else {
                     throw "Unexpected modal content type.";
                 }
@@ -188,12 +200,14 @@ define('ekyna-form/media-collection',
                 this.updateCollection();
             }
         },
-        removeMedia: function($media) {
+        removeMedia: function($media, confirm) {
             if (!$media.find('[data-role="remove"]').hasClass('disabled')) {
-                if (confirm('Souhaitez-vous réellement retirer cet élément ?')) {
-                    $media.remove();
-                    this.updateCollection();
+                if (confirm && !confirm('Souhaitez-vous réellement retirer cet élément ?')) {
+                    return;
                 }
+
+                $media.remove();
+                this.updateCollection();
             }
         }
     };
