@@ -2,7 +2,7 @@ oneup_flysystem:
     adapters:
         local_media:
             local:
-                directory: %kernel.root_dir%/../var/media
+                directory: %kernel.var_dir%/media
     filesystems:
         local_media:
             adapter: local_media
