@@ -2,12 +2,14 @@
 
 namespace Ekyna\Bundle\MediaBundle\Model;
 
+use Ekyna\Bundle\CoreBundle\Model\SortableInterface;
+
 /**
- * Interface MediaSubjectInterface
+ * Interface GalleryMediaInterface
  * @package Ekyna\Bundle\MediaBundle\Model
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
-interface MediaSubjectInterface
+interface GalleryMediaInterface extends SortableInterface
 {
     /**
      * Sets the media.
@@ -15,7 +17,7 @@ interface MediaSubjectInterface
      * @param MediaInterface $media
      * @return MediaSubjectInterface|$this
      */
-    public function setMedia(MediaInterface $media = null);
+    public function setMedia(MediaInterface $media);
 
     /**
      * Returns the media.

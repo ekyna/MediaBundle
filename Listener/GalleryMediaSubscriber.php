@@ -7,14 +7,14 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 
 /**
- * Class MediaSubjectSubscriber
+ * Class GalleryMediaSubscriber
  * @package Ekyna\Bundle\MediaBundle\Listener
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
-class MediaSubjectSubscriber implements EventSubscriber
+class GalleryMediaSubscriber implements EventSubscriber
 {
     const MEDIA_FQCN = 'Ekyna\Bundle\MediaBundle\Entity\Media';
-    const SUBJECT_INTERFACE = 'Ekyna\Bundle\MediaBundle\Model\MediaSubjectInterface';
+    const GALLERY_MEDIA_INTERFACE = 'Ekyna\Bundle\MediaBundle\Model\GalleryMediaInterface';
 
     /**
      * @param LoadClassMetadataEventArgs $eventArgs
@@ -29,8 +29,8 @@ class MediaSubjectSubscriber implements EventSubscriber
             return;
         }
 
-        // Check if class implements the subject interface
-        if (!in_array(self::SUBJECT_INTERFACE, class_implements($metadata->getName()))) {
+        // Check if class implements the gallery media interface
+        if (!in_array(self::GALLERY_MEDIA_INTERFACE, class_implements($metadata->getName()))) {
             return;
         }
 
@@ -47,7 +47,7 @@ class MediaSubjectSubscriber implements EventSubscriber
                 array(
                     'name'                  => 'media_id',
                     'referencedColumnName'  => 'id',
-                    'onDelete'              => 'SET NULL',
+                    'onDelete'              => 'CASCADE',
                     'nullable'              => true,
                 ),
             ),

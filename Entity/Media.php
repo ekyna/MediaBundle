@@ -17,8 +17,7 @@ use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
  */
 class Media implements MediaInterface
 {
-    use Core\SoftDeleteableTrait,
-        Core\TaggedEntityTrait,
+    use Core\TaggedEntityTrait,
         TranslatableTrait;
 
     use Core\UploadableTrait {

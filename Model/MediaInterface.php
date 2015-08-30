@@ -12,7 +12,6 @@ use Ekyna\Bundle\CoreBundle\Model as Core;
  */
 interface MediaInterface extends
     Core\UploadableInterface,
-    Core\SoftDeleteableInterface,
     Core\TaggedEntityInterface,
     TranslatableInterface
 {

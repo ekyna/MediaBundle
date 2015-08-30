@@ -2,13 +2,17 @@
 
 namespace Ekyna\Bundle\MediaBundle\Model;
 
+use Ekyna\Bundle\CoreBundle\Model\SortableTrait;
+
 /**
- * Trait MediaSubjectTrait
+ * Trait GalleryMediaTrait
  * @package Ekyna\Bundle\MediaBundle\Model
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
-trait MediaSubjectTrait
+trait GalleryMediaTrait
 {
+    use SortableTrait;
+
     /**
      * @var MediaInterface
      */
@@ -21,7 +25,7 @@ trait MediaSubjectTrait
      * @param MediaInterface $media
      * @return MediaSubjectInterface|$this
      */
-    public function setMedia(MediaInterface $media = null)
+    public function setMedia(MediaInterface $media)
     {
         $this->media = $media;
 

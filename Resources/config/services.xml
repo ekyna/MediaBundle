@@ -79,6 +79,9 @@
         <service id="ekyna_media.media.subject_subscriber" class="Ekyna\Bundle\MediaBundle\Listener\MediaSubjectSubscriber" public="false">
             <tag name="doctrine.event_subscriber" connection="default" />
         </service>
+        <service id="ekyna_media.media.gallery_subscriber" class="Ekyna\Bundle\MediaBundle\Listener\GalleryMediaSubscriber" public="false">
+            <tag name="doctrine.event_subscriber" connection="default" />
+        </service>
 
         <!-- Twig extensions -->
         <service id="ekyna_media.twig.media_extension" class="Ekyna\Bundle\MediaBundle\Twig\MediaExtension">
