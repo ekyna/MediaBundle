@@ -1,9 +1,19 @@
-define('ekyna-form/media-collection', ['jquery', 'ekyna-form/media-choice', 'jquery-ui'], function($, MediaChoice) {
+define('ekyna-form/media-collection',
+    ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-media-browser', 'jquery-ui'],
+    function($, Router, Twig, Modal, Browser) {
     "use strict";
 
     var MediaCollectionWidget = function($elem) {
         this.$elem = $($elem);
-        this.defaults = {limit: 0};
+        this.defaults = {
+            types: [],
+            controls: [
+                {role: 'move-left', icon: 'arrow-left'},
+                {role: 'remove', icon: 'remove'},
+                {role: 'move-right', icon: 'arrow-right'}
+            ],
+            limit: 0
+        };
         this.config = $.extend({}, this.defaults, this.$elem.data('config'));
     };
 
@@ -24,6 +34,15 @@ define('ekyna-form/media-collection', ['jquery', 'ekyna-form/media-choice', 'jqu
                 e.preventDefault();
                 that.moveRight($(e.target).closest('.ekyna-media-collection-media'));
             });
+            that.$elem.on('click', '.ekyna-media-collection-media [data-role="remove"]', function(e) {
+                e.preventDefault();
+                that.removeMedia($(e.target).closest('.ekyna-media-collection-media'));
+            });
+
+            that.$elem.on('click', '.ekyna-media-collection-add', function(e) {
+                e.preventDefault();
+                that.addMedias();
+            });
 
             that.$elem.sortable({
                 delay: 150,
@@ -36,38 +55,47 @@ define('ekyna-form/media-collection', ['jquery', 'ekyna-form/media-choice', 'jqu
             }).disableSelection();
 
             that.updateCollection();
-            that.addMedia();
         },
-        addMedia: function() {
-            var that = this;
+        addMedias: function() {
+            var that = this, modal = new Modal(), browser;
 
-            if (that.$elem.find('.ekyna-media-collection-add').size() == 1) {
-                return;
-            }
-
-            var child = this.$elem.attr('data-prototype'),
-                prototypeName = this.$elem.attr('data-prototype-name'),
-                count = this.$elem.find('.ekyna-media-collection-media').size();
-
-            // Check if an element with this ID already exists.
-            // If it does, increase the count by one and try again
-            var childName = child.match(/id="(.*?)"/);
-            var re = new RegExp(prototypeName, "g");
-            while ($('#' + childName[1].replace(re, count)).size() > 0) {
-                count++;
-            }
-
-            child = child.replace(re, count);
-            child = child.replace(/__id__/g, childName[1].replace(re, count));
-
-            var $child = $(child);
-            that.$elem.append($child);
-            MediaChoice.init($child.find('.ekyna-media-choice'));
-
-            $child.on('ekyna.media-choice.selection', function() {
-                $child.removeClass('ekyna-media-collection-add');
-                that.updateCollection();
+            $(modal).on('ekyna.modal.content', function (e) {
+                if (e.contentType == 'html') {
+                    browser = new Browser(e.content);
+                    browser.init();
+                } else {
+                    throw "Unexpected modal content type.";
+                }
             });
+
+            $(modal).on('ekyna.modal.load_fail', function () {
+                alert('Failed to load media browser.');
+            });
+
+            $(modal).on('ekyna.modal.button_click', function (e) {
+                if (e.buttonId == 'submit' && browser) {
+                    var selection = browser.getSelection();
+                    for (var i in selection) {
+                        if (selection.hasOwnProperty(i)) {
+                            that.createMedia(selection[i]);
+                        }
+                    }
+                    that.updateCollection();
+                    modal.getDialog().close();
+                }
+            });
+
+            modal.getDialog().onHide(function() {
+                if (browser) {
+                    browser = null;
+                }
+            });
+
+            var params = {mode: 'multiple_selection'};
+            if (that.config.types.length > 0) {
+                params.types = this.config.types;
+            }
+            modal.load({url: Router.generate('ekyna_media_browser_admin_modal', params)});
         },
         updateCollection: function() {
             var that = this,
@@ -89,10 +117,64 @@ define('ekyna-form/media-collection', ['jquery', 'ekyna-form/media-choice', 'jqu
                 }
             });
 
-            if (that.$elem.find('.ekyna-media-collection-add').size() == 0
-                && (that.config.limit == 0 || max <= that.config.limit)) {
-                that.addMedia();
+            that.createAddButton();
+        },
+        createMedia: function (data) {
+            var that = this;
+            var child = this.$elem.attr('data-prototype'),
+                prototypeName = this.$elem.attr('data-prototype-name'),
+                count = this.$elem.find('.ekyna-media-collection-media').size();
+            var childName = child.match(/id="(.*?)"/);
+            var re = new RegExp(prototypeName, "g");
+            while ($('#' + childName[1].replace(re, count)).size() > 0) {
+                count++;
             }
+            child = child.replace(re, count);
+            child = child.replace(/__id__/g, childName[1].replace(re, count));
+
+            var $child = $(child);
+            $child.removeClass('ekyna-media-collection-add');
+
+            var $thumb = $(Twig.render(media_thumb_template, {
+                media: data,
+                controls: that.config.controls,
+                selector: false
+            }));
+            $thumb.data(data);
+
+            $child.find('.media-thumb').replaceWith($thumb);
+            $child.find('input').val(data.id);
+
+            that.$elem.append($child);
+        },
+        createAddButton: function() {
+            var that = this;
+
+            var $addButton = that.$elem.find('.ekyna-media-collection-add');
+            if ($addButton.length == 1) {
+                $addButton.detach().appendTo(that.$elem);
+                return;
+            } else if ($addButton.length > 1) {
+                $addButton.remove();
+            }
+
+            var child = this.$elem.attr('data-prototype'),
+                prototypeName = this.$elem.attr('data-prototype-name'),
+                count = this.$elem.find('.ekyna-media-collection-media').size();
+
+            // Check if an element with this ID already exists.
+            // If it does, increase the count by one and try again
+            var childName = child.match(/id="(.*?)"/);
+            var re = new RegExp(prototypeName, "g");
+            while ($('#' + childName[1].replace(re, count)).size() > 0) {
+                count++;
+            }
+
+            child = child.replace(re, count);
+            child = child.replace(/__id__/g, childName[1].replace(re, count));
+
+            var $child = $(child);
+            that.$elem.append($child);
         },
         moveLeft: function($media) {
             if (!$media.find('[data-role="move-left"]').hasClass('disabled')) {
@@ -104,6 +186,14 @@ define('ekyna-form/media-collection', ['jquery', 'ekyna-form/media-choice', 'jqu
             if (!$media.find('[data-role="move-right"]').hasClass('disabled')) {
                 $media.next().after($media.detach());
                 this.updateCollection();
+            }
+        },
+        removeMedia: function($media) {
+            if (!$media.find('[data-role="remove"]').hasClass('disabled')) {
+                if (confirm('Souhaitez-vous réellement retirer cet élément ?')) {
+                    $media.remove();
+                    this.updateCollection();
+                }
             }
         }
     };

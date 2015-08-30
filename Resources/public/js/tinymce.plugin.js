@@ -2,23 +2,27 @@ tinymce.PluginManager.add('filemanager', function (editor) {
 
     function filemanager(id, value, type, win) {
 
-        //console.log(id, value, type, win);
+        console.log(id, value, type, win);
 
-        var title = "FileManager";
+        var title = "Gestionnaire de médias"; // TODO
         if (typeof editor.settings.filemanager_title !== "undefined" && editor.settings.filemanager_title) {
             title = editor.settings.filemanager_title;
         }
 
+        var path = '/admin/content/media-browser?mode=tinymce';
+        if (type == 'image') {
+            path = path + '&types[]=image';
+        } else if (type == 'media') {
+            path = path + '&types[]=video&types[]=audio'
+        }
         tinymce.activeEditor.windowManager.open({
             title: title,
-            //file: editor.settings.external_filemanager_path + 'dialog.php?type='
-            //      + urltype + '&descending=' + descending + sort_by + fldr + '&lang=' + editor.settings.language + '&akey='+akey,
-            file: '/admin/content/media-browser',
+            file: path,
             width: 860,
-            height: 570,
+            height: 570/*,
             resizable: true,
             maximizable: true,
-            inline: 1
+            inline: 1*/
         }, {
             setUrl: function (url) {
                 var fieldElm = win.document.getElementById(id);

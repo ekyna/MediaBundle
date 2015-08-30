@@ -22,6 +22,7 @@ class MediaCollectionType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['config'] = array(
+            'types' => (array) $options['types'],
             'limit' => $options['limit'],
         );
     }

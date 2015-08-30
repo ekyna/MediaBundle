@@ -37,14 +37,16 @@ define('ekyna-form/media-choice',
                         if (e.hasOwnProperty('media')) {
                             var $thumb = $(Twig.render(media_thumb_template, {
                                 media: e.media,
-                                controls: that.config.controls
+                                controls: that.config.controls,
+                                selector: false
                             }));
                             $thumb.data(e.media);
 
                             that.$elem.find('.media-thumb').replaceWith($thumb);
                             that.$elem.find('input').val(e.media.id);
 
-                            $(that.$elem).trigger(jQuery.Event('ekyna.media-choice.selection'));
+                            // TODO wtf ????
+                            //$(that.$elem).trigger(jQuery.Event('ekyna.media-choice.selection'));
                         }
                         modal.getDialog().close();
                     });
@@ -53,13 +55,13 @@ define('ekyna-form/media-choice',
                 }
             });
 
-            /*$(modal).on('ekyna.modal.load_fail', function () {
+            $(modal).on('ekyna.modal.load_fail', function () {
+                alert('Failed to load media browser.');
+            });
 
-            });*/
-
-            var params = {};
+            var params = {mode: 'single_selection'};
             if (that.config.types.length > 0) {
-                params = {types: this.config.types};
+                params.types = this.config.types;
             }
             modal.load({url: Router.generate('ekyna_media_browser_admin_modal', params)});
         }

@@ -38,7 +38,7 @@
             </div>
         </div>#}
         {# --- TYPE FILTER --- #}
-        {% if config.types is not defined %}
+        {% if (config.types is not defined) or (config.types is empty)%}
             <div class="media-browser-controls-group">
                 <div class="btn-group" data-toggle="buttons">
                     <label class="btn btn-sm btn-default" data-role="filter">

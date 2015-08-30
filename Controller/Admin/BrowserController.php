@@ -28,10 +28,7 @@ class BrowserController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $config = array();
-        if ($request->query->has('types')) {
-            $config['types'] = $request->query->get('types');
-        }
+        $config = $this->buildConfig($request);
 
         return $this->render('EkynaMediaBundle:Manager:index.html.twig', array('config' => $config));
     }
@@ -48,17 +45,51 @@ class BrowserController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $config = array();
-        if ($request->query->has('types')) {
-            $config['types'] = $request->query->get('types');
-        }
+        $config = $this->buildConfig($request);
+
         $browser = $this->renderView('EkynaMediaBundle:Manager:render.html.twig', array('config' => $config));
 
         $modal = new Modal();
-        $modal->setTitle('ekyna_media.manager.title');
+        $modal->setTitle('ekyna_media.browser.title.'.$config['mode']);
         $modal->setContent($browser);
 
+        if ($config['mode'] == 'multiple_selection') {
+            $modal->setButtons(array(
+                array(
+                    'id'       => 'submit',
+                    'label'    => 'ekyna_core.button.validate',
+                    'icon'     => 'glyphicon glyphicon-ok',
+                    'cssClass' => 'btn-success',
+                    'autospin' => true,
+                ),
+                array(
+                    'id' => 'close',
+                    'label' => 'ekyna_core.button.close',
+                    'icon' => 'glyphicon glyphicon-remove',
+                    'cssClass' => 'btn-default',
+                )
+            ));
+        }
+
         return $this->get('ekyna_core.modal')->render($modal);
+    }
+
+    /**
+     * Builds the browser config.
+     *
+     * @param Request $request
+     * @return array
+     */
+    private function buildConfig(Request $request)
+    {
+        $config = array(
+            'mode' => $request->query->get('mode', 'browse'),
+        );
+        if (null !== $types = $request->query->get('types', array())) {
+            // TODO validate types
+            $config['types'] = $types;
+        }
+        return $config;
     }
 
     /**

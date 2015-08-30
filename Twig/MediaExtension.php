@@ -173,7 +173,8 @@ HTML;
         }
         return $this->thumbTemplate->render(array(
             'media'    => $media,
-            'controls' => $controls
+            'controls' => $controls,
+            'selector' => false,
         ));
     }
 

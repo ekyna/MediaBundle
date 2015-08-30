@@ -10,7 +10,7 @@ config:
         'ekyna-form/media-choice':
             deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-media-browser']
         'ekyna-form/media-collection':
-            deps: ['jquery', 'ekyna-form/media-choice', 'jquery-ui']
+            deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-media-browser', 'jquery-ui']
     paths:
         'fancytree': 'js/fancytree'
         'ekyna-media-thumb': 'js/media-thumb'

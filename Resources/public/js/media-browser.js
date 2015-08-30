@@ -63,12 +63,13 @@
     })();
 
     var defaultConfig = {
+        mode:    "browse",
         path:    "",
-        types: [],
+        types:   [],
         sortBy:  "filename",
         sortDir: "asc",
         search:  "",
-        debug: true
+        debug:   true
     };
 
     var EkynaMediaBrowser = function(selector) {
@@ -85,8 +86,14 @@
 
     EkynaMediaBrowser.prototype = {
         constructor: EkynaMediaBrowser,
-        init: function() {
+        init: function(config) {
+            this.config = $.extend({}, this.config, config || {});
+            if (-1 == $.inArray(this.config.mode, ['browse', 'single_selection', 'multiple_selection', 'tinymce'])) {
+                throw 'Unexpected browser mode "' + this.config.mode + '".';
+            }
+
             this.initTree();
+
             // Disable controls until the user select a folder
             this.$controls.find('button, label').addClass('disabled').prop('disabled', true);
             this.$controls.find('input').prop('disabled', true);
@@ -184,15 +191,18 @@
                 e.preventDefault();
                 e.stopPropagation();
                 var $element = $(e.currentTarget).parents('.media-thumb');
-                if (parent.tinymce && parent.tinymce.activeEditor) {
+                if (that.config.mode == 'tinymce' && parent.tinymce && parent.tinymce.activeEditor) {
                     parent.tinymce.activeEditor.windowManager.getParams().setUrl(
                         $element.data('front')
                     );
                     parent.tinymce.activeEditor.windowManager.close();
-                } else {
+                } else if (that.config.mode == 'single_selection') {
                     var event = jQuery.Event('ekyna.media-browser.selection');
                     event.media = $element.data();
                     $(that).trigger(event);
+                } else if (that.config.mode == 'multiple_selection') {
+                    var $checkbox = $element.find('input[type="checkbox"]');
+                    $checkbox.prop('checked', !$checkbox.is(':checked'));
                 }
             });
 
@@ -252,13 +262,17 @@
                         return;
                     }
                     if (d.hasOwnProperty('medias')) {
+                        var selector = false;
+                        if (that.config.mode == 'multiple_selection') {
+                            selector = true;
+                        }
                         var controls = [
                             {role: 'edit', icon: 'pencil'},
                             {role: 'delete', icon: 'trash'},
                             {role: 'download', icon: 'download'}
                         ];
                         $(d['medias']).each(function (index, media) {
-                            $(Twig.render(media_thumb_template, {media: media, controls: controls}))
+                            $(Twig.render(media_thumb_template, {media: media, controls: controls, selector: selector}))
                                 .data(media)
                                 .appendTo(that.$content)
                                 .draggable({
@@ -431,6 +445,16 @@
             this.$content.find('.media-thumb').sortElements(function(a, b) {
                 return $(a).data(prop) > $(b).data(prop) ? dir : -dir;
             });
+        },
+        getSelection: function() {
+            if (this.config.mode != 'multiple_selection') {
+                return [];
+            }
+            var result = [];
+            this.$content.find('input[name="thumb_selection[]"]:checked').each(function(i, input) {
+                result.push($(input).closest('.media-thumb').data());
+            });
+            return result;
         },
         initTree: function() {
             var that = this;
