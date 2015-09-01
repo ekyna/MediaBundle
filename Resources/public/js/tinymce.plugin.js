@@ -17,7 +17,11 @@ tinymce.PluginManager.add('filemanager', function (editor) {
             title: title,
             file: path,
             width: 900,
-            height: 470
+            height: 470,
+            resizable: true/*,
+             maximizable: true,
+             inline: 1*/
+
         }, {
             setUrl: function (url) {
                 var fieldElm = win.document.getElementById(id);

@@ -67,7 +67,7 @@ define('ekyna-form/media-collection',
                     $(browser).bind('ekyna.media-browser.removal', function(e) {
                         if (e.hasOwnProperty('media')) {
                             var $medias = that.$elem.find('.ekyna-media-collection-media').not('.ekyna-media-collection-add');
-                            $medias.each(function (i) {
+                            $medias.each(function () {
                                 var $media = $(this);
                                 if (e.media.id == $media.find('input').val()) {
                                     that.removeMedia($media, false);
@@ -200,9 +200,9 @@ define('ekyna-form/media-collection',
                 this.updateCollection();
             }
         },
-        removeMedia: function($media, confirm) {
+        removeMedia: function($media, askConfirm) {
             if (!$media.find('[data-role="remove"]').hasClass('disabled')) {
-                if (confirm && !confirm('Souhaitez-vous réellement retirer cet élément ?')) {
+                if (askConfirm && !confirm('Souhaitez-vous réellement retirer cet élément ?')) {
                     return;
                 }
 
