@@ -14,6 +14,7 @@ class MediaTypes extends AbstractConstants
     const FILE    = 'file';
     const IMAGE   = 'image';
     const VIDEO   = 'video';
+    const FLASH   = 'flash';
     const AUDIO   = 'audio';
     const ARCHIVE = 'archive';
 
@@ -27,6 +28,7 @@ class MediaTypes extends AbstractConstants
             self::FILE    => array($prefix.self::FILE,    '125955'),
             self::IMAGE   => array($prefix.self::IMAGE,   'e6ab2e'),
             self::VIDEO   => array($prefix.self::VIDEO,   'de4935'),
+            self::FLASH   => array($prefix.self::FLASH,   'de4935'),
             self::AUDIO   => array($prefix.self::AUDIO,   'b1212a'),
             self::ARCHIVE => array($prefix.self::ARCHIVE, '63996b'),
         );
@@ -48,6 +50,10 @@ class MediaTypes extends AbstractConstants
 
         if (preg_match('~zip|rar|compress~', $mimeType)) {
             return self::ARCHIVE;
+        }
+
+        if ($mimeType === 'application/x-shockwave-flash') {
+            return self::FLASH;
         }
 
         return self::FILE;

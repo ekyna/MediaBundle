@@ -20,6 +20,7 @@
 
         <field name="type" type="string" column="type" length="8" />
         <field name="path" type="string" column="path" length="255" />
+        <field name="size" type="integer" column="size" />
         <field name="createdAt" column="created_at" type="datetime">
             <gedmo:timestampable on="create" />
         </field>

@@ -9,6 +9,10 @@ Ekyna\Bundle\MediaBundle\Entity\Media:
             expose: true
             groups: [Manager]
             type: string
+        size:
+            expose: true
+            groups: [Manager]
+            type: integer
         type:
             expose: true
             groups: [Manager]

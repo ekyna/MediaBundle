@@ -5,6 +5,13 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
                         http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
+    <class name="Ekyna\Bundle\MediaBundle\Entity\Folder">
+        <property name="name">
+            <constraint name="NotBlank" />
+        </property>
+        <!-- TODO parent (not for root) -->
+    </class>
+
     <class name="Ekyna\Bundle\MediaBundle\Entity\Media">
         <constraint name="Ekyna\Bundle\CoreBundle\Validator\Constraints\Uploadable" />
         <constraint name="Ekyna\Bundle\MediaBundle\Validator\Constraints\Media" />

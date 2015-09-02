@@ -62,13 +62,6 @@
             <argument>local_media</argument><!-- TODO config -->
         </service>
 
-        <!-- Event listeners -->
-        <service id="ekyna_media.media.event_listener" class="Ekyna\Bundle\MediaBundle\EventListener\MediaEventListener">
-            <argument type="service" id="doctrine.orm.default_entity_manager" />
-            <argument type="service" id="ekyna_media.folder.repository" />
-            <tag name="kernel.event_subscriber" />
-        </service>
-
         <!-- Doctrine entity listeners -->
         <service id="ekyna_media.media.listener" class="Ekyna\Bundle\MediaBundle\Listener\MediaListener">
             <argument type="service" id="ekyna_media.media.uploader" />

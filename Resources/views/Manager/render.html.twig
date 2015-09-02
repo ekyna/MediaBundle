@@ -37,8 +37,8 @@
                 </label>
             </div>
         </div>#}
-        {# --- TYPE FILTER --- #}
-        {% if (config.types is not defined) or (config.types is empty)%}
+        {# --- TYPE FILTER --- #} {# TODO foreach MediaTypes #}
+        {% if (config.types is not defined) or (config.types is empty) %}
             <div class="media-browser-controls-group">
                 <div class="btn-group" data-toggle="buttons">
                     <label class="btn btn-sm btn-default" data-role="filter">
@@ -52,6 +52,10 @@
                     <label class="btn btn-sm btn-default" data-role="filter">
                         <input type="checkbox" name="filters[]" value="video">
                         <span class="glyphicon glyphicon-film"></span>
+                    </label>
+                    <label class="btn btn-sm btn-default" data-role="filter">
+                        <input type="checkbox" name="filters[]" value="flash">
+                        <span class="glyphicon glyphicon-flash"></span>
                     </label>
                     <label class="btn btn-sm btn-default" data-role="filter">
                         <input type="checkbox" name="filters[]" value="audio">
