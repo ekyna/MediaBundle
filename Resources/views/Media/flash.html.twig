@@ -1,0 +1,13 @@
+{% extends "EkynaMediaBundle:Media:base.html.twig" %}
+
+{% block body %}
+    {{ media|media_flash }}
+{% endblock body %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        requirejs(['ekyna-media-player'], function(player) {
+            player.init();
+        });
+    </script>
+{% endblock javascripts %}

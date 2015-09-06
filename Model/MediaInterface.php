@@ -16,6 +16,13 @@ interface MediaInterface extends
     TranslatableInterface
 {
     /**
+     * Returns the id.
+     *
+     * @return int
+     */
+    public function getId();
+
+    /**
      * Sets the folder.
      *
      * @param FolderInterface $folder

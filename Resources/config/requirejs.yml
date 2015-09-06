@@ -11,9 +11,20 @@ config:
             deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-media-browser']
         'ekyna-form/media-collection':
             deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-media-browser', 'jquery-ui']
+        'ekyna-media-player':
+            deps: ['require', 'jquery']
+        'fancybox':
+            deps: ['jquery']
     paths:
         'fancytree': 'js/fancytree'
         'ekyna-media-thumb': 'js/media-thumb'
         'ekyna-media-browser': 'bundles/ekynamedia/js/media-browser'
         'ekyna-form/media-choice': 'bundles/ekynamedia/js/form-media-choice'
         'ekyna-form/media-collection': 'bundles/ekynamedia/js/form-media-collection'
+        'ekyna-media-player': 'bundles/ekynamedia/js/media-player'
+        'fancybox': 'bundles/ekynamedia/lib/fancybox/jquery.fancybox.pack'
+        'videojs': 'bundles/ekynamedia/lib/videojs/video'
+        'swfobject': 'bundles/ekynamedia/lib/swfobject/swfobject'
+build:
+    include:
+        - 'ekyna-media-player'

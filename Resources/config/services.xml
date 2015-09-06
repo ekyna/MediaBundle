@@ -77,11 +77,17 @@
         </service>
 
         <!-- Twig extensions -->
-        <service id="ekyna_media.twig.media_extension" class="Ekyna\Bundle\MediaBundle\Twig\MediaExtension">
+        <service id="ekyna_media.twig.browser_extension" class="Ekyna\Bundle\MediaBundle\Twig\BrowserExtension">
             <argument type="service" id="local_media_filesystem" />
             <argument type="service" id="router" />
             <argument type="service" id="ekyna_media.folder.repository" />
             <argument type="service" id="ekyna_media.browser.thumb_generator" />
+            <tag name="twig.extension" />
+        </service>
+        <service id="ekyna_media.twig.player_extension" class="Ekyna\Bundle\MediaBundle\Twig\PlayerExtension">
+            <argument type="service" id="local_media_filesystem" />
+            <argument type="service" id="router" />
+            <argument type="service" id="liip_imagine.filter.manager" />
             <tag name="twig.extension" />
         </service>
 

@@ -10,6 +10,14 @@ ekyna_media_download:
         key: "[a-z0-9-\./]+"
     options: { expose: true }
 
+ekyna_media_player:
+    path: /media/{key}
+    defaults: { _controller: "EkynaMediaBundle:Media:player" }
+    requirements:
+        _method: GET
+        key: "[a-z0-9-\./]+"
+    options: { expose: true }
+
 _liip_imagine:
     resource: "@LiipImagineBundle/Resources/config/routing.xml"
 

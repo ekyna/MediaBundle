@@ -1,0 +1,23 @@
+{% spaceless %}
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}">
+<head>
+    <title>{{ media.title }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    {% block stylesheets %}{% endblock stylesheets %}
+
+    {% include 'EkynaCoreBundle:Ui:ie-fix.html.twig' %}
+
+    {{ require_js(not app.debug) }}
+</head>
+<body>
+{% block body %}{% endblock body %}
+
+{% block javascripts %}{% endblock javascripts %}
+</body>
+</html>
+{% endspaceless %}

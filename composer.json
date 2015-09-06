@@ -26,11 +26,10 @@
         "craue/formflow-bundle": "~2.1"
     },
     "autoload" : {
-        "psr-0" : {
-            "Ekyna\\Bundle\\MediaBundle" : ""
+        "psr-4" : {
+            "Ekyna\\Bundle\\MediaBundle\\" : ""
         }
     },
-    "target-dir" : "Ekyna/Bundle/MediaBundle",
     "extra" : {
         "branch-alias" : {
             "dev-master" : "0.3.x-dev"
