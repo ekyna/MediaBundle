@@ -487,13 +487,14 @@
                     },
                     dragEnter: function(node, data) {
                         // return ["before", "after"];
-                        if( !data.otherNode ) {
+                        /*if( !data.otherNode ) {
                             return ["over"];
                         }
                         if (node.data.level === 0) {
                             return ["over"];
                         }
-                        return true;
+                        return true;*/
+                        return ["over"];
                     },
                     dragDrop: function(refNode, data) {
                         that.setBusy(true);

@@ -31,7 +31,6 @@ define('ekyna-media-player', ['require', 'jquery'], function(require, $) {
                     .attr('href', '/bundles/ekynamedia/lib/videojs/video-js.min.css')
                     .appendTo($('head'))
                 ;
-                console.log('loading videojs');
                 require(['videojs'], function () {
                     videojs.options.flash.swf = "/bundles/ekynamedia/lib/videojs/video-js.swf";
                     videojs($element.attr('id'));
@@ -43,15 +42,15 @@ define('ekyna-media-player', ['require', 'jquery'], function(require, $) {
         initFlash: function($element) {
             var that = this;
             if (typeof swfobject == 'undefined') {
-                console.log('loading swfobject');
                 require(['swfobject'], function() {
+                    swfobject.switchOffAutoHideShow();
                     swfobject.registerObject($element.attr('id'), "9.0.0", "/bundles/ekynamedia/lib/swfobject/expressInstall.swf");
                 });
                 return;
             }
             swfobject.registerObject($element.attr('id'), "9.0.0", "/bundles/ekynamedia/lib/swfobject/expressInstall.swf");
         }
-        // TODO fancybox
+        // TODO fancybox (gallery)
     };
 
     return new MediaPlayer();

@@ -41,7 +41,7 @@
 
         <one-to-many field="children" target-entity="Ekyna\Bundle\MediaBundle\Entity\Folder" mapped-by="parent" fetch="EXTRA_LAZY">
             <order-by>
-                <order-by-field name="left" direction="ASC" />
+                <order-by-field name="name" direction="ASC" />
             </order-by>
         </one-to-many>
 
