@@ -28,7 +28,7 @@ define('ekyna-media-player', ['require', 'jquery'], function(require, $) {
         initVideo: function($element) {
             var that = this;
             if (!that.videoInitialized) {
-                $('link')
+                $('<link>')
                     .attr('media', 'all')
                     .attr('rel', 'stylesheet')
                     .attr('href', '/bundles/ekynamedia/lib/videojs/video-js.min.css')

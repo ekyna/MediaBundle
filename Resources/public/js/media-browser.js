@@ -11,12 +11,13 @@
             require('ekyna-form'),
             require('ekyna-string'),
             require('ekyna-media-thumb'),
-            require('fancytree')
+            require('fancytree'),
+            require('fancybox')
         );
     }
     // AMD module is defined
     else if (typeof define === 'function' && define.amd) {
-        define('ekyna-media-browser', ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'ekyna-string', 'ekyna-media-thumb', 'fancytree'],
+        define('ekyna-media-browser', ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'ekyna-string', 'ekyna-media-thumb', 'fancytree', 'fancybox'],
             function($, Router, Twig, Modal, Form) {
             return factory($, Router, Twig, Modal, Form);
         });
@@ -267,6 +268,7 @@
                             selector = true;
                         }
                         var controls = [
+                            {role: 'show', icon: 'play'},
                             {role: 'edit', icon: 'pencil'},
                             {role: 'delete', icon: 'trash'},
                             {role: 'download', icon: 'download'}
@@ -381,12 +383,17 @@
             });
         },
         showMedia: function($media) {
-            this.openModal({
-                url: Router.generate(
-                    'ekyna_media_media_admin_show',
-                    {'mediaId': $media.data('id')}
-                )
-            });
+            if ($media.data('type') == 'file' || $media.data('type') == 'file') {
+                this.downloadMedia($media);
+                return;
+            }
+            var params = {href: $media.data('front'), autoSize: true};
+            if ($media.data('type') == 'image') {
+                params.type  = 'image';
+            } else {
+                params.type = 'iframe';
+            }
+            $.fancybox(params);
         },
         editMedia: function($media) {
             this.openModal({

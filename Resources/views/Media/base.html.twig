@@ -8,13 +8,16 @@
     <meta name="robots" content="noindex, nofollow">
     <link rel="shortcut icon" href="/favicon.ico">
 
-    {% block stylesheets %}{% endblock stylesheets %}
+    {% block stylesheets %}
+    {#<link rel="stylesheet" href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}">#}
+    {% endblock stylesheets %}
 
     {% include 'EkynaCoreBundle:Ui:ie-fix.html.twig' %}
 
     {{ require_js(not app.debug) }}
 </head>
 <body>
+
 {% block body %}{% endblock body %}
 
 {% block javascripts %}{% endblock javascripts %}

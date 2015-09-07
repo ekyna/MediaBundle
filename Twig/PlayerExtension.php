@@ -123,7 +123,7 @@ class PlayerExtension extends \Twig_Extension
         }
 
         $params = array_merge(array(
-            'responsive'   => true,
+            'responsive'   => false,
             'aspect_ratio' => '16by9',
             'attr'         => array(
                 'id'     => 'media-video-' . $video->getId(),
@@ -157,7 +157,7 @@ class PlayerExtension extends \Twig_Extension
         }
 
         $params = array_merge(array(
-            //'responsive' => $params['responsive'],
+            //'responsive' => true,
             'attr'       => array(
                 'id'     => 'media-flash-' . $flash->getId(),
                 'class'  => 'swf-object',

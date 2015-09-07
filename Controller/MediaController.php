@@ -3,6 +3,7 @@
 namespace Ekyna\Bundle\MediaBundle\Controller;
 
 use Ekyna\Bundle\CoreBundle\Controller\Controller;
+use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -70,6 +71,10 @@ class MediaController extends Controller
          * @var \League\Flysystem\File $file
          */
         list($media, $file) = $this->findMedia($request->attributes->get('key'));
+
+        if (in_array($media->getType(), array(MediaTypes::FILE, MediaTypes::ARCHIVE))) {
+            return $this->redirect($this->generateUrl('ekyna_media_download', array('key' => $media->getPath())));
+        }
 
         $lastModified = $media->getUpdatedAt();
 
