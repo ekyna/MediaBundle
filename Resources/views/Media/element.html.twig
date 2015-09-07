@@ -1,7 +1,7 @@
 {% block video %}
 {% spaceless %}
 {% if responsive %}<div class="embed-responsive embed-responsive-{{ aspect_ratio }}">{% endif %}
-    <video controls preload="auto" data-setup='{"example_option":true}'{{ block('attributes') }}>
+    <video controls preload="auto" autoplay data-setup='{"example_option":true}'{{ block('attributes') }}>
         <source src="{{ src }}" type="{{ mime_type }}" />
         Your browser does not support the video tag.
     </video>
@@ -20,27 +20,26 @@
 
 {% block flash %}
 {% spaceless %}
-<div>
-    <object{{ block('attributes') }}>
-        <param name="movie" value="{{ src }}" />
-        <!--[if !IE]>-->
-        <object type="application/x-shockwave-flash" data="{{ src }}"
-                {%- if attr.width %} width="{{ attr.width }}"{% endif %}
-                {%- if attr.height %} height="{{ attr.height }}"{% endif %}>
-            <!--<![endif]-->
-            <div>
-                <h1>Please install Flash player to see this content.</h1>
-                <p>
-                    <a href="http://www.adobe.com/go/getflashplayer">
-                        <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" />
-                    </a>
-                </p>
-            </div>
-            <!--[if !IE]>-->
-        </object>
+<object{{ block('attributes') }}>
+    <param name="movie" value="{{ src }}" />
+    <param name="bgcolor" value="000000" />
+    <!--[if !IE]>-->
+    <object type="application/x-shockwave-flash" data="{{ src }}"
+            {%- if attr.width %} width="{{ attr.width }}"{% endif %}
+            {%- if attr.height %} height="{{ attr.height }}"{% endif %}>
         <!--<![endif]-->
+        <div>
+            <h1>Please install Flash player to see this content.</h1>
+            <p>
+                <a href="http://www.adobe.com/go/getflashplayer">
+                    <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" />
+                </a>
+            </p>
+        </div>
+        <!--[if !IE]>-->
     </object>
-</div>
+    <!--<![endif]-->
+</object>
 {% endspaceless %}
 {% endblock flash %}
 
@@ -51,7 +50,5 @@
 {% endblock image %}
 
 {% block attributes %}
-{% spaceless %}
 {% for key, value in attr %} {{ key }}="{{ value }}"{% endfor %}
-{% endspaceless %}
 {% endblock attributes %}

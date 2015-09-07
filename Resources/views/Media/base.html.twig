@@ -9,6 +9,15 @@
     <link rel="shortcut icon" href="/favicon.ico">
 
     {% block stylesheets %}
+    <style>
+    html, body {
+        background-color: #000000;
+        margin: 0;
+        padding: 0;
+        width: 800px;
+        height: 600px;
+    }
+    </style>
     {#<link rel="stylesheet" href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}">#}
     {% endblock stylesheets %}
 
@@ -17,9 +26,7 @@
     {{ require_js(not app.debug) }}
 </head>
 <body>
-
 {% block body %}{% endblock body %}
-
 {% block javascripts %}{% endblock javascripts %}
 </body>
 </html>

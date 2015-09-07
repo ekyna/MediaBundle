@@ -387,7 +387,7 @@
                 this.downloadMedia($media);
                 return;
             }
-            var params = {href: $media.data('front'), autoSize: true};
+            var params = {href: $media.data('front'), autoSize: true, padding: 0};
             if ($media.data('type') == 'image') {
                 params.type  = 'image';
             } else {

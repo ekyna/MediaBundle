@@ -1,10 +1,7 @@
 define('ekyna-media-player', ['require', 'jquery'], function(require, $) {
     "use strict";
 
-    var MediaPlayer = function() {
-        this.videoInitialized = false;
-        this.flashInitialized = false;
-    };
+    var MediaPlayer = function() {};
 
     MediaPlayer.prototype = {
         constructor: MediaPlayer,
@@ -27,27 +24,27 @@ define('ekyna-media-player', ['require', 'jquery'], function(require, $) {
         },
         initVideo: function($element) {
             var that = this;
-            if (!that.videoInitialized) {
+            if (typeof videojs == 'undefined') {
                 $('<link>')
                     .attr('media', 'all')
                     .attr('rel', 'stylesheet')
                     .attr('href', '/bundles/ekynamedia/lib/videojs/video-js.min.css')
                     .appendTo($('head'))
                 ;
-                require(['videojs'], function() {
-                    that.videoInitialized = true;
+                console.log('loading videojs');
+                require(['videojs'], function () {
                     videojs.options.flash.swf = "/bundles/ekynamedia/lib/videojs/video-js.swf";
                     videojs($element.attr('id'));
                 });
                 return;
             }
-            videojs(id);
+            videojs($element.attr('id'));
         },
         initFlash: function($element) {
             var that = this;
-            if (!that.flashInitialized) {
+            if (typeof swfobject == 'undefined') {
+                console.log('loading swfobject');
                 require(['swfobject'], function() {
-                    that.flashInitialized = true;
                     swfobject.registerObject($element.attr('id'), "9.0.0", "/bundles/ekynamedia/lib/swfobject/expressInstall.swf");
                 });
                 return;

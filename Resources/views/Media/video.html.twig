@@ -1,13 +1,5 @@
 {% extends "EkynaMediaBundle:Media:base.html.twig" %}
 
-{% block stylesheets %}
-<style>
-.video-js {
-    margin: auto;
-}
-</style>
-{% endblock stylesheets %}
-
 {% block body %}
     {{ media|media_video }}
 {% endblock body %}

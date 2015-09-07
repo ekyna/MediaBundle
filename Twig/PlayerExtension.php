@@ -128,8 +128,8 @@ class PlayerExtension extends \Twig_Extension
             'attr'         => array(
                 'id'     => 'media-video-' . $video->getId(),
                 'class'  => 'video-js vjs-default-skin vjs-big-play-centered',
-                'height' => '480',
-                'width'  => '720',
+                'height' => '100%',
+                'width'  => '100%',
             ),
         ), $params);
 
@@ -162,8 +162,8 @@ class PlayerExtension extends \Twig_Extension
                 'id'     => 'media-flash-' . $flash->getId(),
                 'class'  => 'swf-object',
                 //'classid' => 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000',
-                'height' => '480',
-                'width'  => '720',
+                'height' => '100%',
+                'width'  => '100%',
             ),
         ), $params);
 
