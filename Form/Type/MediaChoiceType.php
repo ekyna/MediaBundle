@@ -51,7 +51,9 @@ class MediaChoiceType extends AbstractType
                 'label' => 'ekyna_media.media.label.singular',
                 'types' => null,
                 'error_bubbling' => false,
-                'controls' => array(),
+                'controls' => array(
+                    array('role' => 'remove', 'icon' => 'remove'),
+                ),
                 'gallery' => false,
             ))
             ->setAllowedTypes(array(

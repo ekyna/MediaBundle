@@ -16,14 +16,8 @@ define('ekyna-form/media-choice',
             this.$elem.on('click', '.media-thumb [data-role="select"]', function() {
                 that.selectMedia();
             });
-            /*this.$elem.on('click', '.media-thumb [data-role="show"]', function() {
-
-            });*/
-            this.$elem.on('click', '.media-thumb [data-role="edit"]', function() {
-                /* TODO */
-            });
-            this.$elem.on('click', '.media-thumb [data-role="download"]', function() {
-                /* TODO */
+            this.$elem.on('click', '.media-thumb [data-role="remove"]', function() {
+                that.removeMedia();
             });
         },
         selectMedia: function() {
@@ -50,12 +44,12 @@ define('ekyna-form/media-choice',
                         }
                         modal.getDialog().close();
                     });
+                    // TODO Update media id edited in browser
+
                     // Clear media if deleted in browser
-                    $(browser).bind('ekyna.media-browser.removal', function(e) {
+                    $(browser).bind('ekyna.media-browser.media_delete', function(e) {
                         if (e.hasOwnProperty('media') && e.media.id == that.$elem.find('input').val()) {
-                            var $empty = $(that.$elem.data('empty-thumb'));
-                            that.$elem.find('.media-thumb').replaceWith($empty);
-                            that.$elem.find('input').val('');
+                            that.removeMedia();
                         }
                     });
                 } else {
@@ -78,6 +72,11 @@ define('ekyna-form/media-choice',
                 params.types = this.config.types;
             }
             modal.load({url: Router.generate('ekyna_media_browser_admin_modal', params)});
+        },
+        removeMedia: function() {
+            var $empty = $(this.$elem.data('empty-thumb'));
+            this.$elem.find('.media-thumb').replaceWith($empty);
+            this.$elem.find('input').val('');
         }
     };
 

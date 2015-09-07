@@ -396,11 +396,19 @@
             $.fancybox(params);
         },
         editMedia: function($media) {
+            var that = this;
             this.openModal({
                 url: Router.generate(
                     'ekyna_media_media_admin_edit',
                     {'mediaId': $media.data('id')}
-                )
+                )/*,
+                TODO onData: function(data) {
+                    if (data.hasOwnProperty('success') && data.success) {
+                        var event = jQuery.Event('ekyna.media-browser.media_update');
+                        event.media = $media.data();
+                        $(that).trigger(event);
+                    }
+                }*/
             });
         },
         removeMedia: function($media) {
@@ -413,7 +421,7 @@
                 ),
                 onData: function(data) {
                     if (data.hasOwnProperty('success') && data.success) {
-                        var event = jQuery.Event('ekyna.media-browser.removal');
+                        var event = jQuery.Event('ekyna.media-browser.media_delete');
                         event.media = $media.data();
                         $(that).trigger(event);
                     }

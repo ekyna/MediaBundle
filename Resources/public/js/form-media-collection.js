@@ -63,8 +63,11 @@ define('ekyna-form/media-collection',
                 if (e.contentType == 'html') {
                     browser = new Browser(e.content);
                     browser.init();
+
+                    // TODO Update media id edited in browser
+
                     // Remove media if deleted in browser
-                    $(browser).bind('ekyna.media-browser.removal', function(e) {
+                    $(browser).bind('ekyna.media-browser.media_delete', function(e) {
                         if (e.hasOwnProperty('media')) {
                             var $medias = that.$elem.find('.ekyna-media-collection-media').not('.ekyna-media-collection-add');
                             $medias.each(function () {
