@@ -3,7 +3,7 @@ ekyna_media_admin:
     prefix:   /admin/content
 
 ekyna_media_download:
-    path: /download/media/{key}
+    path: /download/media/{key} # TODO /media/download/{key}
     defaults: { _controller: "EkynaMediaBundle:Media:download" }
     requirements:
         _method: GET
@@ -11,7 +11,7 @@ ekyna_media_download:
     options: { expose: true }
 
 ekyna_media_player:
-    path: /media/{key}
+    path: /media/player/{key}
     defaults: { _controller: "EkynaMediaBundle:Media:player" }
     requirements:
         _method: GET
