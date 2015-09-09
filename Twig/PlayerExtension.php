@@ -98,11 +98,11 @@ class PlayerExtension extends \Twig_Extension
             case MediaTypes::VIDEO :
                 return $this->renderVideo($media, $params);
             case MediaTypes::FLASH :
-                return $this->renderVideo($media, $params);
+                return $this->renderFlash($media, $params);
             case MediaTypes::AUDIO :
-                return $this->renderVideo($media, $params);
+                return $this->renderAudio($media, $params);
             case MediaTypes::IMAGE :
-                return $this->renderVideo($media, $params);
+                return $this->renderImage($media, $params);
             default:
                 return $this->renderFile($media, $params);
         }
@@ -128,8 +128,8 @@ class PlayerExtension extends \Twig_Extension
             'attr'         => array(
                 'id'     => 'media-video-' . $video->getId(),
                 'class'  => 'video-js vjs-default-skin vjs-big-play-centered',
-                'height' => '100%',
-                'width'  => '100%',
+                'height' => '600',
+                'width'  => '800',
             ),
         ), $params);
 
@@ -157,13 +157,13 @@ class PlayerExtension extends \Twig_Extension
         }
 
         $params = array_merge(array(
-            //'responsive' => true,
+            //'responsive' => false,
             'attr'       => array(
                 'id'     => 'media-flash-' . $flash->getId(),
                 'class'  => 'swf-object',
                 //'classid' => 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000',
-                'height' => '100%',
-                'width'  => '100%',
+                'height' => '600',
+                'width'  => '800',
             ),
         ), $params);
 

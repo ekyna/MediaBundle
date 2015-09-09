@@ -70,31 +70,45 @@ class MediaController extends Controller
          * @var \Ekyna\Bundle\MediaBundle\Model\MediaInterface $media
          * @var \League\Flysystem\File $file
          */
-        list($media, $file) = $this->findMedia($request->attributes->get('key'));
+        list ($media, $file) = $this->findMedia($request->attributes->get('key'));
 
         if (in_array($media->getType(), array(MediaTypes::FILE, MediaTypes::ARCHIVE))) {
             return $this->redirect($this->generateUrl('ekyna_media_download', array('key' => $media->getPath())));
         }
 
         $lastModified = $media->getUpdatedAt();
+        if ($request->isXmlHttpRequest()) {
+            $eTag = md5($file->getPath().'-xhr-'.$lastModified->getTimestamp());
+        } else {
+            $eTag = md5($file->getPath().$lastModified->getTimestamp());
+        }
 
         $response = new Response();
         $response->setPublic();
         $response->setLastModified($lastModified);
-        $response->setEtag(md5($file->getPath().$file->getTimestamp()));
+        $response->setEtag($eTag);
         if ($response->isNotModified($request)) {
             return $response;
         }
 
-        $template = "EkynaMediaBundle:Media:{$media->getType()}.html.twig";
+        if ($request->isXmlHttpRequest()) {
+            $twig = $this->get('twig');
+            $twig->initRuntime();
+            /** @var \Ekyna\Bundle\MediaBundle\Twig\PlayerExtension $extension */
+            $extension = $twig->getExtension('ekyna_media_player');
+            $content = $extension->renderMedia($media);
+        } else {
+            $template = "EkynaMediaBundle:Media:{$media->getType()}.html.twig";
+            $content = $this->renderView($template, array(
+                'media' => $media,
+                'file' => $file,
+            ));
+        }
 
-        $response = $this->render($template, array(
-            'media' => $media,
-            'file' => $file,
-        ));
+        $response->setContent($content);
         $response->setPublic();
         $response->setLastModified($lastModified);
-        $response->setEtag(md5($file->getPath().$lastModified->getTimestamp()));
+        $response->setEtag($eTag);
 
         return $response;
     }

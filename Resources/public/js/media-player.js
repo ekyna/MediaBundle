@@ -1,21 +1,36 @@
-define('ekyna-media-player', ['require', 'jquery'], function(require, $) {
+(function(root, factory) {
+    "use strict";
+
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = factory(require, require('jquery'));
+    } else if (typeof define === 'function' && define.amd) {
+        define('ekyna-media-player', ['require', 'jquery'], function(require, jQuery) {
+            return factory(require, jQuery);
+        });
+    } else {
+        root.EkynaMediaPlayer = factory(require, root.jQuery);
+    }
+
+}(this, function(require, $) {
     "use strict";
 
     var MediaPlayer = function() {};
 
     MediaPlayer.prototype = {
         constructor: MediaPlayer,
-        init: function () {
+        init: function ($container) {
             var that = this;
 
-            var $videos = $('.video-js');
+            $container = $container || $('body');
+
+            var $videos = $container.find('.video-js');
             if (0 < $videos.length) {
                 $videos.each(function() {
                     that.initVideo($(this));
                 });
             }
 
-            var $swfObjects = $('.swf-object');
+            var $swfObjects = $container.find('.swf-object');
             if (0 < $swfObjects.length) {
                 $swfObjects.each(function() {
                     that.initFlash($(this));
@@ -23,7 +38,6 @@ define('ekyna-media-player', ['require', 'jquery'], function(require, $) {
             }
         },
         initVideo: function($element) {
-            var that = this;
             if (typeof videojs == 'undefined') {
                 $('<link>')
                     .attr('media', 'all')
@@ -40,7 +54,6 @@ define('ekyna-media-player', ['require', 'jquery'], function(require, $) {
             videojs($element.attr('id'));
         },
         initFlash: function($element) {
-            var that = this;
             if (typeof swfobject == 'undefined') {
                 require(['swfobject'], function() {
                     swfobject.switchOffAutoHideShow();
@@ -54,4 +67,4 @@ define('ekyna-media-player', ['require', 'jquery'], function(require, $) {
     };
 
     return new MediaPlayer();
-});
+}));

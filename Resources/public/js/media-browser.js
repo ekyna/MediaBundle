@@ -9,6 +9,7 @@
             require('twig'),
             require('ekyna-modal'),
             require('ekyna-form'),
+            require('ekyna-media-player'),
             require('ekyna-string'),
             require('ekyna-media-thumb'),
             require('fancytree'),
@@ -17,9 +18,11 @@
     }
     // AMD module is defined
     else if (typeof define === 'function' && define.amd) {
-        define('ekyna-media-browser', ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'ekyna-string', 'ekyna-media-thumb', 'fancytree', 'fancybox'],
-            function($, Router, Twig, Modal, Form) {
-            return factory($, Router, Twig, Modal, Form);
+        define('ekyna-media-browser',
+            ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'ekyna-media-player',
+                'ekyna-string', 'ekyna-media-thumb', 'fancytree', 'fancybox'],
+            function($, Router, Twig, Modal, Form, Player) {
+                return factory($, Router, Twig, Modal, Form, Player);
         });
     } else {
         // planted over the root!
@@ -28,11 +31,12 @@
             root.Routing,
             root.Twig,
             root.EkynaModal,
-            root.EkynaForm
+            root.EkynaForm, // TODO
+            root.EkynaMediaPlayer
         );
     }
 
-}(this, function($, Router, Twig, Modal, Form) {
+}(this, function($, Router, Twig, Modal, Form, Player) {
     "use strict";
 
     // http://james.padolsey.com/javascript/sorting-elements-with-jquery/
@@ -391,7 +395,10 @@
             if ($media.data('type') == 'image') {
                 params.type  = 'image';
             } else {
-                params.type = 'iframe';
+                params.type = 'ajax';
+                params.beforeShow = function() {
+                    Player.init($('.fancybox-inner'));
+                };
             }
             $.fancybox(params);
         },
