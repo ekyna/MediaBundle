@@ -64,7 +64,6 @@
         },
         destroyVideo: function($element) {
             var video = videojs($element.attr('id'));
-            video.pause();
             video.dispose();
             return video;
         },
