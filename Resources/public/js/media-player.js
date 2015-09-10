@@ -2,17 +2,27 @@
     "use strict";
 
     if (typeof module !== 'undefined' && module.exports) {
-        module.exports = factory(require, require('jquery'));
+        module.exports = factory(require('jquery'), require('videojs'), require('swfobject'));
     } else if (typeof define === 'function' && define.amd) {
-        define('ekyna-media-player', ['require', 'jquery'], function(require, jQuery) {
-            return factory(require, jQuery);
+        define('ekyna-media-player', ['jquery', 'videojs', 'swfobject'], function(jQuery) {
+            return factory(jQuery);
         });
     } else {
-        root.EkynaMediaPlayer = factory(require, root.jQuery);
+        root.EkynaMediaPlayer = factory(root.jQuery);
     }
 
-}(this, function(require, $) {
+}(this, function($) {
     "use strict";
+
+    $('<link>')
+        .attr('media', 'all')
+        .attr('rel', 'stylesheet')
+        .attr('href', '/bundles/ekynamedia/lib/videojs/video-js.min.css')
+        .appendTo($('head'))
+    ;
+    videojs.options.flash.swf = "/bundles/ekynamedia/lib/videojs/video-js.swf";
+
+    swfobject.switchOffAutoHideShow();
 
     var MediaPlayer = function() {};
 
@@ -37,33 +47,30 @@
                 });
             }
         },
-        initVideo: function($element) {
-            if (typeof videojs == 'undefined') {
-                $('<link>')
-                    .attr('media', 'all')
-                    .attr('rel', 'stylesheet')
-                    .attr('href', '/bundles/ekynamedia/lib/videojs/video-js.min.css')
-                    .appendTo($('head'))
-                ;
-                require(['videojs'], function () {
-                    videojs.options.flash.swf = "/bundles/ekynamedia/lib/videojs/video-js.swf";
-                    videojs($element.attr('id'));
+        destroy: function($container) {
+            var that = this;
+
+            $container = $container || $('body');
+
+            var $videos = $container.find('.video-js');
+            if (0 < $videos.length) {
+                $videos.each(function() {
+                    that.destroyVideo($(this));
                 });
-                return;
             }
-            videojs($element.attr('id'));
+        },
+        initVideo: function($element) {
+            return videojs($element.attr('id'));
+        },
+        destroyVideo: function($element) {
+            var video = videojs($element.attr('id'));
+            video.pause();
+            video.dispose();
+            return video;
         },
         initFlash: function($element) {
-            if (typeof swfobject == 'undefined') {
-                require(['swfobject'], function() {
-                    swfobject.switchOffAutoHideShow();
-                    swfobject.registerObject($element.attr('id'), "9.0.0", "/bundles/ekynamedia/lib/swfobject/expressInstall.swf");
-                });
-                return;
-            }
             swfobject.registerObject($element.attr('id'), "9.0.0", "/bundles/ekynamedia/lib/swfobject/expressInstall.swf");
         }
-        // TODO fancybox (gallery)
     };
 
     return new MediaPlayer();

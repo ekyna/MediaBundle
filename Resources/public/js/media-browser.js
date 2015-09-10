@@ -399,6 +399,9 @@
                 params.beforeShow = function() {
                     Player.init($('.fancybox-inner'));
                 };
+                params.beforeClose = function() {
+                    Player.destroy($('.fancybox-inner'));
+                };
             }
             $.fancybox(params);
         },

@@ -12,7 +12,7 @@ config:
         'ekyna-form/media-collection':
             deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-media-browser', 'jquery-ui']
         'ekyna-media-player':
-            deps: ['require', 'jquery']
+            deps: ['jquery', 'videojs', 'swfobject']
         'fancybox':
             deps: ['jquery']
     paths:
