@@ -74,14 +74,14 @@ class PlayerExtension extends \Twig_Extension
      */
     public function getFilters()
     {
-        return array(
-            new \Twig_SimpleFilter('media',       array($this, 'renderMedia'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFilter('media_video', array($this, 'renderVideo'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFilter('media_flash', array($this, 'renderFlash'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFilter('media_audio', array($this, 'renderAudio'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFilter('media_image', array($this, 'renderImage'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFilter('media_file',  array($this, 'renderFile'), array('is_safe' => array('html'))),
-        );
+        return [
+            new \Twig_SimpleFilter('media',       [$this, 'renderMedia'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('media_video', [$this, 'renderVideo'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('media_flash', [$this, 'renderFlash'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('media_audio', [$this, 'renderAudio'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('media_image', [$this, 'renderImage'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('media_file',  [$this, 'renderFile'], ['is_safe' => ['html']]),
+        ];
     }
 
     /**
@@ -92,7 +92,7 @@ class PlayerExtension extends \Twig_Extension
      * @return string
      * @throws \InvalidArgumentException
      */
-    public function renderMedia(MediaInterface $media, array $params = array())
+    public function renderMedia(MediaInterface $media, array $params = [])
     {
         switch ($media->getType()) {
             case MediaTypes::VIDEO :
@@ -116,30 +116,30 @@ class PlayerExtension extends \Twig_Extension
      * @return string
      * @throws \InvalidArgumentException
      */
-    public function renderVideo(MediaInterface $video, array $params = array())
+    public function renderVideo(MediaInterface $video, array $params = [])
     {
         if ($video->getType() !== MediaTypes::VIDEO) {
             throw new \InvalidArgumentException('Expected media with "video" type.');
         }
 
-        $params = array_merge(array(
+        $params = array_merge([
             'responsive'   => false,
             'aspect_ratio' => '16by9',
-            'attr'         => array(
+            'attr'         => [
                 'id'     => 'media-video-' . $video->getId(),
                 'class'  => 'video-js vjs-default-skin vjs-big-play-centered',
                 'height' => '600',
                 'width'  => '800',
-            ),
-        ), $params);
+            ],
+        ], $params);
 
-        return $this->elementTemplate->renderBlock('video', array(
+        return $this->elementTemplate->renderBlock('video', [
             'responsive'   => $params['responsive'],
             'aspect_ratio' => $params['aspect_ratio'],
             'src'          => $this->getDownloadUrl($video),
             'mime_type'    => $this->getMimeType($video),
             'attr'         => $params['attr'],
-        ));
+        ]);
     }
 
     /**
@@ -150,27 +150,27 @@ class PlayerExtension extends \Twig_Extension
      * @return string
      * @throws \InvalidArgumentException
      */
-    public function renderFlash(MediaInterface $flash, array $params = array())
+    public function renderFlash(MediaInterface $flash, array $params = [])
     {
         if ($flash->getType() !== MediaTypes::FLASH) {
             throw new \InvalidArgumentException('Expected media with "flash" type.');
         }
 
-        $params = array_merge(array(
+        $params = array_merge([
             //'responsive' => false,
-            'attr'       => array(
+            'attr'       => [
                 'id'     => 'media-flash-' . $flash->getId(),
                 'class'  => 'swf-object',
                 //'classid' => 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000',
                 'height' => '600',
                 'width'  => '800',
-            ),
-        ), $params);
+            ],
+        ], $params);
 
-        return $this->elementTemplate->renderBlock('flash', array(
+        return $this->elementTemplate->renderBlock('flash', [
             'src'  => $this->getDownloadUrl($flash),
             'attr' => $params['attr'],
-        ));
+        ]);
     }
 
     /**
@@ -181,22 +181,22 @@ class PlayerExtension extends \Twig_Extension
      * @return string
      * @throws \InvalidArgumentException
      */
-    public function renderAudio(MediaInterface $audio, array $params = array())
+    public function renderAudio(MediaInterface $audio, array $params = [])
     {
         if ($audio->getType() !== MediaTypes::AUDIO) {
             throw new \InvalidArgumentException('Expected media with "audio" type.');
         }
 
-        $params = array_merge(array(
-            'attr' => array(
+        $params = array_merge([
+            'attr' => [
                 'id' => 'media-audio-' . $audio->getId(),
-            ),
-        ), $params);
+            ],
+        ], $params);
 
-        return $this->elementTemplate->renderBlock('audio', array(
+        return $this->elementTemplate->renderBlock('audio', [
             'src'  => $this->getDownloadUrl($audio),
             'attr' => $params['attr'],
-        ));
+        ]);
     }
 
     /**
@@ -207,18 +207,18 @@ class PlayerExtension extends \Twig_Extension
      * @return string
      * @throws \InvalidArgumentException
      */
-    public function renderImage(MediaInterface $image, array $params = array())
+    public function renderImage(MediaInterface $image, array $params = [])
     {
         if ($image->getType() !== MediaTypes::IMAGE) {
             throw new \InvalidArgumentException('Expected media with "image" type.');
         }
 
-        $params = array_merge(array(
+        $params = array_merge([
             'filter' => 'media_front',
-            'attr' => array(
+            'attr' => [
                 'id' => 'media-image-' . $image->getId(),
-            ),
-        ), $params);
+            ],
+        ], $params);
 
         if (!(array_key_exists('width', $params) && array_key_exists('height', $params))) {
             $filter = $this->filterManager->getFilterConfiguration()->get($params['filter']);
@@ -234,21 +234,21 @@ class PlayerExtension extends \Twig_Extension
                         }
                     }
                 }
-                $params = array_merge(array(
-                    'attr' => array(
+                $params = array_merge([
+                    'attr' => [
                         'width'  => $width,
                         'height' => $height,
-                    ),
-                ), $params);
+                    ],
+                ], $params);
             }
         }
 
-        return $this->elementTemplate->renderBlock('image', array(
+        return $this->elementTemplate->renderBlock('image', [
             'filter' => $params['filter'],
             'path'   => $image->getPath(),
             'alt'    => $image->getTitle(),
             'attr'   => $params['attr'],
-        ));
+        ]);
     }
 
     /**
@@ -259,23 +259,23 @@ class PlayerExtension extends \Twig_Extension
      * @return string
      * @throws \InvalidArgumentException
      */
-    public function renderFile(MediaInterface $file, array $params = array())
+    public function renderFile(MediaInterface $file, array $params = [])
     {
-        if (in_array($file->getType(), array(MediaTypes::FILE, MediaTypes::ARCHIVE))) {
+        if (in_array($file->getType(), [MediaTypes::FILE, MediaTypes::ARCHIVE])) {
             throw new \InvalidArgumentException('Expected media with "file" or "archive" type.');
         }
 
-        $params = array_replace(array(
-            'attr' => array(
+        $params = array_replace([
+            'attr' => [
                 'id' => 'image-' . $file->getId(),
-            ),
-        ), $params);
+            ],
+        ], $params);
 
-        return $this->elementTemplate->renderBlock('image', array(
+        return $this->elementTemplate->renderBlock('image', [
             'attr'   => $params['attr'],
             'href'   => $this->getDownloadUrl($file),
             'title'  => $file->getTitle(),
-        ));
+        ]);
     }
 
     /**
@@ -286,7 +286,7 @@ class PlayerExtension extends \Twig_Extension
      */
     private function getDownloadUrl(MediaInterface $media)
     {
-        return $this->urlGenerator->generate('ekyna_media_download', array('key' => $media->getPath()));
+        return $this->urlGenerator->generate('ekyna_media_download', ['key' => $media->getPath()]);
     }
 
     /**

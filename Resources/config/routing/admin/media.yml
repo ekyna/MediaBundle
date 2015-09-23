@@ -1,49 +1,46 @@
 ekyna_media_media_admin_home:
-    path: /
+    path: ""
     defaults: { _controller: "ekyna_media.media.controller:homeAction" }
-    requirements:
-        _method: GET
+    methods: [GET]
 
 ekyna_media_media_admin_list:
     path: /list
     defaults: { _controller: "ekyna_media.media.controller:listAction" }
-    requirements:
-        _method: GET|POST
+    methods: [GET|POST]
 
 ekyna_media_media_admin_new:
     path: /new
     defaults: { _controller: "ekyna_media.media.controller:newAction" }
-    requirements:
-        _method: GET|POST
+    methods: [GET|POST]
     options: { expose: true }
 
 ekyna_media_media_admin_show:
     path: /{mediaId}/show
     defaults: { _controller: "ekyna_media.media.controller:showAction" }
+    methods: [GET]
     requirements:
-        _method: GET
-        mediaId:  \d+
+        mediaId: \d+
     options: { expose: true }
 
 ekyna_media_media_admin_tinymce:
     path: /{mediaId}/tinymce
     defaults: { _controller: "ekyna_media.media.controller:tinymceAction", field: description }
+    methods: [GET]
     requirements:
-        _method: GET
         mediaId: \d+
 
 ekyna_media_media_admin_edit:
     path: /{mediaId}/edit
     defaults: { _controller: "ekyna_media.media.controller:editAction" }
+    methods: [GET|POST]
     requirements:
-        _method: GET|POST
-        mediaId:  \d+
+        mediaId: \d+
     options: { expose: true }
 
 ekyna_media_media_admin_remove:
     path: /{mediaId}/remove
     defaults: { _controller: "ekyna_media.media.controller:removeAction" }
+    methods: [GET|POST]
     requirements:
-        _method: GET|POST
         mediaId:  \d+
     options: { expose: true }

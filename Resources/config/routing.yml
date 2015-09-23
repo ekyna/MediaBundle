@@ -5,16 +5,16 @@ ekyna_media_admin:
 ekyna_media_download:
     path: /download/media/{key} # TODO /media/download/{key}
     defaults: { _controller: "EkynaMediaBundle:Media:download" }
+    methods: [GET]
     requirements:
-        _method: GET
         key: "[a-z0-9-\./]+"
     options: { expose: true }
 
 ekyna_media_player:
     path: /media/player/{key}
     defaults: { _controller: "EkynaMediaBundle:Media:player" }
+    methods: [GET]
     requirements:
-        _method: GET
         key: "[a-z0-9-\./]+"
     options: { expose: true }
 

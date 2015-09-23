@@ -39,19 +39,19 @@ class GalleryMediaSubscriber implements EventSubscriber
             return;
         }
 
-        $metadata->mapManyToOne(array(
+        $metadata->mapManyToOne([
             'fieldName'     => 'media',
             'targetEntity'  => self::MEDIA_FQCN,
-            'cascade'       => array('persist', 'merge', 'refresh', 'detach'),
-            'joinColumns' => array(
-                array(
+            'cascade'       => ['persist', 'merge', 'refresh', 'detach'],
+            'joinColumns' => [
+                [
                     'name'                  => 'media_id',
                     'referencedColumnName'  => 'id',
                     'onDelete'              => 'CASCADE',
                     'nullable'              => true,
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
     }
 
     /**
@@ -59,8 +59,8 @@ class GalleryMediaSubscriber implements EventSubscriber
      */
     public function getSubscribedEvents()
     {
-        return array(
+        return [
             Events::loadClassMetadata,
-        );
+        ];
     }
 }

@@ -5,7 +5,7 @@ namespace Ekyna\Bundle\MediaBundle\Form\Type;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class MediaCollectionMediaType
@@ -20,51 +20,47 @@ class MediaCollectionMediaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('media', 'ekyna_media_choice', array(
+            ->add('media', 'ekyna_media_choice', [
                 'types' => $options['types'],
-                'controls' => array(
-                    array('role' => 'move-left', 'icon' => 'arrow-left'),
-                    array('role' => 'remove', 'icon' => 'remove'),
-                    array('role' => 'move-right', 'icon' => 'arrow-right'),
-                ),
+                'controls' => [
+                    ['role' => 'move-left', 'icon' => 'arrow-left'],
+                    ['role' => 'remove', 'icon' => 'remove'],
+                    ['role' => 'move-right', 'icon' => 'arrow-right'],
+                ],
                 'gallery' => true,
-            ))
-            ->add('position', 'hidden', array(
-                'attr' => array(
+            ])
+            ->add('position', 'hidden', [
+                'attr' => [
                     'data-role' => 'position'
-                )
-            ))
+                ]
+            ])
         ;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults(array(
+            ->setDefaults([
                 'label'    => false,
                 'required' => false,
                 'types'    => null,
-            ))
-            ->setAllowedTypes(array(
-                'types' => array('null', 'string', 'array'),
-            ))
-            ->setAllowedValues(array(
-                'types' => function($value) {
-                    if (is_string($value)) {
-                        return MediaTypes::isValid($value);
-                    } elseif (is_array($value)) {
-                        foreach ($value as $v) {
-                            if (!MediaTypes::isValid($v)) {
-                                return false;
-                            }
+            ])
+            ->setAllowedTypes('types', ['null', 'string', 'array'])
+            ->setAllowedValues('types', function($value) {
+                if (is_string($value)) {
+                    return MediaTypes::isValid($value);
+                } elseif (is_array($value)) {
+                    foreach ($value as $v) {
+                        if (!MediaTypes::isValid($v)) {
+                            return false;
                         }
                     }
-                    return true;
                 }
-            ));
+                return true;
+            });
         ;
     }
 

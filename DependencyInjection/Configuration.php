@@ -48,10 +48,10 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('media')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->variableNode('templates')->defaultValue(array(
+                                ->variableNode('templates')->defaultValue([
                                     'list.html'  => 'EkynaMediaBundle:Admin/Media:list.html',
                                     'show.html'  => 'EkynaMediaBundle:Admin/Media:show.html',
-                                ))->end()
+                                ])->end()
                                 ->scalarNode('entity')->defaultValue('Ekyna\Bundle\MediaBundle\Entity\Media')->end()
                                 ->scalarNode('controller')->defaultValue('Ekyna\Bundle\MediaBundle\Controller\Admin\MediaController')->end()
                                 ->scalarNode('repository')->defaultValue('Ekyna\Bundle\MediaBundle\Entity\MediaRepository')->end()
@@ -66,7 +66,7 @@ class Configuration implements ConfigurationInterface
                                         ->scalarNode('repository')->end()
                                         ->arrayNode('fields')
                                             ->prototype('scalar')->end()
-                                                ->defaultValue(array('title', 'description'))
+                                                ->defaultValue(['title', 'description'])
                                         ->end()
                                     ->end()
                                 ->end()

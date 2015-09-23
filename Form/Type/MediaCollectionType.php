@@ -7,7 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class MediaCollectionType
@@ -21,19 +21,19 @@ class MediaCollectionType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['config'] = array(
+        $view->vars['config'] = [
             'types' => (array) $options['types'],
             'limit' => $options['limit'],
-        );
+        ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults(array(
+            ->setDefaults([
                 'media_class'  => null,
                 'types'        => null,
                 'limit'        => 0,
@@ -42,19 +42,17 @@ class MediaCollectionType extends AbstractType
                 'allow_sort'   => true,
                 'type'         => 'ekyna_media_collection_media',
                 'options'      => function(Options $options) {
-                    return array(
+                    return [
                         'label'      => false,
                         'types'      => $options['types'],
                         'data_class' => $options['media_class'],
-                    );
+                    ];
                 },
-            ))
-            ->setAllowedTypes(array(
-                'media_class' => 'string',
-                'types'       => array('null', 'string', 'array'),
-                'limit'       => 'int',
-            ))
-            ->setAllowedValues(array(
+            ])
+            ->setAllowedTypes('media_class', 'string')
+            ->setAllowedTypes('types',       ['null', 'string', 'array'])
+            ->setAllowedTypes('limit',       'int')
+            ->setAllowedValues([
                 'types' => function($value) {
                     if (is_string($value)) {
                         return MediaTypes::isValid($value);
@@ -67,7 +65,7 @@ class MediaCollectionType extends AbstractType
                     }
                     return true;
                 }
-            ));
+            ]);
         ;
     }
 

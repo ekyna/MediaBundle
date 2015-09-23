@@ -1,85 +1,82 @@
 ekyna_media_browser_admin_index:
     path: ""
     defaults: { _controller: "EkynaMediaBundle:Admin/Browser:index" }
-    requirements:
-        _method: GET
+    methods: [GET]
     options: { i18n: false }
 
 ekyna_media_browser_admin_modal:
     path: /modal
     defaults: { _controller: "EkynaMediaBundle:Admin/Browser:modal" }
-    requirements:
-        _method: GET
+    methods: [GET]
     options: { i18n: false, expose: true }
 
 ekyna_media_browser_admin_list:
     path: /list
     defaults: { _controller: "EkynaMediaBundle:Admin/Browser:list" }
-    requirements:
-        _method: GET
+    methods: [GET]
     options: { i18n: false, expose: true }
 
 ekyna_media_browser_admin_create:
     path: /{id}/create
     defaults: { _controller: "EkynaMediaBundle:Admin/Browser:create" }
+    methods: [POST]
     requirements:
-        _method: POST
         id: \d+
     options: { i18n: false, expose: true }
 
 ekyna_media_browser_admin_rename:
     path: /{id}/rename
     defaults: { _controller: "EkynaMediaBundle:Admin/Browser:rename" }
+    methods: [POST]
     requirements:
-        _method: POST
         id: \d+
     options: { i18n: false, expose: true }
 
 ekyna_media_browser_admin_delete:
     path: /{id}/delete
     defaults: { _controller: "EkynaMediaBundle:Admin/Browser:delete" }
+    methods: [POST]
     requirements:
-        _method: POST
         id: \d+
     options: { i18n: false, expose: true }
 
 ekyna_media_browser_admin_move:
     path: /{id}/move
     defaults: { _controller: "EkynaMediaBundle:Admin/Browser:move" }
+    methods: [POST]
     requirements:
-        _method: POST
         id: \d+
     options: { i18n: false, expose: true }
 
 ekyna_media_browser_admin_list_media:
     path: /{id}/medias
     defaults: { _controller: "EkynaMediaBundle:Admin/Browser:listMedia" }
+    methods: [GET]
     requirements:
-        _method: GET
         id: \d+
     options: { i18n: false, expose: true }
 
 ekyna_media_browser_admin_create_media:
     path: /{id}/medias/create
     defaults: { _controller: "EkynaMediaBundle:Admin/Browser:createMedia" }
+    methods: [GET|POST]
     requirements:
-        _method: GET|POST
         id: \d+
     options: { i18n: false, expose: true }
 
 ekyna_media_browser_admin_import_media:
     path: /{id}/medias/import
     defaults: { _controller: "EkynaMediaBundle:Admin/Browser:importMedia" }
+    methods: [GET|POST]
     requirements:
-        _method: GET|POST
         id: \d+
     options: { i18n: false, expose: true }
 
 ekyna_media_browser_admin_move_media:
     path: /{id}/medias/move/{mediaId}
     defaults: { _controller: "EkynaMediaBundle:Admin/Browser:moveMedia" }
+    methods: [POST]
     requirements:
-        _method: POST
         id: \d+
         mediaId: \d+
     options: { i18n: false, expose: true }

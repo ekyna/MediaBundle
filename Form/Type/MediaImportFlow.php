@@ -33,22 +33,22 @@ class MediaImportFlow extends FormFlow
      */
     protected function loadStepsConfig()
     {
-        return array(
-            array(
+        return [
+            [
                 'label' => 'selection',
                 'type'  => 'ekyna_media_import_selection',
-            ),
-            array(
+            ],
+            [
                 'label' => 'creation',
                 'type'  => 'ekyna_media_import_creation',
-            ),
-        );
+            ],
+        ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFormOptions($step, array $options = array())
+    public function getFormOptions($step, array $options = [])
     {
         $options = parent::getFormOptions($step, $options);
 
@@ -57,16 +57,16 @@ class MediaImportFlow extends FormFlow
             throw new \Exception('Initial import object must be set.');
         }
 
-        $options['validation_groups'] = array('Default'); //, $step == 1 ? 'Selection' : 'Creation'
+        $options['validation_groups'] = ['Default']; //, $step == 1 ? 'Selection' : 'Creation'
         $options['action'] = $this->urlGenerator->generate(
             'ekyna_media_browser_admin_import_media',
-            array('id' => $import->getFolder()->getId())
+            ['id' => $import->getFolder()->getId()]
         );
         $options['method'] = 'post';
         $options['admin_mode'] = true;
-        $options['attr'] = array(
+        $options['attr'] = [
             'class' => 'form form-horizontal form-with-tabs',
-        );
+        ];
 
         return $options;
     }

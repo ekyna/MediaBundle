@@ -80,11 +80,11 @@ class BrowserExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('render_media_manager', array($this, 'renderManager'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('render_media_thumb', array($this, 'renderMediaThumb'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('get_media_thumb_path', array($this, 'getMediaThumbPath')),
-        );
+        return [
+            new \Twig_SimpleFunction('render_media_manager', [$this, 'renderManager'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('render_media_thumb', [$this, 'renderMediaThumb'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('get_media_thumb_path', [$this, 'getMediaThumbPath']),
+        ];
     }
 
 
@@ -94,9 +94,9 @@ class BrowserExtension extends \Twig_Extension
      * @param array $config
      * @return string
      */
-    public function renderManager(array $config = array())
+    public function renderManager(array $config = [])
     {
-        return $this->managerTemplate->render(array('config' => $config));
+        return $this->managerTemplate->render(['config' => $config]);
     }
 
     /**
@@ -106,7 +106,7 @@ class BrowserExtension extends \Twig_Extension
      * @param array          $controls
      * @return string
      */
-    public function renderMediaThumb(MediaInterface $media = null, array $controls = array())
+    public function renderMediaThumb(MediaInterface $media = null, array $controls = [])
     {
         if (null !== $media) {
             $media->setThumb($this->thumbGenerator->generateThumbUrl($media));
@@ -123,11 +123,11 @@ class BrowserExtension extends \Twig_Extension
                 throw new \InvalidArgumentException('Controls must have "role" and "icon" defined.');
             }
         }
-        return $this->thumbTemplate->render(array(
+        return $this->thumbTemplate->render([
             'media'    => $media,
             'controls' => $controls,
             'selector' => false,
-        ));
+        ]);
     }
 
     /**

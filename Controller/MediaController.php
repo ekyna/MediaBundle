@@ -72,8 +72,8 @@ class MediaController extends Controller
          */
         list ($media, $file) = $this->findMedia($request->attributes->get('key'));
 
-        if (in_array($media->getType(), array(MediaTypes::FILE, MediaTypes::ARCHIVE))) {
-            return $this->redirect($this->generateUrl('ekyna_media_download', array('key' => $media->getPath())));
+        if (in_array($media->getType(), [MediaTypes::FILE, MediaTypes::ARCHIVE])) {
+            return $this->redirect($this->generateUrl('ekyna_media_download', ['key' => $media->getPath()]));
         }
 
         $lastModified = $media->getUpdatedAt();
@@ -99,10 +99,10 @@ class MediaController extends Controller
             $content = $extension->renderMedia($media);
         } else {
             $template = "EkynaMediaBundle:Media:{$media->getType()}.html.twig";
-            $content = $this->renderView($template, array(
+            $content = $this->renderView($template, [
                 'media' => $media,
                 'file' => $file,
-            ));
+            ]);
         }
 
         $response->setContent($content);
@@ -137,6 +137,6 @@ class MediaController extends Controller
         }
         $file = $fs->get($media->getPath());
 
-        return array($media, $file);
+        return [$media, $file];
     }
 }

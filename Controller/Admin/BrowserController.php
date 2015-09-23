@@ -7,7 +7,6 @@ use Ekyna\Bundle\CoreBundle\Controller\Controller;
 use Ekyna\Bundle\CoreBundle\Modal\Modal;
 use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
 use Ekyna\Bundle\MediaBundle\Model\Import\MediaImport;
-use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +29,7 @@ class BrowserController extends Controller
     {
         $config = $this->buildConfig($request);
 
-        return $this->render('EkynaMediaBundle:Manager:index.html.twig', array('config' => $config));
+        return $this->render('EkynaMediaBundle:Manager:index.html.twig', ['config' => $config]);
     }
 
     /**
@@ -47,28 +46,28 @@ class BrowserController extends Controller
 
         $config = $this->buildConfig($request);
 
-        $browser = $this->renderView('EkynaMediaBundle:Manager:render.html.twig', array('config' => $config));
+        $browser = $this->renderView('EkynaMediaBundle:Manager:render.html.twig', ['config' => $config]);
 
         $modal = new Modal();
         $modal->setTitle('ekyna_media.browser.title.'.$config['mode']);
         $modal->setContent($browser);
 
         if ($config['mode'] == 'multiple_selection') {
-            $modal->setButtons(array(
-                array(
+            $modal->setButtons([
+                [
                     'id'       => 'submit',
                     'label'    => 'ekyna_core.button.validate',
                     'icon'     => 'glyphicon glyphicon-ok',
                     'cssClass' => 'btn-success',
                     'autospin' => true,
-                ),
-                array(
+                ],
+                [
                     'id' => 'close',
                     'label' => 'ekyna_core.button.close',
                     'icon' => 'glyphicon glyphicon-remove',
                     'cssClass' => 'btn-default',
-                )
-            ));
+                ]
+            ]);
         }
 
         return $this->get('ekyna_core.modal')->render($modal);
@@ -82,10 +81,10 @@ class BrowserController extends Controller
      */
     private function buildConfig(Request $request)
     {
-        $config = array(
+        $config = [
             'mode' => $request->query->get('mode', 'browse'),
-        );
-        if (null !== $types = $request->query->get('types', array())) {
+        ];
+        if (null !== $types = $request->query->get('types', [])) {
             // TODO validate types
             $config['types'] = $types;
         }
@@ -107,12 +106,12 @@ class BrowserController extends Controller
         $root = $this->getFolderRepository()->findRoot();
 
         $response = new Response($this->get('jms_serializer')->serialize(
-            array($root),
+            [$root],
             'json',
-            SerializationContext::create()->setGroups(array('Manager'))
+            SerializationContext::create()->setGroups(['Manager'])
         ));
 
-        $response->headers->add(array('Content-Type' => 'application/json'));
+        $response->headers->add(['Content-Type' => 'application/json']);
 
         return $response;
     }
@@ -136,11 +135,11 @@ class BrowserController extends Controller
         $newFolder->setName('New folder');
 
         $mode = strtolower($request->request->get('mode'));
-        if (!in_array($mode, array('child', 'after'))) {
-            $response = new Response(json_encode(array(
+        if (!in_array($mode, ['child', 'after'])) {
+            $response = new Response(json_encode([
                 'error'   => true,
                 'message' => 'Unexpected creation mode.',
-            ), JSON_FORCE_OBJECT));
+            ], JSON_FORCE_OBJECT));
         } else {
             if ($mode === 'after') {
                 $repo->persistAsNextSiblingOf($newFolder, $refFolder);
@@ -149,22 +148,22 @@ class BrowserController extends Controller
             }
 
             if (true !== $message = $this->validateFolder($newFolder)) {
-                $response = new Response(json_encode(array(
+                $response = new Response(json_encode([
                     'error'   => true,
                     'message' => $message,
-                ), JSON_FORCE_OBJECT));
+                ], JSON_FORCE_OBJECT));
             } else {
                 $this->getEntityManager()->flush();
                 $data = $this->get('jms_serializer')->serialize(
                     $newFolder,
                     'json',
-                    SerializationContext::create()->setGroups(array('Manager'))
+                    SerializationContext::create()->setGroups(['Manager'])
                 );
                 $response = new Response(sprintf('{"node":%s}', $data));
             }
         }
 
-        $response->headers->add(array('Content-Type' => 'application/json'));
+        $response->headers->add(['Content-Type' => 'application/json']);
         return $response;
     }
 
@@ -185,19 +184,19 @@ class BrowserController extends Controller
         $folder->setName($request->request->get('name'));
 
         if (true !== $message = $this->validateFolder($folder)) {
-            $result = array(
+            $result = [
                 'error'   => true,
                 'message' => $message,
-            );
+            ];
         } else {
             $this->persistFolder($folder);
-            $result = array(
+            $result = [
                 'name' => $folder->getName()
-            );
+            ];
         }
 
         $response = new Response(json_encode($result, JSON_FORCE_OBJECT));
-        $response->headers->add(array('Content-Type' => 'application/json'));
+        $response->headers->add(['Content-Type' => 'application/json']);
         return $response;
     }
 
@@ -215,18 +214,18 @@ class BrowserController extends Controller
 
         $folder = $this->findFolderById($request->attributes->get('id'));
 
-        $result = array();
+        $result = [];
         try {
             $this->removeFolder($folder);
         } catch(DBALException $e) {
-            $result = array(
+            $result = [
                 'error'   => true,
                 'message' => 'Ce dossier n\'est pas vide.',
-            );
+            ];
         }
 
         $response = new Response(json_encode($result, JSON_FORCE_OBJECT));
-        $response->headers->add(array('Content-Type' => 'application/json'));
+        $response->headers->add(['Content-Type' => 'application/json']);
         return $response;
     }
 
@@ -244,14 +243,14 @@ class BrowserController extends Controller
 
         $folder = $this->findFolderById($request->attributes->get('id'));
 
-        $result = array();
+        $result = [];
         $mode = $request->request->get('mode');
 
-        if (!in_array($mode, array('before', 'after', 'over'))) {
-            $result = array(
+        if (!in_array($mode, ['before', 'after', 'over'])) {
+            $result = [
                 'error'   => true,
                 'message' => 'Unexpected creation mode.',
-            );
+            ];
         } else {
             $reference = $this->findFolderById($request->request->get('reference'));
 
@@ -266,7 +265,7 @@ class BrowserController extends Controller
         }
 
         $response = new Response(json_encode($result, JSON_FORCE_OBJECT));
-        $response->headers->add(array('Content-Type' => 'application/json'));
+        $response->headers->add(['Content-Type' => 'application/json']);
         return $response;
     }
 
@@ -290,15 +289,15 @@ class BrowserController extends Controller
             ->findMedias((array) $request->query->get('types'))
         ;
 
-        $data = array('medias' => $medias);
+        $data = ['medias' => $medias];
 
         $response = new Response($this->get('jms_serializer')->serialize(
             $data,
             'json',
-            SerializationContext::create()->setGroups(array('Manager'))
+            SerializationContext::create()->setGroups(['Manager'])
         ));
 
-        $response->headers->add(array('Content-Type' => 'application/json'));
+        $response->headers->add(['Content-Type' => 'application/json']);
         return $response;
     }
 
@@ -323,19 +322,19 @@ class BrowserController extends Controller
         }
 
         if ($folder === $media->getFolder()) {
-            $result = array('success' => true);
+            $result = ['success' => true];
         } else {
             $media->setFolder($folder);
             $event = $this->get('ekyna_media.media.operator')->update($media);
             if (!$event->hasErrors()) {
-                $result = array('success' => true);
+                $result = ['success' => true];
             } else {
-                $result = array('success' => false);
+                $result = ['success' => false];
             }
         }
 
         $response = new Response(json_encode($result));
-        $response->headers->add(array('Content-Type' => 'application/json'));
+        $response->headers->add(['Content-Type' => 'application/json']);
         return $response;
     }
 
@@ -358,16 +357,16 @@ class BrowserController extends Controller
         $media = $this->get('ekyna_media.media.repository')->createNew();
         $media->setFolder($folder);
 
-        $form = $this->createForm('ekyna_media_media', $media, array(
+        $form = $this->createForm('ekyna_media_media', $media, [
             'action' => $this->generateUrl(
                 'ekyna_media_browser_admin_create_media',
-                array('id' => $folderId)
+                ['id' => $folderId]
             ),
             'method' => 'POST',
-            'attr' => array(
+            'attr' => [
                 'class' => 'form-horizontal form-with-tabs',
-            ),
-        ));
+            ],
+        ]);
 
         $modal = $this->createModal();
 
@@ -376,7 +375,7 @@ class BrowserController extends Controller
             // TODO use ResourceManager
             $event = $this->get('ekyna_media.media.operator')->create($media);
             if (!$event->hasErrors()) {
-                $modal->setContent(array('success' => true));
+                $modal->setContent(['success' => true]);
             }
         } else {
             $modal->setContent($form->createView());
@@ -453,7 +452,7 @@ class BrowserController extends Controller
                     }
                 }
 
-                $modal->setContent(array('success' => true));
+                $modal->setContent(['success' => true]);
                 return $this->get('ekyna_core.modal')->render($modal);
             }
         }
@@ -501,25 +500,25 @@ class BrowserController extends Controller
     protected function createModal()
     {
         $modal = new Modal('ekyna_media.media.header.new');
-        $modal->setButtons(array(
-            array(
+        $modal->setButtons([
+            [
                 'id'       => 'submit',
                 'label'    => 'ekyna_core.button.save',
                 'icon'     => 'glyphicon glyphicon-ok',
                 'cssClass' => 'btn-success',
                 'autospin' => true,
-            ),
-            array(
+            ],
+            [
                 'id' => 'close',
                 'label' => 'ekyna_core.button.cancel',
                 'icon' => 'glyphicon glyphicon-remove',
                 'cssClass' => 'btn-default',
-            )
-        ));
-        $modal->setVars(array(
+            ]
+        ]);
+        $modal->setVars([
             'resource_name' => 'ekyna_media.media',
             'form_template' => 'EkynaAdminBundle:Entity/Default:_form.html.twig',
-        ));
+        ]);
         return $modal;
     }
 

@@ -37,16 +37,16 @@ class AsseticConfiguration
      */
     protected function buildFancyTreeCss($outputDir)
     {
-        $inputs = array(
+        $inputs = [
             '@EkynaMediaBundle/Resources/asset/css/fancytree/ui.fancytree.css',
-        );
+        ];
 
-        return array(
+        return [
             'inputs'  => $inputs,
-            'filters' => array('yui_css'),
+            'filters' => ['yui_css'],
             'output'  => $outputDir . 'css/fancytree.css',
             'debug'   => false,
-        );
+        ];
     }
 
     /**
@@ -57,19 +57,19 @@ class AsseticConfiguration
      */
     protected function buildFancyTreeJs($outputDir)
     {
-        $inputs = array(
+        $inputs = [
             '@EkynaMediaBundle/Resources/asset/js/jquery.ui-contextmenu.min.js',
             '@EkynaMediaBundle/Resources/asset/js/fancytree/jquery.fancytree.js',
             '@EkynaMediaBundle/Resources/asset/js/fancytree/jquery.fancytree.dnd.js',
             '@EkynaMediaBundle/Resources/asset/js/fancytree/jquery.fancytree.edit.js',
-        );
+        ];
 
-        return array(
+        return [
             'inputs'  => $inputs,
-            'filters' => array('yui_js'),
+            'filters' => ['yui_js'],
             'output'  => $outputDir . 'js/fancytree.js',
             'debug'   => false,
-        );
+        ];
     }
 
     /**
@@ -80,14 +80,14 @@ class AsseticConfiguration
      */
     protected function buildMediaThumbJs($outputDir)
     {
-        $inputs = array(
+        $inputs = [
             '@EkynaMediaBundle/Resources/views/thumb.html.twig',
-        );
-        return array(
+        ];
+        return [
             'inputs'  => $inputs,
-            'filters' => array('twig_js'),
+            'filters' => ['twig_js'],
             'output'  => $outputDir . 'js/media-thumb.js',
             'debug'   => false,
-        );
+        ];
     }
 }

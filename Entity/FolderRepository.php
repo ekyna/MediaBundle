@@ -42,9 +42,9 @@ class FolderRepository extends NestedTreeRepository implements ResourceRepositor
      */
     public function findRoot()
     {
-        return $this->findOneBy(array(
+        return $this->findOneBy([
             'name' => FolderInterface::ROOT,
             'level' => 0,
-        ));
+        ]);
     }
 }

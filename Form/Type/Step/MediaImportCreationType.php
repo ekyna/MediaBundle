@@ -58,16 +58,16 @@ class MediaImportCreationType extends AbstractType
                 $import->addMedia($media);
             }
 
-            $form->add('medias', 'collection', array(
+            $form->add('medias', 'collection', [
                 'label' => false,
                 'type' => 'ekyna_media_import',
-                'options' => array(
+                'options' => [
                     'label' => false,
-                ),
-                'attr' => array(
+                ],
+                'attr' => [
                     'widget_col' => 12,
-                ),
-            ));
+                ],
+            ]);
         });
     }
 

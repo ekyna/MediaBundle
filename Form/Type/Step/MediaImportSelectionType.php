@@ -46,12 +46,12 @@ class MediaImportSelectionType extends AbstractType
 
             $form = $event->getForm();
 
-            $form->add('keys', 'choice', array(
+            $form->add('keys', 'choice', [
                 'label' => 'Choisissez des fichiers à importer.',
                 'choices' => $type->buildKeysChoices($import),
                 'expanded' => true,
                 'multiple' => true,
-            ));
+            ]);
         });
     }
 
@@ -66,7 +66,7 @@ class MediaImportSelectionType extends AbstractType
         $prefix = $import->getFilesystem();
         $fs = $this->mountManager->getFilesystem($prefix);
         $contents = $fs->listContents('', true);
-        $choices = array();
+        $choices = [];
         foreach ($contents as $object) {
             if (!($object['type'] == 'dir' || substr($object['path'], 0, 1) == '.')) {
                 $key = sprintf('%s://%s', $prefix, $object['path']);

@@ -4,7 +4,7 @@ namespace Ekyna\Bundle\MediaBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class ImportMediaType
@@ -35,28 +35,28 @@ class ImportMediaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('key', 'bs_static', array(
+            ->add('key', 'bs_static', [
                 'label' => 'Fichier',
-            ))
-            ->add('translations', 'a2lix_translationsForms', array(
+            ])
+            ->add('translations', 'a2lix_translationsForms', [
                 'form_type' => new MediaTranslationType(),
                 'label'     => false,
-                'attr' => array(
+                'attr' => [
                     'widget_col' => 12,
-                ),
-            ))
+                ],
+            ])
         ;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults(array(
+            ->setDefaults([
                 'data_class' => $this->dataClass
-            ))
+            ])
         ;
     }
 

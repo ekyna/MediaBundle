@@ -115,10 +115,10 @@ class Generator
 
         if ($media->getType() === MediaTypes::IMAGE) {
             $path = $this->cacheManager->getBrowserPath($media->getPath(), 'media_front');
-        } elseif (in_array($media->getType(), array(MediaTypes::VIDEO, MediaTypes::AUDIO, MediaTypes::FLASH))) {
-            $path = $this->urlGenerator->generate('ekyna_media_player', array('key' => $media->getPath()), true);
+        } elseif (in_array($media->getType(), [MediaTypes::VIDEO, MediaTypes::AUDIO, MediaTypes::FLASH])) {
+            $path = $this->urlGenerator->generate('ekyna_media_player', ['key' => $media->getPath()], true);
         } else {
-            $path = $this->urlGenerator->generate('ekyna_media_download', array('key' => $media->getPath()), true);
+            $path = $this->urlGenerator->generate('ekyna_media_download', ['key' => $media->getPath()], true);
         }
 
         return $path;

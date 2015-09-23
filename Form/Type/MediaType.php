@@ -20,14 +20,14 @@ class MediaType extends ResourceFormType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('translations', 'a2lix_translationsForms', array(
+            ->add('translations', 'a2lix_translationsForms', [
                 'form_type' => new MediaTranslationType(),
                 'label'     => false,
                 'required'  => false,
-                'attr'      => array(
+                'attr'      => [
                     'widget_col' => 12,
-                ),
-            ))
+                ],
+            ])
         ;
 
         $builder->addEventListener(

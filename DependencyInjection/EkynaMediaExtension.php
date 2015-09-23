@@ -48,10 +48,10 @@ class EkynaMediaExtension extends AbstractExtension
     protected function configureAsseticBundle(ContainerBuilder $container, $outputDir)
     {
         $asseticConfig = new AsseticConfiguration();
-        $container->prependExtensionConfig('assetic', array(
+        $container->prependExtensionConfig('assetic', [
             'assets' => $asseticConfig->build($outputDir),
-            'bundles' => array('EkynaMediaBundle'),
-        ));
+            'bundles' => ['EkynaMediaBundle'],
+        ]);
     }
 
     /**
@@ -61,8 +61,8 @@ class EkynaMediaExtension extends AbstractExtension
      */
     protected function configureTwigBundle(ContainerBuilder $container)
     {
-        $container->prependExtensionConfig('twig', array(
-            'form' => array('resources' => array('EkynaMediaBundle:Form:form_div_layout.html.twig')),
-        ));
+        $container->prependExtensionConfig('twig', [
+            'form' => ['resources' => ['EkynaMediaBundle:Form:form_div_layout.html.twig']],
+        ]);
     }
 }

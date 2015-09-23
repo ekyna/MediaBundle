@@ -24,14 +24,14 @@ class MediaTypes extends AbstractConstants
     static public function getConfig()
     {
         $prefix = '';
-        return array(
-            self::FILE    => array($prefix.self::FILE,    '125955'),
-            self::IMAGE   => array($prefix.self::IMAGE,   'e6ab2e'),
-            self::VIDEO   => array($prefix.self::VIDEO,   'de4935'),
-            self::FLASH   => array($prefix.self::FLASH,   'de4935'),
-            self::AUDIO   => array($prefix.self::AUDIO,   'b1212a'),
-            self::ARCHIVE => array($prefix.self::ARCHIVE, '63996b'),
-        );
+        return [
+            self::FILE    => [$prefix.self::FILE,    '125955'],
+            self::IMAGE   => [$prefix.self::IMAGE,   'e6ab2e'],
+            self::VIDEO   => [$prefix.self::VIDEO,   'de4935'],
+            self::FLASH   => [$prefix.self::FLASH,   'de4935'],
+            self::AUDIO   => [$prefix.self::AUDIO,   'b1212a'],
+            self::ARCHIVE => [$prefix.self::ARCHIVE, '63996b'],
+        ];
     }
 
     /**

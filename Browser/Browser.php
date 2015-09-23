@@ -69,13 +69,13 @@ class Browser
      * @param array $types
      * @return MediaInterface[]
      */
-    public function findMedias(array $types = array())
+    public function findMedias(array $types = [])
     {
         if (null === $this->folder) {
             throw new \RuntimeException('No folder selected.');
         }
 
-        $criteria = array('folder' => $this->folder);
+        $criteria = ['folder' => $this->folder];
         if (count($types)) {
             $criteria['type'] = $types;
         }

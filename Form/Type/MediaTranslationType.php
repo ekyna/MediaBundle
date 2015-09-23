@@ -4,7 +4,7 @@ namespace Ekyna\Bundle\MediaBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class MediaTranslationType
@@ -19,10 +19,10 @@ class MediaTranslationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', 'text', array(
+            ->add('title', 'text', [
                 'label' => 'ekyna_core.field.title',
                 'required' => false,
-            ))
+            ])
             /*->add('description', 'tinymce', array(
                 'label' => 'ekyna_core.field.description',
                 'theme' => 'advanced',
@@ -34,12 +34,12 @@ class MediaTranslationType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults(array(
+            ->setDefaults([
                 'data_class' => 'Ekyna\Bundle\MediaBundle\Entity\MediaTranslation',
-            ))
+            ])
         ;
     }
 

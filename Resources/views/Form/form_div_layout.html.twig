@@ -25,7 +25,7 @@
     {% set empty_thumb = render_media_thumb() %}
     <div class="ekyna-media-choice" data-config="{{ config|json_encode }}" data-empty-thumb="{{ empty_thumb }}">
     {%- endif %}
-        {{ render_media_thumb(media, (media is not sameas(null) ? config.controls : [])) }}
+        {{ render_media_thumb(media, (media is not same as(null) ? config.controls : [])) }}
         {% set type = type|default('hidden') %}
         {{ block('form_widget_simple') }}
     </div>
