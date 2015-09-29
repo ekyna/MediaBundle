@@ -65,7 +65,7 @@
         <!-- Doctrine entity listeners -->
         <service id="ekyna_media.media.listener" class="Ekyna\Bundle\MediaBundle\Listener\MediaListener">
             <argument type="service" id="ekyna_media.media.uploader" />
-            <tag name="doctrine.entity_listener" />
+            <tag name="doctrine.orm.entity_listener" />
         </service>
 
         <!-- Doctrine event listeners -->
