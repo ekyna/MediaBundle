@@ -391,7 +391,19 @@
                 this.downloadMedia($media);
                 return;
             }
-            var params = {href: $media.data('front'), autoSize: true, padding: 0};
+            var params = {
+                href        : $media.data('front'),
+                maxWidth	: 800,
+                maxHeight	: 600,
+                fitToView	: false,
+                width		: '75%',
+                height		: '75%',
+                autoSize	: false,
+                closeClick	: false,
+                openEffect	: 'none',
+                closeEffect	: 'none',
+                padding     : 0
+            };
             if ($media.data('type') == 'image') {
                 params.type  = 'image';
             } else {
