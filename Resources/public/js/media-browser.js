@@ -393,15 +393,15 @@
             }
             var params = {
                 href        : $media.data('front'),
-                maxWidth	: 800,
+                /*maxWidth	: 800,
                 maxHeight	: 600,
-                fitToView	: false,
-                width		: '75%',
-                height		: '75%',
-                autoSize	: false,
-                closeClick	: false,
+                fitToView	: false,*/
+                width		: 800,
+                height		: 600,
+                autoSize	: true,
+                /*closeClick	: false,
                 openEffect	: 'none',
-                closeEffect	: 'none',
+                closeEffect	: 'none',*/
                 padding     : 0
             };
             if ($media.data('type') == 'image') {
