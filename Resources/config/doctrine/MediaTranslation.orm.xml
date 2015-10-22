@@ -12,7 +12,7 @@
             <generator strategy="AUTO" />
         </id>
 
-        <field name="title" type="string" column="title" length="64" />
+        <field name="title" type="string" column="title" length="64" nullable="true" />
         <field name="description" type="text" column="description" nullable="true" />
 
     </entity>
