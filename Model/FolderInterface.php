@@ -201,4 +201,12 @@ interface FolderInterface
      * @return ArrayCollection|MediaInterface[]
      */
     public function getMedias();
+
+    /**
+     * [Tree] Sets active.
+     *
+     * @param boolean $active
+     * @return FolderInterface|$this
+     */
+    public function setActive($active);
 }

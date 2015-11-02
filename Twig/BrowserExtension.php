@@ -5,6 +5,8 @@ namespace Ekyna\Bundle\MediaBundle\Twig;
 use Ekyna\Bundle\MediaBundle\Browser\Generator;
 use Ekyna\Bundle\MediaBundle\Entity\FolderRepository;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
 use League\Flysystem\FilesystemInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -24,6 +26,11 @@ class BrowserExtension extends \Twig_Extension
      * @var UrlGeneratorInterface
      */
     private $urlGenerator;
+
+    /**
+     * @var SerializerInterface
+     */
+    protected $serializer;
 
     /**
      * @var FolderRepository
@@ -51,17 +58,20 @@ class BrowserExtension extends \Twig_Extension
      *
      * @param FilesystemInterface   $filesystem
      * @param UrlGeneratorInterface $urlGenerator
+     * @param SerializerInterface   $serializer
      * @param FolderRepository      $folderRepository
-     * @param Generator        $thumbGenerator
+     * @param Generator             $thumbGenerator
      */
     public function __construct(
         FilesystemInterface $filesystem,
         UrlGeneratorInterface $urlGenerator,
+        SerializerInterface $serializer,
         FolderRepository $folderRepository,
         Generator $thumbGenerator
     ) {
         $this->filesystem       = $filesystem;
         $this->urlGenerator     = $urlGenerator;
+        $this->serializer       = $serializer;
         $this->folderRepository = $folderRepository;
         $this->thumbGenerator   = $thumbGenerator;
     }
@@ -123,8 +133,16 @@ class BrowserExtension extends \Twig_Extension
                 throw new \InvalidArgumentException('Controls must have "role" and "icon" defined.');
             }
         }
+
+        $data = '{}';
+        if ($media) {
+            $context = SerializationContext::create()->setGroups(array('Manager'));
+            $data = $this->serializer->serialize($media, 'json', $context);
+        }
+
         return $this->thumbTemplate->render(array(
             'media'    => $media,
+            'data'     => $data,
             'controls' => $controls,
             'selector' => false,
         ));
@@ -149,3 +167,4 @@ class BrowserExtension extends \Twig_Extension
         return 'ekyna_media_browser';
     }
 }
+

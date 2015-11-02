@@ -80,6 +80,7 @@
         <service id="ekyna_media.twig.browser_extension" class="Ekyna\Bundle\MediaBundle\Twig\BrowserExtension">
             <argument type="service" id="local_media_filesystem" />
             <argument type="service" id="router" />
+            <argument type="service" id="serializer" />
             <argument type="service" id="ekyna_media.folder.repository" />
             <argument type="service" id="ekyna_media.browser.thumb_generator" />
             <tag name="twig.extension" />

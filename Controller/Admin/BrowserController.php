@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class BrowserController
  * @package Ekyna\Bundle\MediaBundle\Controller\Admin
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class BrowserController extends Controller
 {
@@ -23,6 +23,7 @@ class BrowserController extends Controller
      * Renders the manager modal
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function indexAction(Request $request)
@@ -36,6 +37,7 @@ class BrowserController extends Controller
      * Renders the manager modal
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function modalAction(Request $request)
@@ -49,7 +51,7 @@ class BrowserController extends Controller
         $browser = $this->renderView('EkynaMediaBundle:Manager:render.html.twig', array('config' => $config));
 
         $modal = new Modal();
-        $modal->setTitle('ekyna_media.browser.title.'.$config['mode']);
+        $modal->setTitle('ekyna_media.browser.title.' . $config['mode']);
         $modal->setContent($browser);
 
         if ($config['mode'] == 'multiple_selection') {
@@ -62,11 +64,11 @@ class BrowserController extends Controller
                     'autospin' => true,
                 ),
                 array(
-                    'id' => 'close',
-                    'label' => 'ekyna_core.button.close',
-                    'icon' => 'glyphicon glyphicon-remove',
+                    'id'       => 'close',
+                    'label'    => 'ekyna_core.button.close',
+                    'icon'     => 'glyphicon glyphicon-remove',
                     'cssClass' => 'btn-default',
-                )
+                ),
             ));
         }
 
@@ -77,6 +79,7 @@ class BrowserController extends Controller
      * Builds the browser config.
      *
      * @param Request $request
+     *
      * @return array
      */
     private function buildConfig(Request $request)
@@ -95,6 +98,7 @@ class BrowserController extends Controller
      * Lists the children folders.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function listAction(Request $request)
@@ -104,22 +108,53 @@ class BrowserController extends Controller
         }
 
         $root = $this->getFolderRepository()->findRoot();
+        if (null !== $id = $request->query->get('folderId')) {
+            if (!$this->activateFolderById($id, $root)) {
+                $root->setActive(true);
+            }
+        } else {
+            $root->setActive(true);
+        }
 
-        $response = new Response($this->get('jms_serializer')->serialize(
+        $folders = $this->get('jms_serializer')->serialize(
             array($root),
             'json',
             SerializationContext::create()->setGroups(array('Manager'))
-        ));
+        );
 
+        $response = new Response($folders);
         $response->headers->add(array('Content-Type' => 'application/json'));
 
         return $response;
     }
 
     /**
+     * Activate the folder by id.
+     *
+     * @param int             $id
+     * @param FolderInterface $folder
+     *
+     * @return bool
+     */
+    private function activateFolderById($id, FolderInterface $folder)
+    {
+        foreach ($folder->getChildren() as $child) {
+            if ($child->getId() == $id) {
+                $child->setActive(true);
+                return true;
+            }
+            if ($this->activateFolderById($id, $child)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Creates the folder.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function createAction(Request $request)
@@ -171,6 +206,7 @@ class BrowserController extends Controller
      * Renames the folder.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function renameAction(Request $request)
@@ -191,7 +227,7 @@ class BrowserController extends Controller
         } else {
             $this->persistFolder($folder);
             $result = array(
-                'name' => $folder->getName()
+                'name' => $folder->getName(),
             );
         }
 
@@ -204,6 +240,7 @@ class BrowserController extends Controller
      * Deletes the folder.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function deleteAction(Request $request)
@@ -217,7 +254,7 @@ class BrowserController extends Controller
         $result = array();
         try {
             $this->removeFolder($folder);
-        } catch(DBALException $e) {
+        } catch (DBALException $e) {
             $result = array(
                 'error'   => true,
                 'message' => 'Ce dossier n\'est pas vide.',
@@ -233,6 +270,7 @@ class BrowserController extends Controller
      * Moves the folder.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function moveAction(Request $request)
@@ -273,6 +311,7 @@ class BrowserController extends Controller
      * Lists the medias by folder.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function listMediaAction(Request $request)
@@ -286,8 +325,7 @@ class BrowserController extends Controller
         $medias = $this
             ->get('ekyna_media.browser')
             ->setFolder($folder)
-            ->findMedias((array) $request->query->get('types'))
-        ;
+            ->findMedias((array)$request->query->get('types'));
 
         $data = array('medias' => $medias);
 
@@ -305,6 +343,7 @@ class BrowserController extends Controller
      * Moves the media to the folder.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function moveMediaAction(Request $request)
@@ -342,6 +381,7 @@ class BrowserController extends Controller
      * Creates the media into the folder.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function createMediaAction(Request $request)
@@ -363,7 +403,7 @@ class BrowserController extends Controller
                 array('id' => $folderId)
             ),
             'method' => 'POST',
-            'attr' => array(
+            'attr'   => array(
                 'class' => 'form-horizontal form-with-tabs',
             ),
         ));
@@ -388,13 +428,14 @@ class BrowserController extends Controller
      * Imports the media into the folder.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function importMediaAction(Request $request)
     {
-        /*if (!$request->isXmlHttpRequest()) {
+        if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
-        }*/
+        }
 
         $modal = $this->createModal();
         $modal->setTitle('ekyna_media.import.title');
@@ -414,38 +455,9 @@ class BrowserController extends Controller
             if ($flow->nextStep()) {
                 $form = $flow->createForm();
             } else {
-                $operator     = $this->get('ekyna_media.media.operator');
-                //$mountManager = $this->get('oneup_flysystem.mount_manager');
-                //$uploader     = $this->get('ekyna_media.media.uploader');
-                //$validator    = $this->get('validator');
-
+                // TODO use ResourceManager
+                $operator = $this->get('ekyna_media.media.operator');
                 foreach ($import->getMedias() as $media) {
-                    /*if (false !== $slashPos = strpos($media->getKey(), '/')) {
-                        $filename = substr($media->getKey(), $slashPos + 1);
-                    } else {
-                        $filename = $media->getKey();
-                    }
-                    $path = $uploader->generatePath($filename);
-                    $source = 'local_ftp://'.$media->getKey();
-                    $target = 'local_media://'.$path;
-
-                    $media
-                        ->setPath($path)
-                        ->setType(MediaTypes::guessByMimeType($mountManager->getMimetype($source)))
-                        ->setKey(null)
-                    ;
-
-                    $validationErrors = $validator->validate($media);
-                    if (0 < $validationErrors->count()) {
-                        $this->addFlash('Invalid media.', 'danger');
-                        continue;
-                    }
-
-                    if (!($mountManager->has($source) && $mountManager->move($source, $target))) {
-                        $this->addFlash(sprintf('Failed to move "%s".', $filename), 'danger');
-                        continue;
-                    }*/
-
                     $event = $operator->create($media);
                     if ($event->isPropagationStopped()) {
                         $this->addFlash(sprintf('Failed to create "%s" media.', $media->getPath()), 'danger');
@@ -460,36 +472,6 @@ class BrowserController extends Controller
         $modal->setContent($form->createView());
 
         return $this->get('ekyna_core.modal')->render($modal);
-
-
-
-
-
-
-        /*$form = $this->createForm('ekyna_media_media', $media, array(
-            'action' => $this->generateUrl(
-                'ekyna_media_browser_admin_import_media',
-                array('id' => $folderId)
-            ),
-            'method' => 'POST',
-            'attr' => array(
-                'class' => 'form-horizontal form-with-tabs',
-            ),
-        ));
-
-
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            // TODO use ResourceManager
-            $event = $this->get('ekyna_media.media.operator')->create($media);
-            if (!$event->hasErrors()) {
-                $modal->setContent(array('success' => true));
-            }
-        } else {
-            $modal->setContent($form->createView());
-        }
-
-        return $this->get('ekyna_core.modal')->render($modal);*/
     }
 
     /**
@@ -509,11 +491,11 @@ class BrowserController extends Controller
                 'autospin' => true,
             ),
             array(
-                'id' => 'close',
-                'label' => 'ekyna_core.button.cancel',
-                'icon' => 'glyphicon glyphicon-remove',
+                'id'       => 'close',
+                'label'    => 'ekyna_core.button.cancel',
+                'icon'     => 'glyphicon glyphicon-remove',
                 'cssClass' => 'btn-default',
-            )
+            ),
         ));
         $modal->setVars(array(
             'resource_name' => 'ekyna_media.media',
@@ -560,6 +542,7 @@ class BrowserController extends Controller
      * Validates the folder.
      *
      * @param FolderInterface $folder
+     *
      * @return true|string
      */
     private function validateFolder(FolderInterface $folder)
@@ -575,6 +558,7 @@ class BrowserController extends Controller
      * Returns the folder by id.
      *
      * @param integer $id
+     *
      * @return FolderInterface
      */
     private function findFolderById($id)
