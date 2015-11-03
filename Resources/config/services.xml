@@ -35,6 +35,14 @@
         <service id="ekyna_media.media_collection_media.form_type" class="%ekyna_media.media_collection_media.form_type.class%">
             <tag name="form.type" alias="ekyna_media_collection_media" />
         </service>
+        <service id="ekyna_media.media_upload.form_type" class="Ekyna\Bundle\MediaBundle\Form\Type\UploadType">
+            <tag name="form.type" alias="ekyna_media_upload" />
+            <tag name="form.js" selector=".ekyna-media-upload" path="ekyna-form/media-upload" />
+        </service>
+        <service id="ekyna_media.media_upload_media.form_type" class="Ekyna\Bundle\MediaBundle\Form\Type\UploadMediaType">
+            <argument>%ekyna_media.media.class%</argument>
+            <tag name="form.type" alias="ekyna_media_upload_media" />
+        </service>
         <service id="ekyna_media.media_import.form_type" class="Ekyna\Bundle\MediaBundle\Form\Type\ImportMediaType">
             <argument>%ekyna_media.media.class%</argument>
             <tag name="form.type" alias="ekyna_media_import" />

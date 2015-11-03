@@ -24,3 +24,6 @@ ekyna_media:
             multiple_selection: Sélectionnez des médias
     import:
         title: Importer des médias
+    upload:
+        title: Télécharger des médias
+        drop_zone: Déposez des fichiers ici

@@ -7,3 +7,4 @@ ekyna_media:
         invalid_mime_type: Les formats acceptés sont JPEG, GIF et PNG.
     import:
         at_least_one_key: Veuillez choisir au moins un fichier.
+        at_least_one_media: Veuillez ajouter au moins un média.

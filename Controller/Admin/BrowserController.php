@@ -7,6 +7,7 @@ use Ekyna\Bundle\CoreBundle\Controller\Controller;
 use Ekyna\Bundle\CoreBundle\Modal\Modal;
 use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
 use Ekyna\Bundle\MediaBundle\Model\Import\MediaImport;
+use Ekyna\Bundle\MediaBundle\Model\Import\MediaUpload;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -393,11 +394,9 @@ class BrowserController extends Controller
         $folderId = $request->attributes->get('id');
         $folder = $this->findFolderById($folderId);
 
-        /** @var \Ekyna\Bundle\MediaBundle\Model\MediaInterface $media */
-        $media = $this->get('ekyna_media.media.repository')->createNew();
-        $media->setFolder($folder);
+        $upload = new MediaUpload();
 
-        $form = $this->createForm('ekyna_media_media', $media, array(
+        $form = $this->createForm('ekyna_media_upload', $upload, array(
             'action' => $this->generateUrl(
                 'ekyna_media_browser_admin_create_media',
                 array('id' => $folderId)
@@ -406,17 +405,30 @@ class BrowserController extends Controller
             'attr'   => array(
                 'class' => 'form-horizontal form-with-tabs',
             ),
+            'folder' => $folder,
         ));
 
         $modal = $this->createModal();
+        $modal->setTitle('ekyna_media.upload.title');
+        $modal->setVars(array(
+            'form_template' => 'EkynaMediaBundle:Manager:upload.html.twig',
+        ));
 
+        $success = false;
         $form->handleRequest($request);
         if ($form->isValid()) {
+            $success = true;
             // TODO use ResourceManager
-            $event = $this->get('ekyna_media.media.operator')->create($media);
-            if (!$event->hasErrors()) {
-                $modal->setContent(array('success' => true));
+            foreach ($upload->getMedias() as $media) {
+                $event = $this->get('ekyna_media.media.operator')->create($media);
+                if ($event->hasErrors()) {
+                    $success = false;
+                    break;
+                }
             }
+        }
+        if ($success) {
+            $modal->setContent(array('success' => true));
         } else {
             $modal->setContent($form->createView());
         }
