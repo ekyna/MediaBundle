@@ -35,13 +35,17 @@ define('ekyna-form/media-upload', ['jquery', 'jquery/fileupload', 'jquery/qtip']
                 })
                 .bind('fileuploadadd', function (e, data) {
                     $.each(data.files, function (index, file) {
+                        $collection.one('ekyna-collection-field-added', function(e) {
+                            var $li = e.target;
+                            $li.data(data);
+                            $li.find('input:text').eq(0).val(file.name);
+                            data.context = $li;
+                        });
                         $addButton.trigger('click');
-                        var $li = $collection.find(' > ul > li:last-child').eq(0);
-                        $li.find('input:text').eq(0).val(file.name);
-                        data.context = $li;
                     });
                 })
-                .bind('fileuploadsubmit', function () { //e, data
+                .bind('fileuploadsubmit', function (e, data) { //e, data
+                    console.log(data);
                     var count = $form.data('uploadCount') || 0;
                     count++;
                     $submitButton.prop('disabled', true);
@@ -83,21 +87,13 @@ define('ekyna-form/media-upload', ['jquery', 'jquery/fileupload', 'jquery/qtip']
                             .attr('aria-valuenow', progress);
                     }
                 })
-                /*.bind('fileuploadchunkfail', function (e, data) {
-                    console.log('FAIL');
-                    console.log(data);
-                    if (data.context) {
-
-                    }
-                })
-                .bind('fileuploadfail', function (e, data) {
-                    console.log('FAIL');
-                    console.log(data);
-                    if (data.context) {
-
-                    }
-                })*/
             ;
+
+            $collection.on('ekyna-collection-field-removed', function(e) {
+                if (e.target.data.abort) {
+                    e.target.data.abort();
+                }
+            });
 
             /* Prevent form submission */
             $form.bind('submit', function(e) {
