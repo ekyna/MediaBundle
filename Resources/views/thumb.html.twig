@@ -1,6 +1,6 @@
 {% twig_js name="media_thumb_template" %}
 {% spaceless %}
-<div class="media-thumb"{% if media is not sameas(null) -%} title="{{ media.title }}"{%- endif %}>
+<div class="media-thumb"{% if media is not sameas(null) -%} title="{{ media.title }}"{%- endif %}{% if data is defined %} data-media="{{ data }}"{% endif %}>
     {% if selector and (media is not sameas(null)) %}
         <span class="selector">
             <input type="checkbox" name="thumb_selection[]" value="{{ media.id }}">

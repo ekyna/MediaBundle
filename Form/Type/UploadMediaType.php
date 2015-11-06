@@ -6,11 +6,11 @@ use Ekyna\Bundle\AdminBundle\Form\Type\ResourceFormType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class MediaType
+ * Class UploadMediaType
  * @package Ekyna\Bundle\MediaBundle\Form\Type
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class MediaType extends ResourceFormType
+class UploadMediaType extends ResourceFormType
 {
     /**
      * {@inheritdoc}
@@ -18,23 +18,20 @@ class MediaType extends ResourceFormType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('translations', 'a2lix_translationsForms', [
+            ->add('translations', 'a2lix_translationsForms', array(
                 'form_type' => new MediaTranslationType(),
                 'label'     => false,
                 'required'  => false,
-                'attr'      => [
+                'attr'      => array(
                     'widget_col' => 12,
-                ],
-            ])
-        ;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return 'ekyna_upload';
+                ),
+            ))
+            ->add('key', 'hidden')
+            ->add('rename', 'text', array(
+                'label'    => false,
+                'required' => true,
+                'sizing'   => 'sm',
+            ));
     }
 
     /**
@@ -42,6 +39,6 @@ class MediaType extends ResourceFormType
      */
     public function getName()
     {
-        return 'ekyna_media_media';
+        return 'ekyna_media_upload_media';
     }
 }

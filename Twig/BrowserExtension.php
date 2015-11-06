@@ -5,6 +5,8 @@ namespace Ekyna\Bundle\MediaBundle\Twig;
 use Ekyna\Bundle\MediaBundle\Browser\Generator;
 use Ekyna\Bundle\MediaBundle\Entity\FolderRepository;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
 use League\Flysystem\FilesystemInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -24,6 +26,11 @@ class BrowserExtension extends \Twig_Extension
      * @var UrlGeneratorInterface
      */
     private $urlGenerator;
+
+    /**
+     * @var SerializerInterface
+     */
+    protected $serializer;
 
     /**
      * @var FolderRepository
@@ -51,17 +58,20 @@ class BrowserExtension extends \Twig_Extension
      *
      * @param FilesystemInterface   $filesystem
      * @param UrlGeneratorInterface $urlGenerator
+     * @param SerializerInterface   $serializer
      * @param FolderRepository      $folderRepository
-     * @param Generator        $thumbGenerator
+     * @param Generator             $thumbGenerator
      */
     public function __construct(
         FilesystemInterface $filesystem,
         UrlGeneratorInterface $urlGenerator,
+        SerializerInterface $serializer,
         FolderRepository $folderRepository,
         Generator $thumbGenerator
     ) {
         $this->filesystem       = $filesystem;
         $this->urlGenerator     = $urlGenerator;
+        $this->serializer       = $serializer;
         $this->folderRepository = $folderRepository;
         $this->thumbGenerator   = $thumbGenerator;
     }
@@ -80,11 +90,11 @@ class BrowserExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return [
-            new \Twig_SimpleFunction('render_media_manager', [$this, 'renderManager'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('render_media_thumb', [$this, 'renderMediaThumb'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('get_media_thumb_path', [$this, 'getMediaThumbPath']),
-        ];
+        return array(
+            new \Twig_SimpleFunction('render_media_manager', array($this, 'renderManager'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('render_media_thumb', array($this, 'renderMediaThumb'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('get_media_thumb_path', array($this, 'getMediaThumbPath')),
+        );
     }
 
 
@@ -94,9 +104,9 @@ class BrowserExtension extends \Twig_Extension
      * @param array $config
      * @return string
      */
-    public function renderManager(array $config = [])
+    public function renderManager(array $config = array())
     {
-        return $this->managerTemplate->render(['config' => $config]);
+        return $this->managerTemplate->render(array('config' => $config));
     }
 
     /**
@@ -106,7 +116,7 @@ class BrowserExtension extends \Twig_Extension
      * @param array          $controls
      * @return string
      */
-    public function renderMediaThumb(MediaInterface $media = null, array $controls = [])
+    public function renderMediaThumb(MediaInterface $media = null, array $controls = array())
     {
         if (null !== $media) {
             $media->setThumb($this->thumbGenerator->generateThumbUrl($media));
@@ -123,11 +133,19 @@ class BrowserExtension extends \Twig_Extension
                 throw new \InvalidArgumentException('Controls must have "role" and "icon" defined.');
             }
         }
-        return $this->thumbTemplate->render([
+
+        $data = '{}';
+        if ($media) {
+            $context = SerializationContext::create()->setGroups(array('Manager'));
+            $data = $this->serializer->serialize($media, 'json', $context);
+        }
+
+        return $this->thumbTemplate->render(array(
             'media'    => $media,
+            'data'     => $data,
             'controls' => $controls,
             'selector' => false,
-        ]);
+        ));
     }
 
     /**
@@ -149,3 +167,4 @@ class BrowserExtension extends \Twig_Extension
         return 'ekyna_media_browser';
     }
 }
+

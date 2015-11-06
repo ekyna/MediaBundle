@@ -183,6 +183,14 @@ class Media implements MediaInterface
     /**
      * {@inheritdoc}
      */
+    public function getFolderId()
+    {
+        return $this->folder ? $this->folder->getId() : null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public static function getEntityTagPrefix()
     {
         return 'ekyna_media.media';

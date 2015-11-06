@@ -18,7 +18,7 @@
     ],
     "require" : {
         "php" : ">=5.4.0",
-        "ekyna/admin-bundle" : "1.0.x-dev",
+        "ekyna/admin-bundle" : "dev-master",
         "liip/imagine-bundle" : "1.2.*",
         "jms/serializer-bundle": "0.13.*",
         "jms/twig-js": "1.0.*",
@@ -28,11 +28,6 @@
     "autoload" : {
         "psr-4" : {
             "Ekyna\\Bundle\\MediaBundle\\" : ""
-        }
-    },
-    "extra" : {
-        "branch-alias" : {
-            "dev-master" : "1.0.x-dev"
         }
     }
 }

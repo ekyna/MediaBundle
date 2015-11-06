@@ -62,14 +62,6 @@ class PlayerExtension extends \Twig_Extension
     }
 
     /**
-     * {@inheritDoc}
-     */
-    /*public function getGlobals()
-    {
-        return array();
-    }*/
-
-    /**
      * {@inheritdoc}
      */
     public function getFilters()
@@ -128,8 +120,8 @@ class PlayerExtension extends \Twig_Extension
             'attr'         => [
                 'id'     => 'media-video-' . $video->getId(),
                 'class'  => 'video-js vjs-default-skin vjs-big-play-centered',
-                'height' => '600',
-                'width'  => '800',
+                'height' => '100%',
+                'width'  => '100%',
             ],
         ], $params);
 
@@ -162,8 +154,8 @@ class PlayerExtension extends \Twig_Extension
                 'id'     => 'media-flash-' . $flash->getId(),
                 'class'  => 'swf-object',
                 //'classid' => 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000',
-                'height' => '600',
-                'width'  => '800',
+                'height' => '100%',
+                'width'  => '100%',
             ],
         ], $params);
 

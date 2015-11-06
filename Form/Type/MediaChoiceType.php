@@ -14,7 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class MediaChoiceType
  * @package Ekyna\Bundle\MediaBundle\Form\Type
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class MediaChoiceType extends AbstractType
 {
@@ -25,7 +25,9 @@ class MediaChoiceType extends AbstractType
 
 
     /**
-     * @param EntityRepository $repository
+     * Constructor.
+     *
+     * @param EntityRepository    $repository
      */
     public function __construct(EntityRepository $repository)
     {
@@ -44,49 +46,50 @@ class MediaChoiceType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $resolver
-            ->setDefaults([
-                'label' => 'ekyna_media.media.label.singular',
-                'types' => null,
-                'error_bubbling' => false,
-                'controls' => [
-                    ['role' => 'remove', 'icon' => 'remove'],
-                ],
-                'gallery' => false,
-            ])
-
-            ->setAllowedTypes('types',    ['null', 'string', 'array'])
-            ->setAllowedTypes('controls', 'array')
-            ->setAllowedTypes('gallery',  'bool')
-
-            ->setAllowedValues('types', function($value) {
-                if (is_string($value)) {
-                    return MediaTypes::isValid($value);
-                } elseif (is_array($value)) {
-                    foreach ($value as $v) {
-                        if (!MediaTypes::isValid($v)) {
-                            return false;
-                        }
-                    }
-                }
-                return true;
-            })
-        ;
+        $view->vars['media'] = $form->getData();
+        $view->vars['config'] = array(
+            'types'    => (array)$options['types'],
+            'controls' => $options['controls'],
+        );
+        $view->vars['gallery'] = $options['gallery'];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $view->vars['media'] = $form->getData();
-        $view->vars['config'] = [
-            'types' => (array) $options['types'],
-            'controls' => $options['controls'],
-        ];
-        $view->vars['gallery'] = $options['gallery'];
+        $resolver
+            ->setDefaults(array(
+                'label'          => 'ekyna_media.media.label.singular',
+                'types'          => null,
+                'error_bubbling' => false,
+                'controls'       => array(
+                    array('role' => 'remove', 'icon' => 'remove'),
+                ),
+                'gallery'        => false,
+            ))
+
+            ->setAllowedTypes('types',    array('null', 'string', 'array'))
+            ->setAllowedTypes('controls', 'array')
+            ->setAllowedTypes('gallery',  'bool')
+
+            ->setAllowedValues(array(
+                'types' => function ($value) {
+                    if (is_string($value)) {
+                        return MediaTypes::isValid($value);
+                    } elseif (is_array($value)) {
+                        foreach ($value as $v) {
+                            if (!MediaTypes::isValid($v)) {
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+                },
+            ));;
     }
 
     /**

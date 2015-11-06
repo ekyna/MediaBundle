@@ -13,14 +13,15 @@ define('ekyna-form/media-choice',
         constructor: MediaChoiceWidget,
         init: function () {
             var that = this;
-            this.$elem.on('click', '.media-thumb [data-role="select"]', function() {
-                that.selectMedia();
+            this.$elem.on('click', '.media-thumb [data-role="select"]', function(e) {
+                that.selectMedia($(e.target).parents('.media-thumb').eq(0).data('media')['folder_id']);
             });
             this.$elem.on('click', '.media-thumb [data-role="remove"]', function() {
                 that.removeMedia();
             });
         },
-        selectMedia: function() {
+        selectMedia: function(folderId) {
+            console.log(folderId);
             var that = this,
                 modal = new Modal(),
                 browser;
@@ -28,7 +29,8 @@ define('ekyna-form/media-choice',
             $(modal).on('ekyna.modal.content', function (e) {
                 if (e.contentType == 'html') {
                     browser = new Browser(e.content);
-                    browser.init();
+                    browser.init({folderId: folderId});
+
                     // Handle browser selection
                     $(browser).bind('ekyna.media-browser.selection', function(e) {
                         if (e.hasOwnProperty('media')) {
@@ -37,7 +39,7 @@ define('ekyna-form/media-choice',
                                 controls: that.config.controls,
                                 selector: false
                             }));
-                            $thumb.data(e.media);
+                            $thumb.data('media', e.media);
 
                             that.$elem.find('.media-thumb').replaceWith($thumb);
                             that.$elem.find('input').val(e.media.id);

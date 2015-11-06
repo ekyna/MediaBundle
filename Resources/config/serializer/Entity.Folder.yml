@@ -30,6 +30,11 @@ Ekyna\Bundle\MediaBundle\Entity\Folder:
             groups: [Manager]
             serialized_name: folder
             type: boolean
+        getActive:
+            expose: true
+            groups: [Manager]
+            serialized_name: active
+            type: boolean
 #        getIcon:
 #            expose: true
 #            type: string
