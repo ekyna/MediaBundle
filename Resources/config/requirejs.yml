@@ -11,6 +11,8 @@ config:
             deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-media-browser']
         'ekyna-form/media-collection':
             deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-media-browser', 'jquery-ui']
+        'ekyna-form/media-upload':
+            deps: ['jquery', 'jquery/fileupload']
         'ekyna-media-player':
             deps: ['jquery', 'videojs', 'swfobject']
         'fancybox':
@@ -21,6 +23,7 @@ config:
         'ekyna-media-browser': 'bundles/ekynamedia/js/media-browser'
         'ekyna-form/media-choice': 'bundles/ekynamedia/js/form-media-choice'
         'ekyna-form/media-collection': 'bundles/ekynamedia/js/form-media-collection'
+        'ekyna-form/media-upload': 'bundles/ekynamedia/js/form-media-upload'
         'ekyna-media-player': 'bundles/ekynamedia/js/media-player'
         'fancybox': 'bundles/ekynamedia/lib/fancybox/jquery.fancybox.pack'
         'videojs': 'bundles/ekynamedia/lib/videojs/video'

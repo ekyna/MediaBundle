@@ -57,7 +57,9 @@ define('ekyna-form/media-collection',
             that.updateCollection();
         },
         addMedias: function() {
-            var that = this, modal = new Modal(), browser;
+            var that = this,
+                modal = new Modal(),
+                browser;
 
             $(modal).on('ekyna.modal.content', function (e) {
                 if (e.contentType == 'html') {
@@ -155,7 +157,7 @@ define('ekyna-form/media-collection',
                 controls: that.config.controls,
                 selector: false
             }));
-            $thumb.data(data);
+            $thumb.data('media', data);
 
             $child.find('.media-thumb').replaceWith($thumb);
             $child.find('input').val(data.id);

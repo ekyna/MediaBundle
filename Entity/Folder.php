@@ -58,6 +58,11 @@ class Folder implements FolderInterface
      */
     protected $medias;
 
+    /**
+     * @var bool
+     */
+    protected $active = false;
+
 
     /**
      * Constructor.
@@ -299,6 +304,16 @@ class Folder implements FolderInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    /**
      * [Serializer] Returns the key.
      *
      * @return string
@@ -329,12 +344,22 @@ class Folder implements FolderInterface
     }
 
     /**
-     * [Serializer] Folder icon.
+     * [Serializer/Tree] Folder icon.
      *
      * @return string
      */
     public function getFolder()
     {
         return true;
+    }
+
+    /**
+     * [Serializer/Tree] Active folder.
+     *
+     * @return boolean
+     */
+    public function getActive()
+    {
+        return $this->active;
     }
 }

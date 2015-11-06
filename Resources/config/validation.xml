@@ -50,4 +50,14 @@
         </property>
     </class>
 
+    <class name="Ekyna\Bundle\MediaBundle\Model\Import\MediaUpload">
+        <property name="medias">
+            <constraint name="Count">
+                <option name="min">1</option>
+                <option name="minMessage">ekyna_media.import.at_least_one_media</option>
+            </constraint>
+            <constraint name="Valid" />
+        </property>
+    </class>
+
 </constraint-mapping>

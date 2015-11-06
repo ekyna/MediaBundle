@@ -69,7 +69,8 @@
 
     var defaultConfig = {
         mode:    "browse",
-        path:    "",
+        //path:    "",
+        folderId: null,
         types:   [],
         sortBy:  "filename",
         sortDir: "asc",
@@ -195,15 +196,15 @@
             this.$content.on('click', '.media-thumb [data-role="select"]', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                var $element = $(e.currentTarget).parents('.media-thumb');
+                var $element = $(e.currentTarget).parents('.media-thumb').eq(0);
                 if (that.config.mode == 'tinymce' && parent.tinymce && parent.tinymce.activeEditor) {
                     parent.tinymce.activeEditor.windowManager.getParams().setUrl(
-                        $element.data('front')
+                        $element.data('media').front
                     );
                     parent.tinymce.activeEditor.windowManager.close();
                 } else if (that.config.mode == 'single_selection') {
                     var event = jQuery.Event('ekyna.media-browser.selection');
-                    event.media = $element.data();
+                    event.media = $element.data('media');
                     $(that).trigger(event);
                 } else if (that.config.mode == 'multiple_selection') {
                     var $checkbox = $element.find('input[type="checkbox"]');
@@ -279,7 +280,7 @@
                         ];
                         $(d['medias']).each(function (index, media) {
                             $(Twig.render(media_thumb_template, {media: media, controls: controls, selector: selector}))
-                                .data(media)
+                                .data('media', media)
                                 .appendTo(that.$content)
                                 .draggable({
                                     revert: "invalid",
@@ -387,12 +388,12 @@
             });
         },
         showMedia: function($media) {
-            if ($media.data('type') == 'file' || $media.data('type') == 'file') {
+            if ($media.data('media').type == 'file' || $media.data('media').type == 'file') {
                 this.downloadMedia($media);
                 return;
             }
             var params = {
-                href        : $media.data('front'),
+                href        : $media.data('media').front,
                 maxWidth    : 1200,
                 //maxHeight   : 600,
                 fitToView   : false,
@@ -404,7 +405,7 @@
                 closeEffect : 'none',
                 padding     : 0
             };
-            if ($media.data('type') == 'image') {
+            if ($media.data('media').type == 'image') {
                 params.type  = 'image';
             } else {
                 params.type = 'ajax';
@@ -422,12 +423,12 @@
             this.openModal({
                 url: Router.generate(
                     'ekyna_media_media_admin_edit',
-                    {'mediaId': $media.data('id')}
+                    {'mediaId': $media.data('media').id}
                 )/*,
                 TODO onData: function(data) {
                     if (data.hasOwnProperty('success') && data.success) {
                         var event = jQuery.Event('ekyna.media-browser.media_update');
-                        event.media = $media.data();
+                        event.media = $media.data('media');
                         $(that).trigger(event);
                     }
                 }*/
@@ -439,19 +440,19 @@
                 // TODO modal size
                 url: Router.generate(
                     'ekyna_media_media_admin_remove',
-                    {'mediaId': $media.data('id')}
+                    {'mediaId': $media.data('media').id}
                 ),
                 onData: function(data) {
                     if (data.hasOwnProperty('success') && data.success) {
                         var event = jQuery.Event('ekyna.media-browser.media_delete');
-                        event.media = $media.data();
+                        event.media = $media.data('media');
                         $(that).trigger(event);
                     }
                 }
             });
         },
         downloadMedia: function($media) {
-            var url = Router.generate('ekyna_media_download', {'key': $media.data('path')});
+            var url = Router.generate('ekyna_media_download', {'key': $media.data('media').path});
             window.open(url,'_blank');
         },
         filterList: function() {
@@ -463,7 +464,7 @@
                 var searchRegex = new RegExp(search.removeDiatrics().escapeRegExp(), 'i');
                 this.$content.find('.media-thumb').each(function(i, media) {
                     var $element = $(media);
-                    var type = $element.data('type');
+                    var type = $element.data('media').type;
                     if (filters.length > 0) {
                         if (0 > $.inArray(type, filters)) {
                             $element.hide();
@@ -472,7 +473,8 @@
                         }
                     }
                     if (search.length > 0) {
-                        if (searchRegex.test($element.data('title').removeDiatrics())) {
+                        if (searchRegex.test($element.data('media').title.removeDiatrics())
+                            || searchRegex.test($element.data('media').filename.removeDiatrics())) {
                             $element.show();
                         } else {
                             $element.hide();
@@ -488,7 +490,7 @@
             var prop = $input.val();
             var dir = $input.data('dir') == 'asc' ? 1 : -1;
             this.$content.find('.media-thumb').sortElements(function(a, b) {
-                return $(a).data(prop) > $(b).data(prop) ? dir : -dir;
+                return $(a).data('media')[prop] > $(b).data('media')[prop] ? dir : -dir;
             });
         },
         getSelection: function() {
@@ -497,7 +499,7 @@
             }
             var result = [];
             this.$content.find('input[name="thumb_selection[]"]:checked').each(function(i, input) {
-                result.push($(input).closest('.media-thumb').data());
+                result.push($(input).closest('.media-thumb').data('media'));
             });
             return result;
         },
@@ -505,9 +507,21 @@
             var that = this;
             this.$tree.fancytree({
                 source: {
-                    url: Router.generate('ekyna_media_browser_admin_list')
+                    url: Router.generate('ekyna_media_browser_admin_list', that.config.folderId ? {folderId: that.config.folderId} : {})
                 },
+                activeVisible: true,
+                minExpandLevel: 2,
+                selectMode: 1,
                 extensions: ["edit", "dnd"],
+                init: function(event, data) {
+                    var node = data.tree.getActiveNode();
+                    if (node)  {
+                        that.browse(node.key);
+                    }
+                },
+                activate: function(event, data) {
+                    that.browse(data.node.key);
+                },
                 dnd: {
                     preventVoidMoves: true,
                     preventRecursiveMoves: true,
@@ -534,7 +548,7 @@
                                 $.ajax({
                                     url: Router.generate('ekyna_media_browser_admin_move_media', {
                                         'id': refNode.key,
-                                        'mediaId': $draggable.data('id')
+                                        'mediaId': $draggable.data('media').id
                                     }),
                                     method: 'POST',
                                     dataType: 'json'
@@ -614,9 +628,6 @@
                             $(data.node.span).addClass("pending");
                         }
                     }
-                },
-                activate: function(event, data) {
-                    that.browse(data.node.key);
                 }
             });
 
