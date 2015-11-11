@@ -70,18 +70,16 @@
             <argument>local_media</argument><!-- TODO config -->
         </service>
 
-        <!-- Doctrine entity listeners -->
-        <service id="ekyna_media.media.listener" class="Ekyna\Bundle\MediaBundle\Listener\MediaListener">
-            <argument type="service" id="ekyna_media.media.uploader" />
-            <tag name="doctrine.entity_listener" />
-        </service>
-
-        <!-- Doctrine event listeners -->
+        <!-- Doctrine subscribers/listeners -->
         <service id="ekyna_media.media.subject_subscriber" class="Ekyna\Bundle\MediaBundle\Listener\MediaSubjectSubscriber" public="false">
             <tag name="doctrine.event_subscriber" connection="default" />
         </service>
         <service id="ekyna_media.media.gallery_subscriber" class="Ekyna\Bundle\MediaBundle\Listener\GalleryMediaSubscriber" public="false">
             <tag name="doctrine.event_subscriber" connection="default" />
+        </service>
+        <service id="ekyna_media.media.listener" class="Ekyna\Bundle\MediaBundle\Listener\MediaListener">
+            <argument type="service" id="ekyna_media.media.uploader" />
+            <tag name="doctrine.orm.entity_listener" />
         </service>
 
         <!-- Twig extensions -->
