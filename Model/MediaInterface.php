@@ -104,4 +104,19 @@ interface MediaInterface extends
      * @return string
      */
     public function getFront();
+
+    /**
+     * Sets the player url.
+     *
+     * @param string $url
+     * @return MediaInterface|$this
+     */
+    public function setPlayer($url);
+
+    /**
+     * Returns the player url.
+     *
+     * @return string
+     */
+    public function getPlayer();
 }

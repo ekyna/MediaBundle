@@ -393,7 +393,7 @@
                 return;
             }
             var params = {
-                href        : $media.data('media').front,
+                href        : $media.data('media').player,
                 maxWidth    : 1200,
                 //maxHeight   : 600,
                 fitToView   : false,

@@ -87,6 +87,7 @@ class Browser
             $media
                 ->setThumb($this->thumbGenerator->generateThumbUrl($media))
                 ->setFront($this->thumbGenerator->generateFrontUrl($media))
+                ->setPlayer($this->thumbGenerator->generatePlayerUrl($media))
             ;
         }
 
