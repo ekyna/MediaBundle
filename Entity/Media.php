@@ -49,6 +49,11 @@ class Media implements MediaInterface
      */
     protected $front;
 
+    /**
+     * @var string
+     */
+    protected $player;
+
 
     /**
      * Constructor.
@@ -178,6 +183,23 @@ class Media implements MediaInterface
     public function getFront()
     {
         return $this->front;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPlayer($url)
+    {
+        $this->player = $url;
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPlayer()
+    {
+        return $this->player;
     }
 
     /**
