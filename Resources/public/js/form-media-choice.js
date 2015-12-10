@@ -46,6 +46,7 @@ define('ekyna-form/media-choice',
                         }
                         modal.getDialog().close();
                     });
+
                     // TODO Update media id edited in browser
 
                     // Clear media if deleted in browser
@@ -63,7 +64,7 @@ define('ekyna-form/media-choice',
                 alert('Failed to load media browser.');
             });
 
-            modal.getDialog().onHide(function() {
+            $(modal).on('ekyna.modal.hide', function () {
                 if (browser) {
                     browser = null;
                 }

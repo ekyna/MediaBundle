@@ -1,42 +1,7 @@
-(function(root, factory) {
-    "use strict";
-
-    // CommonJS module is defined
-    if (typeof module !== 'undefined' && module.exports) {
-        module.exports = factory(
-            require('jquery'),
-            require('routing'),
-            require('twig'),
-            require('ekyna-modal'),
-            require('ekyna-form'),
-            require('ekyna-media-player'),
-            require('ekyna-string'),
-            require('ekyna-media-thumb'),
-            require('fancytree'),
-            require('fancybox')
-        );
-    }
-    // AMD module is defined
-    else if (typeof define === 'function' && define.amd) {
-        define('ekyna-media-browser',
-            ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'ekyna-media-player',
-                'ekyna-string', 'ekyna-media-thumb', 'fancytree', 'fancybox'],
-            function($, Router, Twig, Modal, Form, Player) {
-                return factory($, Router, Twig, Modal, Form, Player);
-        });
-    } else {
-        // planted over the root!
-        root.EkynaMediaBrowser = factory(
-            root.jQuery,
-            root.Routing,
-            root.Twig,
-            root.EkynaModal,
-            root.EkynaForm, // TODO
-            root.EkynaMediaPlayer
-        );
-    }
-
-}(this, function($, Router, Twig, Modal, Form, Player) {
+define('ekyna-media-browser',
+    ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'ekyna-media-player',
+        'ekyna-string', 'ekyna-media-thumb', 'fancytree', 'fancybox'],
+    function($, Router, Twig, Modal, Form, Player) {
     "use strict";
 
     // http://james.padolsey.com/javascript/sorting-elements-with-jquery/
@@ -313,7 +278,7 @@
                 url: null,
                 onData: function() {},
                 onShow: function(data) {},
-                onHide: function() { that.setBusy(false); }
+                onHide: function() {}
             }, options);
 
             if (!settings.url) {
@@ -323,37 +288,12 @@
             var that = this;
             that.setBusy(true);
 
-            var form;
             that.modal = new Modal();
             $(that.modal).on('ekyna.modal.content', function (e) {
                 settings.onShow(e);
-                if (form) {
-                    form.destroy();
-                    form = null;
-                }
-                if (e.contentType == 'form') {
-                    form = Form.create(e.content);
-                    form.init();
-                } else if (e.contentType == 'data') {
+                if (e.contentType == 'data') {
                     settings.onData(e.content);
-                    that.modal.getDialog().close();
                     that.browse();
-                }
-            });
-
-            $(that.modal).on('ekyna.modal.button_click', function (e) {
-                if (e.buttonId == 'submit' && form) {
-                    form.save();
-                    setTimeout(function() {
-                        form.getElement().ajaxSubmit({
-                            dataType: 'xml',
-                            success: function(response) {
-                                form.destroy();
-                                form = null;
-                                that.modal.handleResponse(response);
-                            }
-                        });
-                    }, 100);
                 }
             });
 
@@ -361,12 +301,9 @@
                 that.setBusy(false);
             });
 
-            that.modal.getDialog().onHide(function() {
+            $(that.modal).on('ekyna.modal.hide', function () {
                 settings.onHide();
-                if (form) {
-                    form.destroy();
-                    form = null;
-                }
+                that.setBusy(false);
             });
 
             that.modal.load({url: settings.url});
@@ -740,4 +677,4 @@
     };
 
     return EkynaMediaBrowser;
-}));
+});

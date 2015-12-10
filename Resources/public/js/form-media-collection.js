@@ -102,7 +102,7 @@ define('ekyna-form/media-collection',
                 }
             });
 
-            modal.getDialog().onHide(function() {
+            $(modal).on('ekyna.modal.hide', function () {
                 if (browser) {
                     browser = null;
                 }
