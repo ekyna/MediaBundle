@@ -18,7 +18,7 @@
     ],
     "require" : {
         "php" : ">=5.4.0",
-        "ekyna/admin-bundle" : "0.5.x-dev",
+        "ekyna/admin-bundle" : "0.4.x-dev",
         "liip/imagine-bundle" : "1.2.*",
         "jms/serializer-bundle": "0.13.*",
         "jms/twig-js": "1.0.*",
