@@ -20,11 +20,10 @@
 
 {% block ekyna_media_choice_widget %}
 {% spaceless %}
-    {% if gallery %}<div>{% else -%}
-    {% set empty_thumb = render_media_thumb() %}
-    <div class="ekyna-media-choice" data-config="{{ config|json_encode }}" data-empty-thumb="{{ empty_thumb }}">
-    {%- endif %}
-        {{ render_media_thumb(media, (media is not same as(null) ? config.controls : [])) }}
+    <div{% if not gallery -%}
+        class="ekyna-media-choice" data-config="{{ config|json_encode }}" data-empty-thumb="{{ null|media_thumb }}"
+    {%- endif %}>
+        {{ media|media_thumb(media is not same as(null) ? config.controls : []) }}
         {% set type = type|default('hidden') %}
         {{ block('form_widget_simple') }}
     </div>

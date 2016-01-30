@@ -1,4 +1,4 @@
-{% block video %}
+{% block video -%}
 {% spaceless %}
 {% if responsive %}<div class="embed-responsive embed-responsive-{{ aspect_ratio }}">{% endif %}
     <video controls preload="auto" autoplay data-setup='{"example_option":true}'{{ block('attributes') }}>
@@ -7,18 +7,18 @@
     </video>
 {% if responsive %}</div>{% endif %}
 {% endspaceless %}
-{% endblock video %}
+{%- endblock video %}
 
-{% block audio %}
+{% block audio -%}
 {% spaceless %}
 <audio{{ block('attributes') }} controls>
     <source src="{{ src }}" type="audio/ogg">
     Your browser does not support the audio element.
 </audio>
 {% endspaceless %}
-{% endblock audio %}
+{%- endblock audio %}
 
-{% block flash %}
+{% block flash -%}
 {% spaceless %}
 <object{{ block('attributes') }}>
     <param name="movie" value="{{ src }}" />
@@ -41,14 +41,20 @@
     <!--<![endif]-->
 </object>
 {% endspaceless %}
-{% endblock flash %}
+{%- endblock flash %}
 
-{% block image %}
+{% block image -%}
 {% spaceless %}
-<img src="{{ src|imagine_filter(filter) }}"{{ block('attributes') }}>
+<img{{ block('attributes') }}>
 {% endspaceless %}
-{% endblock image %}
+{%- endblock image %}
 
-{% block attributes %}
+{% block file -%}
+{% spaceless %}
+<a{{ block('attributes') }}>{{ name }}</a>
+{% endspaceless %}
+{%- endblock file %}
+
+{% block attributes -%}
 {% for key, value in attr %} {{ key }}="{{ value }}"{% endfor %}
-{% endblock attributes %}
+{%- endblock attributes %}

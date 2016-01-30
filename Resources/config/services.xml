@@ -84,32 +84,29 @@
 
         <!-- Twig extensions -->
         <service id="ekyna_media.twig.browser_extension" class="Ekyna\Bundle\MediaBundle\Twig\BrowserExtension">
-            <argument type="service" id="local_media_filesystem" />
-            <argument type="service" id="router" />
+            <argument type="service" id="ekyna_media.generator" />
             <argument type="service" id="serializer" />
-            <argument type="service" id="ekyna_media.folder.repository" />
-            <argument type="service" id="ekyna_media.browser.thumb_generator" />
             <tag name="twig.extension" />
         </service>
         <service id="ekyna_media.twig.player_extension" class="Ekyna\Bundle\MediaBundle\Twig\PlayerExtension">
-            <argument type="service" id="local_media_filesystem" />
-            <argument type="service" id="router" />
+            <argument type="service" id="ekyna_media.generator" />
             <argument type="service" id="liip_imagine.filter.manager" />
             <tag name="twig.extension" />
         </service>
 
-        <!-- Browser -->
-        <service id="ekyna_media.browser.thumb_generator" class="Ekyna\Bundle\MediaBundle\Browser\Generator">
+        <!-- Services -->
+        <service id="ekyna_media.generator" class="Ekyna\Bundle\MediaBundle\Service\Generator">
+            <argument type="service" id="local_media_filesystem" />
             <argument type="service" id="liip_imagine" />
             <argument type="service" id="liip_imagine.cache.manager" />
             <argument type="service" id="router" />
             <argument>%kernel.root_dir%/../web</argument>
             <argument>%ekyna_media.browser.thumbs_directory%</argument>
         </service>
-        <service id="ekyna_media.browser" class="Ekyna\Bundle\MediaBundle\Browser\Browser">
+        <service id="ekyna_media.browser" class="Ekyna\Bundle\MediaBundle\Service\Browser">
             <argument type="service" id="doctrine.orm.default_entity_manager" />
             <argument type="service" id="ekyna_media.media.repository" />
-            <argument type="service" id="ekyna_media.browser.thumb_generator" />
+            <argument type="service" id="ekyna_media.generator" />
         </service>
 
         <!-- Validator -->

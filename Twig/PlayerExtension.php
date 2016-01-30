@@ -2,11 +2,10 @@
 
 namespace Ekyna\Bundle\MediaBundle\Twig;
 
+use Ekyna\Bundle\MediaBundle\Service\Generator;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
-use League\Flysystem\FilesystemInterface;
 use Liip\ImagineBundle\Imagine\Filter\FilterManager;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class PlayerExtension
@@ -16,14 +15,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class PlayerExtension extends \Twig_Extension
 {
     /**
-     * @var FilesystemInterface
+     * @var Generator
      */
-    private $filesystem;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
+    private $generator;
 
     /**
      * @var FilterManager
@@ -39,18 +33,13 @@ class PlayerExtension extends \Twig_Extension
     /**
      * Constructor.
      *
-     * @param FilesystemInterface   $filesystem
-     * @param UrlGeneratorInterface $urlGenerator
-     * @param FilterManager         $filterManager
+     * @param Generator     $generator
+     * @param FilterManager $filterManager
      */
-    public function __construct(
-        FilesystemInterface   $filesystem,
-        UrlGeneratorInterface $urlGenerator,
-        FilterManager         $filterManager
-    ) {
-        $this->filesystem       = $filesystem;
-        $this->urlGenerator     = $urlGenerator;
-        $this->filterManager    = $filterManager;
+    public function __construct(Generator $generator, FilterManager $filterManager)
+    {
+        $this->generator     = $generator;
+        $this->filterManager = $filterManager;
     }
 
     /**
@@ -72,7 +61,7 @@ class PlayerExtension extends \Twig_Extension
             new \Twig_SimpleFilter('media_flash', [$this, 'renderFlash'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('media_audio', [$this, 'renderAudio'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('media_image', [$this, 'renderImage'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('media_file',  [$this, 'renderFile'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('media_file',  [$this, 'renderFile'],  ['is_safe' => ['html']]),
         ];
     }
 
@@ -95,9 +84,8 @@ class PlayerExtension extends \Twig_Extension
                 return $this->renderAudio($media, $params);
             case MediaTypes::IMAGE :
                 return $this->renderImage($media, $params);
-            default:
-                return $this->renderFile($media, $params);
         }
+        return $this->renderFile($media, $params);
     }
 
     /**
@@ -125,11 +113,12 @@ class PlayerExtension extends \Twig_Extension
             ],
         ], $params);
 
+        /** @noinspection PhpInternalEntityUsedInspection */
         return $this->elementTemplate->renderBlock('video', [
             'responsive'   => $params['responsive'],
             'aspect_ratio' => $params['aspect_ratio'],
-            'src'          => $this->getDownloadUrl($video),
-            'mime_type'    => $this->getMimeType($video),
+            'src'          => $this->generator->generateFrontUrl($video),
+            'mime_type'    => $this->generator->getMimeType($video),
             'attr'         => $params['attr'],
         ]);
     }
@@ -159,8 +148,9 @@ class PlayerExtension extends \Twig_Extension
             ],
         ], $params);
 
+        /** @noinspection PhpInternalEntityUsedInspection */
         return $this->elementTemplate->renderBlock('flash', [
-            'src'  => $this->getDownloadUrl($flash),
+            'src'  => $this->generator->generateFrontUrl($flash),
             'attr' => $params['attr'],
         ]);
     }
@@ -185,8 +175,9 @@ class PlayerExtension extends \Twig_Extension
             ],
         ], $params);
 
+        /** @noinspection PhpInternalEntityUsedInspection */
         return $this->elementTemplate->renderBlock('audio', [
-            'src'  => $this->getDownloadUrl($audio),
+            'src'  => $this->generator->generateFrontUrl($audio),
             'attr' => $params['attr'],
         ]);
     }
@@ -208,7 +199,8 @@ class PlayerExtension extends \Twig_Extension
         $params = array_merge([
             'filter' => 'media_front',
             'attr' => [
-                'id' => 'media-image-' . $image->getId(),
+                'id'  => 'media-image-' . $image->getId(),
+                'alt' => $image->getTitle(),
             ],
         ], $params);
 
@@ -235,11 +227,11 @@ class PlayerExtension extends \Twig_Extension
             }
         }
 
+        $params['attr']['src'] = $this->generator->generateFrontUrl($image, $params['filter']);
+
+        /** @noinspection PhpInternalEntityUsedInspection */
         return $this->elementTemplate->renderBlock('image', [
-            'filter' => $params['filter'],
-            'path'   => $image->getPath(),
-            'alt'    => $image->getTitle(),
-            'attr'   => $params['attr'],
+            'attr' => $params['attr'],
         ]);
     }
 
@@ -259,37 +251,18 @@ class PlayerExtension extends \Twig_Extension
 
         $params = array_replace([
             'attr' => [
-                'id' => 'image-' . $file->getId(),
+                'id'    => 'media-file-' . $file->getId(),
+                'title' => $file->getTitle(),
             ],
         ], $params);
 
-        return $this->elementTemplate->renderBlock('image', [
-            'attr'   => $params['attr'],
-            'href'   => $this->getDownloadUrl($file),
-            'title'  => $file->getTitle(),
+        $params['attr']['href'] = $this->generator->generateFrontUrl($file);
+
+        /** @noinspection PhpInternalEntityUsedInspection */
+        return $this->elementTemplate->renderBlock('file', [
+            'name' => pathinfo($file->getPath(), PATHINFO_BASENAME),
+            'attr' => $params['attr'],
         ]);
-    }
-
-    /**
-     * Returns the media download url.
-     *
-     * @param MediaInterface $media
-     * @return string
-     */
-    private function getDownloadUrl(MediaInterface $media)
-    {
-        return $this->urlGenerator->generate('ekyna_media_download', ['key' => $media->getPath()]);
-    }
-
-    /**
-     * Returns the media mime type.
-     *
-     * @param MediaInterface $media
-     * @return string
-     */
-    private function getMimeType(MediaInterface $media)
-    {
-        return $this->filesystem->getMimetype($media->getPath());
     }
 
     /**

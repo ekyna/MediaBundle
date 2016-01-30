@@ -15,6 +15,12 @@ class MediaChoice extends Constraint
     public $invalidType = 'ekyna_media.media.invalid_type';
     public $types;
 
+
+    /**
+     * Constructor.
+     *
+     * @param mixed $options
+     */
     public function __construct($options = null)
     {
         parent::__construct($options);

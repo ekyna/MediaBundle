@@ -2,13 +2,10 @@
 
 namespace Ekyna\Bundle\MediaBundle\Twig;
 
-use Ekyna\Bundle\MediaBundle\Browser\Generator;
-use Ekyna\Bundle\MediaBundle\Entity\FolderRepository;
+use Ekyna\Bundle\MediaBundle\Service\Generator;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
-use League\Flysystem\FilesystemInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class BrowserExtension
@@ -18,29 +15,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class BrowserExtension extends \Twig_Extension
 {
     /**
-     * @var FilesystemInterface
+     * @var Generator
      */
-    private $filesystem;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
+    private $generator;
 
     /**
      * @var SerializerInterface
      */
-    protected $serializer;
-
-    /**
-     * @var FolderRepository
-     */
-    private $folderRepository;
-
-    /**
-     * @var Generator
-     */
-    private $thumbGenerator;
+    private $serializer;
 
     /**
      * @var \Twig_Template
@@ -56,24 +38,13 @@ class BrowserExtension extends \Twig_Extension
     /**
      * Constructor.
      *
-     * @param FilesystemInterface   $filesystem
-     * @param UrlGeneratorInterface $urlGenerator
-     * @param SerializerInterface   $serializer
-     * @param FolderRepository      $folderRepository
-     * @param Generator             $thumbGenerator
+     * @param Generator           $generator
+     * @param SerializerInterface $serializer
      */
-    public function __construct(
-        FilesystemInterface $filesystem,
-        UrlGeneratorInterface $urlGenerator,
-        SerializerInterface $serializer,
-        FolderRepository $folderRepository,
-        Generator $thumbGenerator
-    ) {
-        $this->filesystem       = $filesystem;
-        $this->urlGenerator     = $urlGenerator;
-        $this->serializer       = $serializer;
-        $this->folderRepository = $folderRepository;
-        $this->thumbGenerator   = $thumbGenerator;
+    public function __construct(Generator $generator, SerializerInterface $serializer)
+    {
+        $this->generator   = $generator;
+        $this->serializer  = $serializer;
     }
 
     /**
@@ -90,11 +61,20 @@ class BrowserExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('render_media_manager', array($this, 'renderManager'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('render_media_thumb', array($this, 'renderMediaThumb'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('get_media_thumb_path', array($this, 'getMediaThumbPath')),
-        );
+        return [
+            new \Twig_SimpleFunction('render_media_manager', [$this, 'renderManager'], ['is_safe' => ['html']]),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilters()
+    {
+        return [
+            new \Twig_SimpleFilter('media_thumb',      [$this, 'renderMediaThumb'],  ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('media_thumb_path', [$this, 'getMediaThumbPath']),
+        ];
     }
 
 
@@ -119,7 +99,7 @@ class BrowserExtension extends \Twig_Extension
     public function renderMediaThumb(MediaInterface $media = null, array $controls = array())
     {
         if (null !== $media) {
-            $media->setThumb($this->thumbGenerator->generateThumbUrl($media));
+            $media->setThumb($this->generator->generateThumbUrl($media));
         }
         /*if (empty($controls)) {
             $controls = array(
@@ -156,7 +136,7 @@ class BrowserExtension extends \Twig_Extension
      */
     public function getMediaThumbPath(MediaInterface $media)
     {
-        return $this->thumbGenerator->generateThumbUrl($media);
+        return $this->generator->generateThumbUrl($media);
     }
 
     /**

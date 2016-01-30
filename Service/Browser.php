@@ -1,6 +1,6 @@
 <?php
 
-namespace Ekyna\Bundle\MediaBundle\Browser;
+namespace Ekyna\Bundle\MediaBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 use Ekyna\Bundle\MediaBundle\Entity\MediaRepository;
@@ -9,7 +9,7 @@ use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 
 /**
  * Class Browser
- * @package Ekyna\Bundle\MediaBundle\Browser
+ * @package Ekyna\Bundle\MediaBundle\Service
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
 class Browser

@@ -1,27 +1,28 @@
 <?php
 
-namespace Ekyna\Bundle\MediaBundle\Browser;
+namespace Ekyna\Bundle\MediaBundle\Service;
 
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
+use Imagine\Exception\RuntimeException as ImagineException;
 use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Palette\RGB;
-use Liip\ImagineBundle\Imagine\Cache\CacheManager;
-use Symfony\Component\Filesystem\Filesystem;
-use Imagine\Exception\RuntimeException as ImagineException;
 use Imagine\Image\Point;
+use Liip\ImagineBundle\Imagine\Cache\CacheManager;
+use League\Flysystem\FilesystemInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class Generator
- * @package Ekyna\Bundle\MediaBundle\Browser
+ * @package Ekyna\Bundle\MediaBundle\Service
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
 class Generator
 {
     const DEFAULT_THUMB = '/bundles/ekynamedia/img/file.jpg';
-    const NONE_THUMB = '/bundles/ekynamedia/img/media-none.jpg';
+    const NONE_THUMB    = '/bundles/ekynamedia/img/media-none.jpg';
 
     /**
      * @var \Imagine\Image\ImagineInterface
@@ -31,12 +32,12 @@ class Generator
     /**
      * @var CacheManager
      */
-    protected $cacheManager;
+    private $cacheManager;
 
     /**
      * @var UrlGeneratorInterface
      */
-    protected $urlGenerator;
+    private $urlGenerator;
 
     /**
      * @var string
@@ -56,6 +57,7 @@ class Generator
     /**
      * Constructor.
      *
+     * @param FilesystemInterface $filesystem
      * @param ImagineInterface $imagine
      * @param CacheManager $cacheManager
      * @param UrlGeneratorInterface $urlGenerator
@@ -63,12 +65,14 @@ class Generator
      * @param string $thumbsDirectory
      */
     public function __construct(
+        FilesystemInterface $filesystem,
         ImagineInterface $imagine,
         CacheManager $cacheManager,
         UrlGeneratorInterface $urlGenerator,
         $webRootDirectory,
         $thumbsDirectory
     ) {
+        $this->filesystem = $filesystem;
         $this->imagine = $imagine;
         $this->cacheManager = $cacheManager;
         $this->urlGenerator = $urlGenerator;
@@ -90,7 +94,7 @@ class Generator
     {
         $path = null;
 
-        if ($media->getType() === MediaTypes::IMAGE) {
+        if ($this->isImagineFilterable($media)) {
             $path = $this->cacheManager->getBrowserPath($media->getPath(), 'media_thumb');
         } else {
             $path = $this->generateFileThumb($media);
@@ -107,19 +111,16 @@ class Generator
      * Generates the default front url.
      *
      * @param MediaInterface $media
+     * @param string         $filter : optional imagine filter for images
      * @return string
      */
-    public function generateFrontUrl(MediaInterface $media)
+    public function generateFrontUrl(MediaInterface $media, $filter = 'media_front')
     {
-        $path = null;
-
-        if ($media->getType() === MediaTypes::IMAGE) {
-            $path = $this->cacheManager->getBrowserPath($media->getPath(), 'media_front');
-        } else {
-            $path = $this->urlGenerator->generate('ekyna_media_download', array('key' => $media->getPath()), true);
+        if ($this->isImagineFilterable($media)) {
+            return $this->cacheManager->getBrowserPath($media->getPath(), $filter);
         }
 
-        return $path;
+        return $this->urlGenerator->generate('ekyna_media_download', array('key' => $media->getPath()), true);
     }
 
     /**
@@ -130,17 +131,11 @@ class Generator
      */
     public function generatePlayerUrl(MediaInterface $media)
     {
-        $path = null;
-
-        if ($media->getType() === MediaTypes::IMAGE) {
-            $path = $this->cacheManager->getBrowserPath($media->getPath(), 'media_front');
-        } elseif (in_array($media->getType(), array(MediaTypes::VIDEO, MediaTypes::AUDIO, MediaTypes::FLASH))) {
-            $path = $this->urlGenerator->generate('ekyna_media_player', array('key' => $media->getPath()), true);
-        } else {
-            $path = $this->urlGenerator->generate('ekyna_media_download', array('key' => $media->getPath()), true);
+        if (in_array($media->getType(), array(MediaTypes::VIDEO, MediaTypes::AUDIO, MediaTypes::FLASH))) {
+            return $this->urlGenerator->generate('ekyna_media_player', array('key' => $media->getPath()), true);
         }
 
-        return $path;
+        return $this->generateFrontUrl($media);
     }
 
     /**
@@ -184,6 +179,29 @@ class Generator
         }
 
         return null;
+    }
+
+    /**
+     * Returns whether a imagine filter can be applied to the media on not.
+     *
+     * @param MediaInterface $media
+     * @return bool
+     */
+    private function isImagineFilterable(MediaInterface $media)
+    {
+        return $media->getType() === MediaTypes::IMAGE
+            && 0 < preg_match('~^image/(jpe?g|gif|png)$~', $this->getMimeType($media));
+    }
+
+    /**
+     * Returns the media mime type.
+     *
+     * @param MediaInterface $media
+     * @return string
+     */
+    public function getMimeType(MediaInterface $media)
+    {
+        return $this->filesystem->getMimetype($media->getPath());
     }
 
     /**
