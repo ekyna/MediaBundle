@@ -20,8 +20,8 @@
 
 {% block ekyna_media_choice_widget %}
 {% spaceless %}
-    <div{% if not gallery -%}
-        class="ekyna-media-choice" data-config="{{ config|json_encode }}" data-empty-thumb="{{ null|media_thumb }}"
+    <div{% if not gallery %}
+        class="ekyna-media-choice" data-config="{{ config|json_encode }}" data-empty-thumb="{{ null|media_thumb|escape }}"
     {%- endif %}>
         {{ media|media_thumb(media is not same as(null) ? config.controls : []) }}
         {% set type = type|default('hidden') %}

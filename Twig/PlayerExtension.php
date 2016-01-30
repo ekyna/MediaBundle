@@ -56,6 +56,7 @@ class PlayerExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
+            new \Twig_SimpleFilter('media_url',   [$this, 'getMediaUrl']),
             new \Twig_SimpleFilter('media',       [$this, 'renderMedia'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('media_video', [$this, 'renderVideo'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('media_flash', [$this, 'renderFlash'], ['is_safe' => ['html']]),
@@ -63,6 +64,19 @@ class PlayerExtension extends \Twig_Extension
             new \Twig_SimpleFilter('media_image', [$this, 'renderImage'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('media_file',  [$this, 'renderFile'],  ['is_safe' => ['html']]),
         ];
+    }
+
+    /**
+     * Returns the media default url.
+     *
+     * @param MediaInterface $media
+     * @param string         $filter
+     *
+     * @return string
+     */
+    public function getMediaUrl(MediaInterface $media, $filter = 'media_front')
+    {
+        return $this->generator->generateFrontUrl($media, $filter);
     }
 
     /**
@@ -204,30 +218,38 @@ class PlayerExtension extends \Twig_Extension
             ],
         ], $params);
 
-        if (!(array_key_exists('width', $params) && array_key_exists('height', $params))) {
+        if (!(isset($params['attr']['width']) && isset($params['attr']['height']))) {
             $filter = $this->filterManager->getFilterConfiguration()->get($params['filter']);
             if (array_key_exists('filters', $filter)) {
+                // TODO better size resolution
                 $width = $height = 0;
                 foreach ($filter['filters'] as $cfg) {
                     if (array_key_exists('size', $cfg)) {
-                        if (array_key_exists('width', $cfg['size']) && $width < $cfg['size']['width']) {
-                            $width = $cfg['size']['width'];
-                        }
-                        if (array_key_exists('height', $cfg['size']) && $width < $cfg['size']['height']) {
-                            $width = $cfg['size']['height'];
-                        }
+                        $width  = $width  >= $cfg['size'][0] ?: $cfg['size'][0];
+                        $height = $height >= $cfg['size'][1] ?: $cfg['size'][1];
                     }
                 }
-                $params = array_merge([
-                    'attr' => [
-                        'width'  => $width,
-                        'height' => $height,
-                    ],
-                ], $params);
+                if ($width && $height) {
+                    $params['attr']['width']  = $width;
+                    $params['attr']['height'] = $height;
+                }
             }
         }
 
-        $params['attr']['src'] = $this->generator->generateFrontUrl($image, $params['filter']);
+        $path = $this->generator->generateFrontUrl($image, $params['filter']);
+
+        // TODO render svg (use wkHtmlToImage ?)
+        /*if (!$this->generator->isImagineFilterable($image)) {
+            $params['attr']['type'] = $this->generator->getMimeType($image);
+            $params['attr']['data'] = $path;
+
+            return $this->elementTemplate->renderBlock('svg', [
+                'attr'     => $params['attr'],
+                'fallback' => $image->getTitle(),
+            ]);
+        }*/
+
+        $params['attr']['src'] = $path;
 
         /** @noinspection PhpInternalEntityUsedInspection */
         return $this->elementTemplate->renderBlock('image', [

@@ -187,7 +187,7 @@ class Generator
      * @param MediaInterface $media
      * @return bool
      */
-    private function isImagineFilterable(MediaInterface $media)
+    public function isImagineFilterable(MediaInterface $media)
     {
         return $media->getType() === MediaTypes::IMAGE
             && 0 < preg_match('~^image/(jpe?g|gif|png)$~', $this->getMimeType($media));
