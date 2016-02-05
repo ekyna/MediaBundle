@@ -18,7 +18,7 @@ liip_imagine:
             post_processors:
                 jpegoptim: {}
         media_front:
-            quality: 70
+            quality: 85
             cache: local_media
             data_loader: local_media
             filters:
@@ -26,7 +26,7 @@ liip_imagine:
             post_processors:
                 jpegoptim: {}
         media_modal:
-            quality: 70
+            quality: 85
             cache: local_media
             data_loader: local_media
             filters:
