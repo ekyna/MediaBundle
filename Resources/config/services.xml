@@ -15,10 +15,8 @@
     <services>
 
         <!-- Repositories -->
-        <service id="ekyna_media.folder.repository"
-                 class="Ekyna\Bundle\MediaBundle\Entity\FolderRepository"
-                 factory-service="doctrine.orm.default_entity_manager"
-                 factory-method="getRepository">
+        <service id="ekyna_media.folder.repository" class="Ekyna\Bundle\MediaBundle\Entity\FolderRepository">
+            <factory service="doctrine.orm.default_entity_manager" method="getRepository" />
             <argument>Ekyna\Bundle\MediaBundle\Entity\Folder</argument>
         </service>
 
@@ -51,8 +49,7 @@
         <!-- Form flows types -->
         <service id="ekyna_media.import_media.form_flow"
                  class="Ekyna\Bundle\MediaBundle\Form\Type\MediaImportFlow"
-                 parent="craue.form.flow"
-                 scope="request">
+                 parent="craue.form.flow">
             <argument id="router" type="service" />
         </service>
         <service id="ekyna_media.import_media.selection.form_type" class="Ekyna\Bundle\MediaBundle\Form\Type\Step\MediaImportSelectionType">

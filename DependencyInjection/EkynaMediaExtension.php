@@ -62,7 +62,7 @@ class EkynaMediaExtension extends AbstractExtension
     protected function configureTwigBundle(ContainerBuilder $container)
     {
         $container->prependExtensionConfig('twig', [
-            'form' => ['resources' => ['EkynaMediaBundle:Form:form_div_layout.html.twig']],
+            'form_themes' => ['EkynaMediaBundle:Form:form_div_layout.html.twig'],
         ]);
     }
 }

@@ -7,7 +7,7 @@ ekyna_media_download:
     defaults: { _controller: "EkynaMediaBundle:Media:download" }
     methods: [GET]
     requirements:
-        key: "[a-z0-9-\./]+"
+        key: '[a-z0-9-\./]+'
     options: { expose: true }
 
 ekyna_media_player:
@@ -15,7 +15,7 @@ ekyna_media_player:
     defaults: { _controller: "EkynaMediaBundle:Media:player" }
     methods: [GET]
     requirements:
-        key: "[a-z0-9-\./]+"
+        key: '[a-z0-9-\./]+'
     options: { expose: true }
 
 _liip_imagine:
