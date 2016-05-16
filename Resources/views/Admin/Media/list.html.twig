@@ -13,7 +13,9 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
+        console.log('test 1');
         requirejs(['ekyna-media-browser'], function(MediaBrowser) {
+            console.log('test 2');
             var browser = new MediaBrowser('#media-browser');
             browser.init();
         });

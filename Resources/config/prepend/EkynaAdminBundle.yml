@@ -1,8 +1,6 @@
 ekyna_admin:
-    css_inputs:
-        - "@fancytree_css"
-        - "@EkynaMediaBundle/Resources/asset/css/media-thumb.css"
-        - "@EkynaMediaBundle/Resources/asset/css/media-browser.css"
-        - "@EkynaMediaBundle/Resources/public/lib/fancybox/jquery.fancybox.css"
-        - "@EkynaMediaBundle/Resources/public/lib/fancybox/helpers/jquery.fancybox-buttons.css"
-        - "@EkynaMediaBundle/Resources/public/lib/fancybox/helpers/jquery.fancybox-thumbs.css"
+    stylesheets:
+        - 'bundles/ekynamedia/css/main.css'
+        - "bundles/ekynamedia/lib/fancybox/jquery.fancybox.css"
+# TODO ?       - "bundles/ekynamedia/lib/fancybox/helpers/jquery.fancybox-buttons.css"
+# TODO ?       - "bundles/ekynamedia/lib/fancybox/helpers/jquery.fancybox-thumbs.css"

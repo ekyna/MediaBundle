@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use TwigJs\CompileRequest;
 
 /**
  * Class MediaController
@@ -16,6 +17,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class MediaController extends Controller
 {
+    public function thumbTemplateAction()
+    {
+        $handler = $this->container->get('twig_js.compile_request_handler');
+        $request = new CompileRequest('EkynaMediaBundle::thumb.html.twig', null);
+
+        return new Response(
+            $handler->process($request),
+            200,
+            array('Content-Type' => 'application/javascript')
+        );
+    }
+
     /**
      * Download local file.
      *

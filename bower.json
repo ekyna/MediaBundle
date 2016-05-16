@@ -1,0 +1,13 @@
+{
+  "name": "ekyna/MediaBundle",
+  "devDependencies": {
+    "jquery.fancytree": "fancytree#^2.18.0",
+    "ui-contextmenu": "^1.11.0",
+    "fancyBox": "^2.1.5",
+    "swfobject": "*",
+    "video.js": "^5.10.2"
+  },
+  "resolutions": {
+    "jquery": "1.9.1 - 2"
+  }
+}

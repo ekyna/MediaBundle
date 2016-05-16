@@ -1,6 +1,5 @@
 ekyna_core:
-    assets:
-        form_css:
-            inputs:
-                - "@EkynaMediaBundle/Resources/asset/css/media-thumb.css"
-                - "@EkynaMediaBundle/Resources/asset/css/media-form.css"
+    ui:
+        stylesheets:
+            forms:
+                - "bundles/ekynamedia/css/form.css"

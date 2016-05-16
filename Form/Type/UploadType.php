@@ -5,7 +5,7 @@ namespace Ekyna\Bundle\MediaBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class UploadType
@@ -44,16 +44,14 @@ class UploadType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
             ->setDefaults(array(
                 'data_class' => 'Ekyna\Bundle\MediaBundle\Model\Import\MediaUpload',
                 'folder'     => null,
             ))
-            ->setAllowedTypes(array(
-                'folder' => 'Ekyna\Bundle\MediaBundle\Model\FolderInterface',
-            ));
+            ->setAllowedTypes('folder', 'Ekyna\Bundle\MediaBundle\Model\FolderInterface');
     }
 
     /**

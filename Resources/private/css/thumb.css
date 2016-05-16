@@ -1,0 +1,98 @@
+.media-thumb {
+    box-shadow: 0 1px 3px #ccc;
+    height: 120px;
+    position: relative;
+    width: 120px;
+    background: #fff;
+}
+
+.media-thumb:hover {
+    cursor: pointer;
+}
+
+.media-thumb .name {
+    background: #f5f5f5;
+    bottom: 0;
+    color: #777;
+    display: block;
+    font-size: 11px;
+    left: 0;
+    line-height: 14px;
+    height: 30px;
+    overflow: hidden;
+    padding: 8px;
+    position: absolute;
+    text-align: center;
+    text-shadow: 0 1px 0 #fff;
+    width: 120px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    transition: box-shadow .2s linear, bottom .2s ease;
+}
+
+.media-thumb:hover .name {
+    box-shadow: 0 1px 3px #ccc;
+    bottom: 30px;
+    height: auto;
+    max-height: 90px;
+    white-space: normal;
+}
+
+.media-thumb .thumb {
+    height: 90px;
+    width: 120px;
+}
+
+.media-thumb .thumb img {
+    height: auto;
+    width: 100%;
+}
+
+.media-thumb .controls {
+    height: 30px;
+    width: 120px;
+    background: #f5f5f5;
+    text-align: center;
+}
+
+.media-thumb .controls a {
+    color: #777;
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    width: 30px;
+}
+
+.media-thumb .controls a:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+.media-thumb .controls a.disabled {
+    color: #ccc;
+}
+
+.media-thumb .controls a.disabled:hover {
+    color: #ccc;
+}
+
+.media-thumb .selector {
+    background: #f5f5f5;
+    border-bottom-left-radius: 4px;
+    line-height: 0;
+    padding: 5px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+}
+.media-thumb .selector input {
+    margin: 0;
+    line-height: 0;
+}
+
+.show-widget-block .media-thumb {
+    float: left;
+    margin: 0 12px 12px 0;
+}

@@ -2,6 +2,7 @@
 
 namespace Ekyna\Bundle\MediaBundle\Install;
 
+use Ekyna\Bundle\InstallBundle\Install\AbstractInstaller;
 use Ekyna\Bundle\MediaBundle\Entity\Folder;
 use Ekyna\Bundle\InstallBundle\Install\OrderedInstallerInterface;
 use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
@@ -16,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @package Ekyna\Bundle\MediaBundle\Install
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
-class MediaInstaller implements OrderedInstallerInterface, ContainerAwareInterface
+class MediaInstaller extends AbstractInstaller implements OrderedInstallerInterface, ContainerAwareInterface
 {
     /**
      * @var ContainerInterface

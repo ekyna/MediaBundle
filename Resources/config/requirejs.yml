@@ -1,16 +1,16 @@
 config:
     shim:
         'fancytree':
-            deps: ['jquery', 'jquery-ui']
+            deps: ['jquery', 'jquery-ui/core', 'jquery-ui/effect-blind', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/droppable']
         'ekyna-media-thumb':
             deps: ['twig']
         'ekyna-media-browser':
-            deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'ekyna-string', 'ekyna-media-thumb', 'fancytree']
+            deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'ekyna-media-player', 'ekyna-string', 'ekyna-media-thumb', 'fancytree', 'fancybox']
             exports: 'EkynaMediaBrowser'
         'ekyna-form/media-choice':
             deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-media-browser']
         'ekyna-form/media-collection':
-            deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-media-browser', 'jquery-ui']
+            deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-media-browser', 'jquery-ui/sortable']
         'ekyna-form/media-upload':
             deps: ['jquery', 'jquery/fileupload']
         'ekyna-media-player':
@@ -18,16 +18,19 @@ config:
         'fancybox':
             deps: ['jquery']
     paths:
-        'fancytree': 'js/fancytree'
-        'ekyna-media-thumb': 'js/media-thumb'
+        'ekyna-media-thumb':
+            route: ekyna_media_thumb_template
         'ekyna-media-browser': 'bundles/ekynamedia/js/media-browser'
         'ekyna-form/media-choice': 'bundles/ekynamedia/js/form-media-choice'
         'ekyna-form/media-collection': 'bundles/ekynamedia/js/form-media-collection'
         'ekyna-form/media-upload': 'bundles/ekynamedia/js/form-media-upload'
         'ekyna-media-player': 'bundles/ekynamedia/js/media-player'
+        'fancytree': 'bundles/ekynamedia/lib/fancytree/fancytree'
         'fancybox': 'bundles/ekynamedia/lib/fancybox/jquery.fancybox.pack'
         'videojs': 'bundles/ekynamedia/lib/videojs/video'
         'swfobject': 'bundles/ekynamedia/lib/swfobject/swfobject'
 build:
     include:
         - 'ekyna-media-player'
+    paths:
+        'ekyna-media-thumb': 'empty:'
