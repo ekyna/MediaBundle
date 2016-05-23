@@ -23,27 +23,27 @@
         <!-- Form types -->
         <service id="ekyna_media.media_choice.form_type" class="%ekyna_media.media_choice.form_type.class%">
             <argument type="service" id="ekyna_media.media.repository" />
-            <tag name="form.type" alias="ekyna_media_choice" />
+            <tag name="form.type" />
             <tag name="form.js" selector=".ekyna-media-choice" path="ekyna-form/media-choice" />
         </service>
         <service id="ekyna_media.media_collection.form_type" class="%ekyna_media.media_collection.form_type.class%">
-            <tag name="form.type" alias="ekyna_media_collection" />
+            <tag name="form.type" />
             <tag name="form.js" selector=".ekyna-media-collection" path="ekyna-form/media-collection" />
         </service>
         <service id="ekyna_media.media_collection_media.form_type" class="%ekyna_media.media_collection_media.form_type.class%">
-            <tag name="form.type" alias="ekyna_media_collection_media" />
+            <tag name="form.type" />
         </service>
         <service id="ekyna_media.media_upload.form_type" class="Ekyna\Bundle\MediaBundle\Form\Type\UploadType">
-            <tag name="form.type" alias="ekyna_media_upload" />
+            <tag name="form.type" />
             <tag name="form.js" selector=".ekyna-media-upload" path="ekyna-form/media-upload" />
         </service>
         <service id="ekyna_media.media_upload_media.form_type" class="Ekyna\Bundle\MediaBundle\Form\Type\UploadMediaType">
             <argument>%ekyna_media.media.class%</argument>
-            <tag name="form.type" alias="ekyna_media_upload_media" />
+            <tag name="form.type" />
         </service>
         <service id="ekyna_media.media_import.form_type" class="Ekyna\Bundle\MediaBundle\Form\Type\ImportMediaType">
             <argument>%ekyna_media.media.class%</argument>
-            <tag name="form.type" alias="ekyna_media_import" />
+            <tag name="form.type" />
         </service>
 
         <!-- Form flows types -->
@@ -54,11 +54,11 @@
         </service>
         <service id="ekyna_media.import_media.selection.form_type" class="Ekyna\Bundle\MediaBundle\Form\Type\Step\MediaImportSelectionType">
             <argument id="oneup_flysystem.mount_manager" type="service" />
-            <tag name="form.type" alias="ekyna_media_import_selection" />
+            <tag name="form.type" />
         </service>
         <service id="ekyna_media.import_media.creation.form_type" class="Ekyna\Bundle\MediaBundle\Form\Type\Step\MediaImportCreationType">
             <argument id="ekyna_media.media.repository" type="service" />
-            <tag name="form.type" alias="ekyna_media_import_creation" />
+            <tag name="form.type" />
         </service>
 
         <!-- Uploader -->

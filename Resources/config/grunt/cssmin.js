@@ -15,8 +15,7 @@ module.exports = function (grunt, options) {
                     'src/Ekyna/Bundle/MediaBundle/Resources/private/css/form.css'
                 ],
                 'src/Ekyna/Bundle/MediaBundle/Resources/public/css/browser.css': [
-                    'bower_components/bootstrap/dist/css/bootstrap.css',
-                    'bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.css', // TODO is in core
+                    'src/Ekyna/Bundle/MediaBundle/Resources/public/tmp/bootstrap.css',
                     'bower_components/jquery-ui/themes/base/jquery-ui.css',
                     'bower_components/jquery.fancytree/dist/skin-bootstrap/ui.fancytree.css',
                     //'src/Ekyna/Bundle/MediaBundle/Resources/private/css/thumb.css', (packed in form)

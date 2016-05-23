@@ -2,6 +2,9 @@
 
 namespace Ekyna\Bundle\MediaBundle\Form\Type;
 
+use Ekyna\Bundle\CoreBundle\Form\Type\CollectionType;
+use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
+use Ekyna\Bundle\MediaBundle\Model\Import\MediaUpload;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,12 +22,12 @@ class UploadType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('medias', 'ekyna_collection', array(
+        $builder->add('medias', CollectionType::class, [
             'label'          => false,
             'sub_widget_col' => 11,
             'button_col'     => 1,
-            'type'           => 'ekyna_media_upload_media',
-        ));
+            'entry_type'     => UploadMediaType::class,
+        ]);
 
         $builder->addModelTransformer(new CallbackTransformer(
             function ($data) {
@@ -36,6 +39,7 @@ class UploadType extends AbstractType
                 foreach ($data->getMedias() as $media) {
                     $media->setFolder($options['folder']);
                 }
+
                 return $data;
             }
         ));
@@ -47,17 +51,17 @@ class UploadType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults(array(
-                'data_class' => 'Ekyna\Bundle\MediaBundle\Model\Import\MediaUpload',
+            ->setDefaults([
+                'data_class' => MediaUpload::class,
                 'folder'     => null,
-            ))
-            ->setAllowedTypes('folder', 'Ekyna\Bundle\MediaBundle\Model\FolderInterface');
+            ])
+            ->setAllowedTypes('folder', FolderInterface::class);
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'ekyna_media_upload';
     }

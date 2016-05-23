@@ -6,9 +6,11 @@ module.exports = {
         'copy:media_js'
     ],
     'build:media': [
-        'clean:media',
+        'clean:media_pre',
         'copy:media',
+        'less:media',
         'cssmin:media',
-        'uglify:media'
+        'uglify:media',
+        'clean:media_post'
     ]
 };

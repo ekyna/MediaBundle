@@ -3,12 +3,14 @@
 namespace Ekyna\Bundle\MediaBundle\Form\Type;
 
 use Craue\FormFlowBundle\Form\FormFlow;
+use Ekyna\Bundle\MediaBundle\Form\Type\Step\MediaImportCreationType;
+use Ekyna\Bundle\MediaBundle\Form\Type\Step\MediaImportSelectionType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class MediaImportFlow
  * @package Ekyna\Bundle\MediaBundle\Form\Type
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class MediaImportFlow extends FormFlow
 {
@@ -25,7 +27,7 @@ class MediaImportFlow extends FormFlow
      */
     public function __construct(UrlGeneratorInterface $urlGenerator)
     {
-        $this->urlGenerator  = $urlGenerator;
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**
@@ -35,12 +37,12 @@ class MediaImportFlow extends FormFlow
     {
         return [
             [
-                'label' => 'selection',
-                'type'  => 'ekyna_media_import_selection',
+                'label'     => 'selection',
+                'form_type' => MediaImportCreationType::class,
             ],
             [
-                'label' => 'creation',
-                'type'  => 'ekyna_media_import_creation',
+                'label'     => 'creation',
+                'form_type' => MediaImportSelectionType::class,
             ],
         ];
     }
@@ -69,13 +71,5 @@ class MediaImportFlow extends FormFlow
         ];
 
         return $options;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'import_media';
     }
 }

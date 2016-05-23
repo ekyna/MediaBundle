@@ -120,7 +120,11 @@ class Generator
             return $this->cacheManager->getBrowserPath($media->getPath(), $filter);
         }
 
-        return $this->urlGenerator->generate('ekyna_media_download', array('key' => $media->getPath()), true);
+        return $this->urlGenerator->generate(
+            'ekyna_media_download',
+            array('key' => $media->getPath()),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
     }
 
     /**
@@ -132,7 +136,11 @@ class Generator
     public function generatePlayerUrl(MediaInterface $media)
     {
         if (in_array($media->getType(), array(MediaTypes::VIDEO, MediaTypes::AUDIO, MediaTypes::FLASH))) {
-            return $this->urlGenerator->generate('ekyna_media_player', array('key' => $media->getPath()), true);
+            return $this->urlGenerator->generate(
+                'ekyna_media_player',
+                array('key' => $media->getPath()),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
         }
 
         return $this->generateFrontUrl($media);

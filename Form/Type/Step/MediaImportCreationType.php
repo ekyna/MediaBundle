@@ -3,7 +3,9 @@
 namespace Ekyna\Bundle\MediaBundle\Form\Type\Step;
 
 use Ekyna\Bundle\MediaBundle\Entity\MediaRepository;
+use Ekyna\Bundle\MediaBundle\Form\Type\ImportMediaType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -58,10 +60,10 @@ class MediaImportCreationType extends AbstractType
                 $import->addMedia($media);
             }
 
-            $form->add('medias', 'collection', [
+            $form->add('medias', CollectionType::class, [
                 'label' => false,
-                'type' => 'ekyna_media_import',
-                'options' => [
+                'entry_type' => ImportMediaType::class,
+                'entry_options' => [
                     'label' => false,
                 ],
                 'attr' => [
@@ -69,13 +71,5 @@ class MediaImportCreationType extends AbstractType
                 ],
             ]);
         });
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'ekyna_media_import_creation';
     }
 }

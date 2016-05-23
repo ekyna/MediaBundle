@@ -244,7 +244,7 @@ define('ekyna-media-browser',
                             {role: 'download', icon: 'download'}
                         ];
                         $(d['medias']).each(function (index, media) {
-                            $(Twig.render(media_thumb_template, {media: media, controls: controls, selector: selector}))
+                            $(Twig.render(EkynaMediaBundle.thumb.html, {media: media, controls: controls, selector: selector}))
                                 .data('media', media)
                                 .appendTo(that.$content)
                                 .draggable({
@@ -410,8 +410,8 @@ define('ekyna-media-browser',
                         }
                     }
                     if (search.length > 0) {
-                        if (searchRegex.test($element.data('media').title.removeDiatrics())
-                            || searchRegex.test($element.data('media').filename.removeDiatrics())) {
+                        if (// TODO searchRegex.test($element.data('media').title.removeDiatrics()) ||
+                            searchRegex.test($element.data('media').filename.removeDiatrics())) {
                             $element.show();
                         } else {
                             $element.hide();
@@ -442,22 +442,41 @@ define('ekyna-media-browser',
         },
         initTree: function() {
             var that = this;
-            this.$tree.fancytree({
+            this.$tree.addClass('fancytree-expander').fancytree({
                 source: {
                     url: Router.generate('ekyna_media_browser_admin_list', that.config.folderId ? {folderId: that.config.folderId} : {})
                 },
                 activeVisible: true,
-                minExpandLevel: 2,
+                minExpandLevel: 1,
                 selectMode: 1,
-                extensions: ["edit", "dnd"],
+                extensions: ["edit", "dnd", "wide", "glyph"],
                 init: function(event, data) {
                     var node = data.tree.getActiveNode();
                     if (node)  {
+                        node.setExpanded(true);
                         that.browse(node.key);
                     }
                 },
                 activate: function(event, data) {
                     that.browse(data.node.key);
+                },
+                glyph: {
+                    map: {
+                        doc: "glyphicon glyphicon-file",
+                        docOpen: "glyphicon glyphicon-file",
+                        checkbox: "glyphicon glyphicon-unchecked",
+                        checkboxSelected: "glyphicon glyphicon-check",
+                        checkboxUnknown: "glyphicon glyphicon-share",
+                        dragHelper: "glyphicon glyphicon-play",
+                        dropMarker: "glyphicon glyphicon-arrow-right",
+                        error: "glyphicon glyphicon-warning-sign",
+                        expanderClosed: "glyphicon glyphicon-menu-right",
+                        expanderLazy: "glyphicon glyphicon-menu-right",  // glyphicon-plus-sign
+                        expanderOpen: "glyphicon glyphicon-menu-down",  // glyphicon-collapse-down
+                        folder: "glyphicon glyphicon-folder-close",
+                        folderOpen: "glyphicon glyphicon-folder-open",
+                        loading: "glyphicon glyphicon-refresh glyphicon-spin"
+                    }
                 },
                 dnd: {
                     preventVoidMoves: true,

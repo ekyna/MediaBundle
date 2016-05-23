@@ -2,7 +2,9 @@
 
 namespace Ekyna\Bundle\MediaBundle\Form\Type;
 
+use A2lix\TranslationFormBundle\Form\Type\TranslationsFormsType;
 use Ekyna\Bundle\AdminBundle\Form\Type\ResourceFormType;
+use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -18,26 +20,34 @@ class UploadMediaType extends ResourceFormType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('translations', 'a2lix_translationsForms', array(
-                'form_type' => new MediaTranslationType(),
+            ->add('translations', TranslationsFormsType::class, [
+                'form_type' => MediaTranslationType::class,
                 'label'     => false,
                 'required'  => false,
-                'attr'      => array(
+                'attr'      => [
                     'widget_col' => 12,
-                ),
-            ))
-            ->add('key', 'hidden')
-            ->add('rename', 'text', array(
+                ],
+            ])
+            ->add('key', Type\HiddenType::class)
+            ->add('rename', Type\TextType::class, [
                 'label'    => false,
                 'required' => true,
                 'sizing'   => 'sm',
-            ));
+            ]);
     }
 
     /**
      * {@inheritdoc}
      */
     public function getName()
+    {
+        return 'ekyna_media_upload_media';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBlockPrefix()
     {
         return 'ekyna_media_upload_media';
     }

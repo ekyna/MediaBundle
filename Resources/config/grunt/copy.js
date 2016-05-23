@@ -1,11 +1,11 @@
 module.exports = function (grunt, options) {
     return {
-        /*media_fancytree: {
-            expand: true,
-            cwd: 'bower_components/jquery.fancytree/dist',
-            src: ['skin-xp/**'],
-            dest: 'src/Ekyna/Bundle/MediaBundle/Resources/public/lib/fancytree'
-        },*/
+        //media_fancytree: {
+        //    expand: true,
+        //    cwd: 'bower_components/jquery.fancytree/dist',
+        //    src: ['skin-win8/**', 'src/**/*.dnd.js', 'src/**/*.edit.js', 'jquery.fancytree.js'],
+        //    dest: 'src/Ekyna/Bundle/MediaBundle/Resources/public/lib/fancytree'
+        //},
         media_fancybox: {
             expand: true,
             cwd: 'bower_components/fancyBox/source',

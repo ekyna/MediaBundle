@@ -45,7 +45,6 @@ define('ekyna-form/media-upload', ['jquery', 'jquery/fileupload', 'jquery/qtip']
                     });
                 })
                 .bind('fileuploadsubmit', function (e, data) { //e, data
-                    console.log(data);
                     var count = $form.data('uploadCount') || 0;
                     count++;
                     $submitButton.prop('disabled', true);
@@ -64,7 +63,7 @@ define('ekyna-form/media-upload', ['jquery', 'jquery/fileupload', 'jquery/qtip']
                     if (data.context) {
                         if (result.hasOwnProperty('upload_key')) {
                             data.context
-                                .find('input:hidden')
+                                .find('input[type=hidden]')
                                 .val(result['upload_key']);
                             data.context
                                 .find('.progress-bar')

@@ -5,6 +5,7 @@ namespace Ekyna\Bundle\MediaBundle\Form\Type\Step;
 use Ekyna\Bundle\MediaBundle\Model\Import\MediaImport;
 use League\Flysystem\MountManager;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -46,7 +47,7 @@ class MediaImportSelectionType extends AbstractType
 
             $form = $event->getForm();
 
-            $form->add('keys', 'choice', [
+            $form->add('keys', ChoiceType::class, [
                 'label' => 'Choisissez des fichiers à importer.',
                 'choices' => $type->buildKeysChoices($import),
                 'expanded' => true,
@@ -74,13 +75,5 @@ class MediaImportSelectionType extends AbstractType
             }
         }
         return $choices;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'ekyna_media_import_selection';
     }
 }

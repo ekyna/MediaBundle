@@ -5,6 +5,7 @@ namespace Ekyna\Bundle\MediaBundle\Controller\Admin;
 use Doctrine\DBAL\DBALException;
 use Ekyna\Bundle\CoreBundle\Controller\Controller;
 use Ekyna\Bundle\CoreBundle\Modal\Modal;
+use Ekyna\Bundle\MediaBundle\Form\Type\UploadType;
 use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
 use Ekyna\Bundle\MediaBundle\Model\Import\MediaImport;
 use Ekyna\Bundle\MediaBundle\Model\Import\MediaUpload;
@@ -396,7 +397,7 @@ class BrowserController extends Controller
 
         $upload = new MediaUpload();
 
-        $form = $this->createForm('ekyna_media_upload', $upload, array(
+        $form = $this->createForm(UploadType::class, $upload, array(
             'action' => $this->generateUrl(
                 'ekyna_media_browser_admin_create_media',
                 array('id' => $folderId)
