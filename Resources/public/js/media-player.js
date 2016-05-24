@@ -4,14 +4,14 @@
     if (typeof module !== 'undefined' && module.exports) {
         module.exports = factory(require('jquery'), require('videojs'), require('swfobject'));
     } else if (typeof define === 'function' && define.amd) {
-        define('ekyna-media-player', ['jquery', 'videojs', 'swfobject'], function(jQuery) {
-            return factory(jQuery);
+        define('ekyna-media-player', ['jquery', 'videojs', 'swfobject'], function(jQuery, videojs) {
+            return factory(jQuery, videojs);
         });
     } else {
-        root.EkynaMediaPlayer = factory(root.jQuery);
+        root.EkynaMediaPlayer = factory(root.jQuery, root.videojs);
     }
 
-}(this, function($) {
+}(this, function($, videojs) {
     "use strict";
 
     $('<link>')
@@ -21,6 +21,8 @@
         .appendTo($('head'))
     ;
     //videojs.options.flash.swf = "/bundles/ekynamedia/lib/videojs/video-js.swf";
+
+    window.VIDEOJS_NO_DYNAMIC_STYLE = true;
 
     swfobject.switchOffAutoHideShow();
 

@@ -12,10 +12,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript">
-        requirejs(['ekyna-media-browser'], function(MediaBrowser) {
-            var browser = new MediaBrowser('#media-browser');
-            browser.init();
-        });
-    </script>
+    {#<script type="text/javascript">window.VIDEOJS_NO_DYNAMIC_STYLE = true;</script>#}
+    <script type="text/javascript">require(['bundles/ekynamedia/js/browser']);</script>
 {% endblock javascripts %}

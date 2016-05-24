@@ -4,17 +4,6 @@ config:
             deps: ['jquery', 'jquery-ui/core', 'jquery-ui/effect-blind', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/droppable']
         'ekyna-media-thumb':
             deps: ['twig']
-        'ekyna-media-browser':
-            deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'ekyna-media-player', 'ekyna-string', 'ekyna-media-thumb', 'fancytree', 'fancybox']
-            exports: 'EkynaMediaBrowser'
-        'ekyna-form/media-choice':
-            deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-media-browser']
-        'ekyna-form/media-collection':
-            deps: ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-media-browser', 'jquery-ui/sortable']
-        'ekyna-form/media-upload':
-            deps: ['jquery', 'jquery/fileupload']
-        'ekyna-media-player':
-            deps: ['jquery', 'videojs', 'swfobject']
         'fancybox':
             deps: ['jquery']
     paths:

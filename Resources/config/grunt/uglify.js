@@ -10,6 +10,12 @@ module.exports = function (grunt, options) {
                     'bower_components/jquery.fancytree/dist/src/jquery.fancytree.wide.js',
                     'bower_components/jquery.fancytree/dist/src/jquery.fancytree.glyph.js'
                 ]
+                /*'src/Ekyna/Bundle/MediaBundle/Resources/public/js/browser.js': [
+                    'src/Ekyna/Bundle/MediaBundle/Resources/private/js/browser.js'
+                ],
+                'src/Ekyna/Bundle/MediaBundle/Resources/public/js/player.js': [
+                    'src/Ekyna/Bundle/MediaBundle/Resources/private/js/player.js'
+                ]*/
             }
         }
     }

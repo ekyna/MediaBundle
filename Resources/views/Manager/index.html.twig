@@ -22,7 +22,7 @@
         %}
             <link href="{{ asset_url }}" rel="stylesheet" type="text/css" />
         {% endstylesheets %}#}
-        <link href="{{ asset('bundles/ekynacore/css/fontawesome.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('bundles/ekynacore/css/glyphicons.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('bundles/ekynacore/css/core.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('bundles/ekynamedia/css/browser.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('bundles/ekynamedia/lib/fancybox/jquery.fancybox.css') }}" rel="stylesheet" type="text/css" />
@@ -43,12 +43,8 @@
     {{ render_media_manager(config) }}
 
     {% block javascripts %}
-        <script type="text/javascript">
-            requirejs(['ekyna-media-browser'], function(MediaBrowser) {
-                var browser = new MediaBrowser('#media-browser');
-                browser.init();
-            });
-        </script>
+        {#<script type="text/javascript">window.VIDEOJS_NO_DYNAMIC_STYLE = true;</script>#}
+        <script type="text/javascript">require(['bundles/ekynamedia/js/browser']);</script>
     {% endblock javascripts %}
 </body>
 </html>

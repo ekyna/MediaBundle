@@ -5,9 +5,5 @@
 {% endblock body %}
 
 {% block javascripts %}
-    <script type="text/javascript">
-        requirejs(['ekyna-media-player'], function(player) {
-            player.init();
-        });
-    </script>
+    <script type="text/javascript">require(['bundles/ekynamedia/js/player']);</script>
 {% endblock javascripts %}
