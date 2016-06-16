@@ -20,9 +20,6 @@
         .attr('href', '/bundles/ekynamedia/lib/videojs/video-js.css')
         .appendTo($('head'))
     ;
-    //videojs.options.flash.swf = "/bundles/ekynamedia/lib/videojs/video-js.swf";
-
-    window.VIDEOJS_NO_DYNAMIC_STYLE = true;
 
     swfobject.switchOffAutoHideShow();
 

@@ -7,7 +7,12 @@ tinymce.PluginManager.add('filemanager', function (editor) {
             title = editor.settings.filemanager_title;
         }
 
-        var path = '/admin/content/media-browser?mode=tinymce';
+        var path = '';
+        if (/\/app_dev\.php\//.test(window.location.href)) {
+            path = '/app_dev.php';
+        }
+        path += '/admin/content/media-browser?mode=tinymce';
+
         if (type == 'image') {
             path = path + '&types[]=image';
         } else if (type == 'media') {
