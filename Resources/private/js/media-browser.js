@@ -1,7 +1,9 @@
 define('ekyna-media-browser',
-    ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'ekyna-media-player',
-        'ekyna-string', 'ekyna-media-thumb', 'fancytree', 'fancybox'],
-    function($, Router, Twig, Modal, Form, Player) {
+    [
+        'require', 'jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'ekyna-media-player',
+        'ekyna-string', 'ekyna-media-thumb', 'fancybox', 'fancytree'
+    ],
+    function(require, $, Router, Twig, Modal, Form, Player) {
     "use strict";
 
     // http://james.padolsey.com/javascript/sorting-elements-with-jquery/
@@ -449,7 +451,7 @@ define('ekyna-media-browser',
                 activeVisible: true,
                 minExpandLevel: 1,
                 selectMode: 1,
-                extensions: ["edit", "dnd", "wide", "glyph"],
+                extensions: ["edit", "dnd", "glyph"/*, "wide"*/],
                 init: function(event, data) {
                     var node = data.tree.getActiveNode();
                     if (node)  {

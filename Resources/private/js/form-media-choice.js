@@ -21,7 +21,6 @@ define('ekyna-form/media-choice',
             });
         },
         selectMedia: function(folderId) {
-            console.log(folderId);
             var that = this,
                 modal = new Modal(),
                 browser;
@@ -29,12 +28,11 @@ define('ekyna-form/media-choice',
             $(modal).on('ekyna.modal.content', function (e) {
                 if (e.contentType == 'html') {
                     browser = new Browser(e.content);
-                    browser.init({folderId: folderId});
 
                     // Handle browser selection
                     $(browser).bind('ekyna.media-browser.selection', function(e) {
                         if (e.hasOwnProperty('media')) {
-                            var $thumb = $(Twig.render(media_thumb_template, {
+                            var $thumb = $(Twig.render(EkynaMediaBundle.thumb.html, {
                                 media: e.media,
                                 controls: that.config.controls,
                                 selector: false
@@ -62,6 +60,12 @@ define('ekyna-form/media-choice',
 
             $(modal).on('ekyna.modal.load_fail', function () {
                 alert('Failed to load media browser.');
+            });
+
+            $(modal).on('ekyna.modal.shown', function () {
+                if (browser) {
+                    browser.init({folderId: folderId});
+                }
             });
 
             $(modal).on('ekyna.modal.hide', function () {

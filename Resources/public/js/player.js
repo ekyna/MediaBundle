@@ -1,3 +1,1 @@
-require(['ekyna-media-player'], function(MediaPlayer) {
-    MediaPlayer.init();
-});
+require(["ekyna-media-player"],function(a){a.init()});

@@ -8,29 +8,19 @@
     <link rel="shortcut icon" href="/favicon.ico">
 
     {% block stylesheets %}
-        {#{% stylesheets output='css/media-browser.css' filter='cssrewrite, ?yui_css' debug=false
-            'assets/bootstrap/css/bootstrap.min.css'
-            'assets/bootstrap-dialog/dist/css/bootstrap-dialog.min.css'
-            'assets/jquery-ui/themes/base/jquery-ui.min.css'
-            'assets/jquery-ui/themes/smoothness/jquery-ui.min.css'
-            '@fontawesome_css'
-            '@form_css'
-            '@fancytree_css'
-            '@EkynaMediaBundle/Resources/asset/css/media-thumb.css'
-            '@EkynaMediaBundle/Resources/asset/css/media-browser.css'
-            '@EkynaMediaBundle/Resources/public/lib/fancybox/jquery.fancybox.css'
-        %}
-            <link href="{{ asset_url }}" rel="stylesheet" type="text/css" />
-        {% endstylesheets %}#}
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+
         <link href="{{ asset('bundles/ekynacore/css/glyphicons.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('bundles/ekynacore/css/bootstrap.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('bundles/ekynacore/css/jquery-ui.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('bundles/ekynacore/css/core.css') }}" rel="stylesheet" type="text/css" />
-        <link href="{{ asset('bundles/ekynamedia/css/browser.css') }}" rel="stylesheet" type="text/css" />
+
         <link href="{{ asset('bundles/ekynamedia/lib/fancybox/jquery.fancybox.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('bundles/ekynamedia/lib/fancytree/fancytree.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('bundles/ekynamedia/css/browser.css') }}" rel="stylesheet" type="text/css" />
         {# TODO ? <link href="{{ asset('bundles/ekynamedia/lib/fancybox/helpers/jquery.fancybox-buttons.css') }}" rel="stylesheet" type="text/css" />#}
         {# TODO ? <link href="{{ asset('bundles/ekynamedia/lib/fancybox/helpers/jquery.fancybox-thumbs.css') }}" rel="stylesheet" type="text/css" />#}
-        {# TODO optimize fonts #}
-        <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
-        <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic,700italic,900italic" rel="stylesheet" type="text/css" />
+
         {{ ui_forms_stylesheets() }}
     {% endblock stylesheets %}
 

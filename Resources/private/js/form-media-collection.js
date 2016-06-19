@@ -64,7 +64,6 @@ define('ekyna-form/media-collection',
             $(modal).on('ekyna.modal.content', function (e) {
                 if (e.contentType == 'html') {
                     browser = new Browser(e.content);
-                    browser.init();
 
                     // TODO Update media id edited in browser
 
@@ -99,6 +98,12 @@ define('ekyna-form/media-collection',
                     }
                     that.updateCollection();
                     modal.getDialog().close();
+                }
+            });
+
+            $(modal).on('ekyna.modal.shown', function () {
+                if (browser) {
+                    browser.init();
                 }
             });
 
@@ -152,7 +157,7 @@ define('ekyna-form/media-collection',
             var $child = $(child);
             $child.removeClass('ekyna-media-collection-add');
 
-            var $thumb = $(Twig.render(media_thumb_template, {
+            var $thumb = $(Twig.render(EkynaMediaBundle.thumb.html, {
                 media: data,
                 controls: that.config.controls,
                 selector: false

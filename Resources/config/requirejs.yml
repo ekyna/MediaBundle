@@ -6,6 +6,8 @@ config:
             deps: ['twig']
         'fancybox':
             deps: ['jquery']
+        'fancybox':
+            deps: ['jquery']
     paths:
         'ekyna-media-thumb':
             route: ekyna_media_thumb_template
