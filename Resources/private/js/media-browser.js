@@ -51,7 +51,7 @@ define('ekyna-media-browser',
         this.$tree = this.$browser.find('.media-browser-tree');
         this.$content = this.$browser.find('.media-browser-content');
         this.$controls = this.$browser.find('.media-browser-controls');
-        this.modal = new Modal();
+        this.modal = null;
         this.busy = false;
         this.folderId = null;
         this.browseXhr = null;
@@ -291,9 +291,10 @@ define('ekyna-media-browser',
             that.setBusy(true);
 
             that.modal = new Modal();
-            $(that.modal).on('ekyna.modal.content', function (e) {
-                settings.onShow(e);
-                if (e.contentType == 'data') {
+            $(that.modal).on('ekyna.modal.response', function (e) {
+                //settings.onShow(e);
+                if (e.contentType == 'json') {
+                    e.preventDefault();
                     settings.onData(e.content);
                     that.browse();
                 }
