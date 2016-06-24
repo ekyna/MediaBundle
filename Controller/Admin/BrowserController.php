@@ -10,6 +10,7 @@ use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
 use Ekyna\Bundle\MediaBundle\Model\Import\MediaImport;
 use Ekyna\Bundle\MediaBundle\Model\Import\MediaUpload;
 use JMS\Serializer\SerializationContext;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -409,12 +410,6 @@ class BrowserController extends Controller
             'folder' => $folder,
         ));
 
-        $modal = $this->createModal();
-        $modal->setTitle('ekyna_media.upload.title');
-        $modal->setVars(array(
-            'form_template' => 'EkynaMediaBundle:Manager:upload.html.twig',
-        ));
-
         $success = false;
         $form->handleRequest($request);
         if ($form->isValid()) {
@@ -429,10 +424,15 @@ class BrowserController extends Controller
             }
         }
         if ($success) {
-            $modal->setContent(array('success' => true));
-        } else {
-            $modal->setContent($form->createView());
+            return new JsonResponse(['success' => true]);
         }
+
+        $modal = $this->createModal();
+        $modal->setTitle('ekyna_media.upload.title');
+        $modal->setVars(array(
+            'form_template' => 'EkynaMediaBundle:Manager:upload.html.twig',
+        ));
+        $modal->setContent($form->createView());
 
         return $this->get('ekyna_core.modal')->render($modal);
     }
@@ -449,9 +449,6 @@ class BrowserController extends Controller
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
         }
-
-        $modal = $this->createModal();
-        $modal->setTitle('ekyna_media.import.title');
 
         $folderId = $request->attributes->get('id');
         $folder = $this->findFolderById($folderId);
@@ -472,16 +469,17 @@ class BrowserController extends Controller
                 $operator = $this->get('ekyna_media.media.operator');
                 foreach ($import->getMedias() as $media) {
                     $event = $operator->create($media);
+                    // TODO better error handling
                     if ($event->isPropagationStopped()) {
                         $this->addFlash(sprintf('Failed to create "%s" media.', $media->getPath()), 'danger');
                     }
                 }
-
-                $modal->setContent(array('success' => true));
-                return $this->get('ekyna_core.modal')->render($modal);
+                return new JsonResponse(['success' => true]);
             }
         }
 
+        $modal = $this->createModal();
+        $modal->setTitle('ekyna_media.import.title');
         $modal->setContent($form->createView());
 
         return $this->get('ekyna_core.modal')->render($modal);
