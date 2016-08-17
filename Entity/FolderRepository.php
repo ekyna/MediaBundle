@@ -2,8 +2,8 @@
 
 namespace Ekyna\Bundle\MediaBundle\Entity;
 
-use Ekyna\Bundle\AdminBundle\Doctrine\ORM\ResourceRepositoryInterface;
-use Ekyna\Bundle\AdminBundle\Doctrine\ORM\Util\ResourceRepositoryTrait;
+use Ekyna\Component\Resource\Doctrine\ORM\ResourceRepositoryInterface;
+use Ekyna\Component\Resource\Doctrine\ORM\Util\ResourceRepositoryTrait;
 use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 

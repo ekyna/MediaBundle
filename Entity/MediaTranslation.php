@@ -2,7 +2,7 @@
 
 namespace Ekyna\Bundle\MediaBundle\Entity;
 
-use Ekyna\Bundle\AdminBundle\Model\AbstractTranslation;
+use Ekyna\Component\Resource\Model\AbstractTranslation;
 
 /**
  * Class MediaTranslation

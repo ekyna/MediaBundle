@@ -2,7 +2,7 @@
 
 namespace Ekyna\Bundle\MediaBundle\Model;
 
-use Ekyna\Bundle\AdminBundle\Model\TranslatableInterface;
+use Ekyna\Component\Resource\Model\TranslatableInterface;
 use Ekyna\Bundle\CoreBundle\Model as Core;
 
 /**

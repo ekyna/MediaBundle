@@ -2,7 +2,7 @@
 
 namespace Ekyna\Bundle\MediaBundle\DependencyInjection;
 
-use Ekyna\Bundle\AdminBundle\DependencyInjection\AbstractExtension;
+use Ekyna\Bundle\ResourceBundle\DependencyInjection\AbstractExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**

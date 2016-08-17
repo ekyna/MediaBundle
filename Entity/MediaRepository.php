@@ -2,7 +2,7 @@
 
 namespace Ekyna\Bundle\MediaBundle\Entity;
 
-use Ekyna\Bundle\AdminBundle\Doctrine\ORM\TranslatableResourceRepository;
+use Ekyna\Component\Resource\Doctrine\ORM\TranslatableResourceRepository;
 
 /**
  * Class MediaRepository

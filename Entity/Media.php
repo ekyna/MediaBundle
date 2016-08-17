@@ -3,7 +3,7 @@
 namespace Ekyna\Bundle\MediaBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Ekyna\Bundle\AdminBundle\Model\TranslatableTrait;
+use Ekyna\Component\Resource\Model\TranslatableTrait;
 use Ekyna\Bundle\CoreBundle\Model as Core;
 use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
