@@ -4,8 +4,7 @@ namespace Ekyna\Bundle\MediaBundle\Twig;
 
 use Ekyna\Bundle\MediaBundle\Service\Generator;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
-use JMS\Serializer\SerializationContext;
-use JMS\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Class BrowserExtension
@@ -116,8 +115,9 @@ class BrowserExtension extends \Twig_Extension
 
         $data = '{}';
         if ($media) {
-            $context = SerializationContext::create()->setGroups(array('Manager'));
-            $data = $this->serializer->serialize($media, 'json', $context);
+            //$context = SerializationContext::create()->setGroups(array('Manager'));
+            //$data = $this->serializer->serialize($media, 'json', $context);
+            $data = $this->serializer->serialize($media, 'json', ['groups' => ['browser']]);
         }
 
         return $this->thumbTemplate->render(array(

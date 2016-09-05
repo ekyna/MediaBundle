@@ -1,0 +1,20 @@
+Ekyna\Bundle\MediaBundle\Entity\Folder:
+    attributes:
+        id:
+            groups: [Default]
+        name:
+            groups: [Default]
+        level:
+            groups: [Manager]
+        children:
+            groups: [Manager]
+        key:
+            groups: [Manager]
+        title:
+            groups: [Manager]
+        folder:
+            groups: [Manager]
+        active:
+            groups: [Manager]
+#        getIcon:
+#            groups: [Manager]

@@ -1,0 +1,22 @@
+Ekyna\Bundle\MediaBundle\Entity\Media:
+    attributes:
+        id:
+            groups: [Default, Manager]
+        path:
+            groups: [Manager]
+        size:
+            groups: [Manager]
+        type:
+            groups: [Manager]
+        filename:
+            groups: [Manager]
+        title:
+            groups: [Default, Manager]
+        thumb:
+            groups: [Manager]
+        front:
+            groups: [Default, Manager]
+        player:
+            groups: [Default, Manager]
+        folderId:
+            groups: [Default, Manager]
