@@ -37,6 +37,7 @@ class FolderRepository extends NestedTreeRepository implements ResourceRepositor
      */
     public function findRoot()
     {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->findOneBy([
             'name' => FolderInterface::ROOT,
             'level' => 0,

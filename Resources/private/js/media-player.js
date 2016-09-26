@@ -11,7 +11,7 @@
         root.EkynaMediaPlayer = factory(root.jQuery, root.videojs);
     }
 
-}(this, function($, videojs) {
+}(this, function($, VideoJs) {
     "use strict";
 
     $('<link>')
@@ -59,10 +59,10 @@
             }
         },
         initVideo: function($element) {
-            return videojs($element.attr('id'));
+            return VideoJs($element.attr('id'));
         },
         destroyVideo: function($element) {
-            var video = videojs($element.attr('id'));
+            var video = VideoJs($element.attr('id'));
             video.dispose();
             return video;
         },

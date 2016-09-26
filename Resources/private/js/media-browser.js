@@ -1,9 +1,9 @@
 define('ekyna-media-browser',
     [
-        'require', 'jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-form', 'ekyna-media-player',
-        'ekyna-string', 'ekyna-media-thumb', 'fancybox', 'fancytree'
+        'require', 'jquery', 'routing', 'ekyna-modal', 'ekyna-form', 'ekyna-media-player',
+        'ekyna-media-templates', 'ekyna-string', 'fancybox', 'fancytree'
     ],
-    function(require, $, Router, Twig, Modal, Form, Player) {
+    function(require, $, Router, Modal, Form, Player, Templates) {
     "use strict";
 
     // http://james.padolsey.com/javascript/sorting-elements-with-jquery/
@@ -246,7 +246,7 @@ define('ekyna-media-browser',
                             {role: 'download', icon: 'download'}
                         ];
                         $(d['medias']).each(function (index, media) {
-                            $(Twig.render(EkynaMediaBundle.thumb.html, {media: media, controls: controls, selector: selector}))
+                            $(Templates['thumb.html.twig'].render({media: media, controls: controls, selector: selector}))
                                 .data('media', media)
                                 .appendTo(that.$content)
                                 .draggable({

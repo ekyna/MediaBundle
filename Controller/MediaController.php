@@ -17,18 +17,6 @@ use TwigJs\CompileRequest;
  */
 class MediaController extends Controller
 {
-    public function thumbTemplateAction()
-    {
-        $handler = $this->container->get('twig_js.compile_request_handler');
-        $request = new CompileRequest('EkynaMediaBundle::thumb.html.twig', null);
-
-        return new Response(
-            $handler->process($request),
-            200,
-            array('Content-Type' => 'application/javascript')
-        );
-    }
-
     /**
      * Download local file.
      *

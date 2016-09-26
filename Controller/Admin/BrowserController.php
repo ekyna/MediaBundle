@@ -9,7 +9,6 @@ use Ekyna\Bundle\MediaBundle\Form\Type\UploadType;
 use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
 use Ekyna\Bundle\MediaBundle\Model\Import\MediaImport;
 use Ekyna\Bundle\MediaBundle\Model\Import\MediaUpload;
-use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -120,13 +119,6 @@ class BrowserController extends Controller
             $root->setActive(true);
         }
 
-        /*$folders = $this->get('jms_serializer')->serialize(
-            array($root),
-            'json',
-            SerializationContext::create()->setGroups(array('Manager'))
-        );
-        $response = new Response($folders);*/
-
         $response = new Response($this->serializeObject([$root]));
         $response->headers->add(['Content-Type' => 'application/json']);
 
@@ -196,12 +188,7 @@ class BrowserController extends Controller
                 ], JSON_FORCE_OBJECT));
             } else {
                 $this->getEntityManager()->flush();
-                /*$data = $this->get('jms_serializer')->serialize(
-                    $newFolder,
-                    'json',
-                    SerializationContext::create()->setGroups(array('Manager'))
-                );
-                $response = new Response(sprintf('{"node":%s}', $data));*/
+
                 $response = new Response(sprintf('{"node":%s}', $this->serializeObject($newFolder)));
             }
         }
@@ -340,12 +327,6 @@ class BrowserController extends Controller
             ->findMedias((array)$request->query->get('types'));
 
         $data = ['medias' => $medias];
-
-        /*$response = new Response($this->get('jms_serializer')->serialize(
-            $data,
-            'json',
-            SerializationContext::create()->setGroups(array('Manager'))
-        ));*/
 
         $response = new Response(
             $this->get('serializer')->serialize($data, 'json', ['groups' => ['Manager']])

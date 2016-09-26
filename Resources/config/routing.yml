@@ -2,12 +2,6 @@ ekyna_media_admin:
     resource: "routing/admin.yml"
     prefix:   /admin/content
 
-ekyna_media_thumb_template:
-    path: /media/thumb-template.js
-    defaults: { _controller: "EkynaMediaBundle:Media:thumbTemplate" }
-    methods: [GET]
-    options: { expose: true }
-
 ekyna_media_download:
     path: /media/download/{key}
     defaults: { _controller: "EkynaMediaBundle:Media:download" }

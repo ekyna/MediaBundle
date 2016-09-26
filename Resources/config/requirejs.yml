@@ -9,8 +9,8 @@ config:
         'fancybox':
             deps: ['jquery']
     paths:
-        'ekyna-media-thumb':
-            route: ekyna_media_thumb_template
+        'ekyna-media-templates': 'bundles/ekynamedia/js/ekyna-media-templates'
+#            route: ekyna_media_thumb_template
         'ekyna-media-browser': 'bundles/ekynamedia/js/media-browser'
         'ekyna-form/media-choice': 'bundles/ekynamedia/js/form-media-choice'
         'ekyna-form/media-collection': 'bundles/ekynamedia/js/form-media-collection'
@@ -20,8 +20,8 @@ config:
         'fancybox': 'bundles/ekynamedia/lib/fancybox/jquery.fancybox.pack'
         'videojs': 'bundles/ekynamedia/lib/videojs/video'
         'swfobject': 'bundles/ekynamedia/lib/swfobject/swfobject'
-build:
-    include:
-        - 'ekyna-media-player'
-    paths:
-        'ekyna-media-thumb': 'empty:'
+#build:
+#    include:
+#        - 'ekyna-media-player'
+#    paths:
+#        'ekyna-media-thumb': 'empty:'

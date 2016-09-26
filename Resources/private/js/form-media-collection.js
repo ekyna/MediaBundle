@@ -1,6 +1,6 @@
 define('ekyna-form/media-collection',
-    ['jquery', 'routing', 'twig', 'ekyna-modal', 'ekyna-media-browser', 'jquery-ui/sortable'],
-    function($, Router, Twig, Modal, Browser) {
+    ['jquery', 'routing', 'ekyna-modal', 'ekyna-media-browser', 'ekyna-media-templates', 'jquery-ui/sortable'],
+    function($, Router, Modal, Browser, Templates) {
     "use strict";
 
     var MediaCollectionWidget = function($elem) {
@@ -157,7 +157,7 @@ define('ekyna-form/media-collection',
             var $child = $(child);
             $child.removeClass('ekyna-media-collection-add');
 
-            var $thumb = $(Twig.render(EkynaMediaBundle.thumb.html, {
+            var $thumb = $(Templates['thumb.html.twig'].render({
                 media: data,
                 controls: that.config.controls,
                 selector: false

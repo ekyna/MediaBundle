@@ -20,16 +20,8 @@
         "php" : ">=5.5.9",
         "ekyna/admin-bundle" : "0.6.x-dev",
         "liip/imagine-bundle" : "^1.3",
-        "jms/serializer-bundle": "^1.1",
-        "jms/twig-js-bundle": "dev-master",
         "craue/formflow-bundle": "dev-master"
     },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/nikophil/JMSTwigJsBundle.git"
-        }
-    ],
     "autoload" : {
         "psr-4" : {
             "Ekyna\\Bundle\\MediaBundle\\" : ""

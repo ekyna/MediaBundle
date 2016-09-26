@@ -7,6 +7,7 @@ module.exports = {
         'clean:media_pre',
         'copy:media',
         'cssmin:media',
+        'twig:media',
         'uglify:media'
     ]
 };
