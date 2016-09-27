@@ -2,7 +2,7 @@
 
 namespace Ekyna\Bundle\MediaBundle\Model;
 
-use Ekyna\Bundle\CoreBundle\Model\SortableInterface;
+use Ekyna\Component\Resource\Model\SortableInterface;
 
 /**
  * Interface GalleryMediaInterface

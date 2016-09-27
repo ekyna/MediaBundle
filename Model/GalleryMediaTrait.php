@@ -2,7 +2,7 @@
 
 namespace Ekyna\Bundle\MediaBundle\Model;
 
-use Ekyna\Bundle\CoreBundle\Model\SortableTrait;
+use Ekyna\Component\Resource\Model\SortableTrait;
 
 /**
  * Trait GalleryMediaTrait

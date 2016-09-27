@@ -121,7 +121,7 @@ class LoadMediaData extends Loader implements FixtureInterface, OrderedFixtureIn
         }
 
         $root = $this->folderRepository->findRoot();
-        for ($i = 0; $i < 32; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $source = $this->faker->randomElement($sources);
             $target = sprintf('%s/%d.jpg', sys_get_temp_dir(), $i);
             if (!copy($source, $target)) {
