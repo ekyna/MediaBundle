@@ -57,7 +57,7 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('repository')->defaultValue('Ekyna\Bundle\MediaBundle\Entity\MediaRepository')->end()
                                 ->scalarNode('form')->defaultValue('Ekyna\Bundle\MediaBundle\Form\Type\MediaType')->end()
                                 ->scalarNode('table')->defaultValue('Ekyna\Bundle\MediaBundle\Table\Type\MediaType')->end()
-                                ->scalarNode('event')->defaultValue('Ekyna\Bundle\MediaBundle\Event\MediaEvent')->end()
+                                ->scalarNode('event')->end()
                                 ->scalarNode('parent')->end()
                                 ->arrayNode('translation')
                                     ->addDefaultsIfNotSet()
