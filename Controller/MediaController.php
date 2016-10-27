@@ -34,6 +34,7 @@ class MediaController extends Controller
 
         $lastModified = $media->getUpdatedAt();
 
+        // TODO Does streamed response can really be cached ???
         $response = new Response();
         $response->setPublic();
         $response->setLastModified($lastModified);
@@ -42,6 +43,9 @@ class MediaController extends Controller
             return $response;
         }
 
+        // TODO use content disposition
+        // TODO Don't stream small files ?
+        // TODO Use BinaryFileResponse when needed
         $response = new StreamedResponse();
         $response->setPublic();
         $response->setLastModified($lastModified);

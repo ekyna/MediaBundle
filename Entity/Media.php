@@ -18,11 +18,8 @@ use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 class Media implements MediaInterface
 {
     use Core\TaggedEntityTrait,
+        Core\UploadableTrait,
         TranslatableTrait;
-
-    use Core\UploadableTrait {
-        setFile as uploadableSetFile;
-    }
 
     /**
      * @var integer
