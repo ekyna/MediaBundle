@@ -2,7 +2,7 @@
 
 namespace Ekyna\Bundle\MediaBundle\Model;
 
-use Ekyna\Bundle\CoreBundle\Model\AbstractConstants;
+use Ekyna\Bundle\ResourceBundle\Model\AbstractConstants;
 
 /**
  * Class RootFolders
