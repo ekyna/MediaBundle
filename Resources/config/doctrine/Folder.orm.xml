@@ -11,12 +11,12 @@
             table="media_folder">
 
         <indexes>
-            <index name="idx_name" columns="name" />
-            <index name="idx_parent" columns="parent_id" />
+            <index name="idx_media_folder_name" columns="name" />
+            <index name="idx_media_folder_parent" columns="parent_id" />
         </indexes>
 
         <unique-constraints>
-            <unique-constraint name="unique_name" columns="name,parent_id" />
+            <unique-constraint name="unique_media_folder_name" columns="name,parent_id" />
         </unique-constraints>
 
         <id name="id" type="integer" column="id">
