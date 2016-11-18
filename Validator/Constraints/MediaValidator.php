@@ -37,10 +37,10 @@ class MediaValidator extends ConstraintValidator
     public function validate($media, Constraint $constraint)
     {
         if (! $media instanceof MediaInterface) {
-            throw new UnexpectedTypeException($media, 'Ekyna\Bundle\MediaBundle\Model\MediaInterface');
+            throw new UnexpectedTypeException($media, MediaInterface::class);
         }
         if (! $constraint instanceof Media) {
-            throw new UnexpectedTypeException($constraint, __NAMESPACE__.'\Media');
+            throw new UnexpectedTypeException($constraint, Media::class);
         }
 
         /**

@@ -8,14 +8,14 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
- * Class MediaChoiceValidator
+ * Class MediaTypesValidator
  * @package Ekyna\Bundle\MediaBundle\Validator\Constraints
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-class MediaChoiceValidator extends ConstraintValidator
+class MediaTypesValidator extends ConstraintValidator
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function validate($media, Constraint $constraint)
     {
@@ -23,15 +23,11 @@ class MediaChoiceValidator extends ConstraintValidator
             return;
         }
 
-        if (! $media instanceof MediaInterface) {
-            throw new UnexpectedTypeException($media, 'Ekyna\Bundle\MediaBundle\Model\MediaInterface');
+        if (!$media instanceof MediaInterface) {
+            throw new UnexpectedTypeException($media, MediaInterface::class);
         }
-        if (! $constraint instanceof MediaChoice) {
-            throw new UnexpectedTypeException($constraint, __NAMESPACE__.'\MediaChoice');
-        }
-
-        if (!count($constraint->types)) {
-            return;
+        if (!$constraint instanceof MediaTypes) {
+            throw new UnexpectedTypeException($constraint, MediaTypes::class);
         }
 
         if (!in_array($media->getType(), $constraint->types, true)) {
