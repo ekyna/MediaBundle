@@ -3,7 +3,7 @@
 namespace Ekyna\Bundle\MediaBundle\Validator\Constraints;
 
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
-use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
+use Ekyna\Bundle\MediaBundle\Model\MediaTypes as Types;
 use League\Flysystem\MountManager;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Constraint;
@@ -66,7 +66,7 @@ class MediaValidator extends ConstraintValidator
             }
 
             $propertyPath = $media->hasFile() ? 'file' : 'key';
-            $type = MediaTypes::guessByMimeType($mimeType);
+            $type = Types::guessByMimeType($mimeType);
             if (null !== $media->getType() && $media->getType() != $type) {
                 $this->context
                     ->buildViolation($constraint->typeMissMatch)
@@ -77,7 +77,7 @@ class MediaValidator extends ConstraintValidator
                 $media->setType($type);
             }
 
-            if (!MediaTypes::isValid($media->getType())) {
+            if (!Types::isValid($media->getType())) {
                 $this->context->addViolation($constraint->invalidType);
             }
         }
