@@ -8,7 +8,7 @@ use Ekyna\Component\Table\TableBuilderInterface;
 /**
  * Class MediaType
  * @package Ekyna\Bundle\MediaBundle\Table\Type
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class MediaType extends ResourceTableType
 {
@@ -22,40 +22,41 @@ class MediaType extends ResourceTableType
                 'sortable' => true,
             ])
             ->addColumn('title', 'anchor', [
-                'label' => 'ekyna_core.field.title',
-                'sortable' => true,
-                'route_name' => 'ekyna_media_media_admin_show',
+                'label'                => 'ekyna_core.field.title',
+                'sortable'             => true,
+                'route_name'           => 'ekyna_media_media_admin_show',
                 'route_parameters_map' => [
-                    'mediaId' => 'id'
+                    'mediaId' => 'id',
                 ],
+                'position'             => 10,
             ])
             ->addColumn('updatedAt', 'datetime', [
                 'sortable' => true,
-                'label' => 'ekyna_core.field.updated_at',
+                'label'    => 'ekyna_core.field.updated_at',
+                'position' => 20,
             ])
             ->addColumn('actions', 'admin_actions', [
                 'buttons' => [
                     [
-                        'label' => 'ekyna_core.button.edit',
-                        'class' => 'warning',
-                        'route_name' => 'ekyna_media_media_admin_edit',
+                        'label'                => 'ekyna_core.button.edit',
+                        'class'                => 'warning',
+                        'route_name'           => 'ekyna_media_media_admin_edit',
                         'route_parameters_map' => [
-                            'mediaId' => 'id'
+                            'mediaId' => 'id',
                         ],
-                        'permission' => 'edit',
+                        'permission'           => 'edit',
                     ],
                     [
-                        'label' => 'ekyna_core.button.remove',
-                        'class' => 'danger',
-                        'route_name' => 'ekyna_media_media_admin_remove',
+                        'label'                => 'ekyna_core.button.remove',
+                        'class'                => 'danger',
+                        'route_name'           => 'ekyna_media_media_admin_remove',
                         'route_parameters_map' => [
-                            'mediaId' => 'id'
+                            'mediaId' => 'id',
                         ],
-                        'permission' => 'delete',
+                        'permission'           => 'delete',
                     ],
                 ],
-            ])
-            /*->addFilter('id', 'number')
+            ])/*->addFilter('id', 'number')
             ->addFilter('path', 'text', array(
                 'label' => 'ekyna_core.field.path'
             ))
