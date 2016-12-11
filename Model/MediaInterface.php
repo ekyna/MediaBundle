@@ -2,23 +2,24 @@
 
 namespace Ekyna\Bundle\MediaBundle\Model;
 
-use Ekyna\Component\Resource\Model\TranslatableInterface;
 use Ekyna\Bundle\CoreBundle\Model as Core;
+use Ekyna\Component\Resource\Model as RM;
 
 /**
  * Interface MediaInterface
  * @package Ekyna\Bundle\MediaBundle\Model
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 interface MediaInterface extends
     Core\UploadableInterface,
-    Core\TaggedEntityInterface,
-    TranslatableInterface
+    RM\TranslatableInterface,
+    RM\TaggedEntityInterface
 {
     /**
      * Sets the folder.
      *
      * @param FolderInterface $folder
+     *
      * @return MediaInterface|$this
      */
     public function setFolder(FolderInterface $folder);
@@ -34,6 +35,7 @@ interface MediaInterface extends
      * Sets the type.
      *
      * @param string $type
+     *
      * @return MediaInterface|$this
      */
     public function setType($type);
@@ -49,6 +51,7 @@ interface MediaInterface extends
      * Sets the title.
      *
      * @param string $title
+     *
      * @return MediaInterface|$this
      */
     public function setTitle($title);
@@ -64,6 +67,7 @@ interface MediaInterface extends
      * Sets the description.
      *
      * @param string $description
+     *
      * @return MediaInterface|$this
      */
     public function setDescription($description);
@@ -79,6 +83,7 @@ interface MediaInterface extends
      * Sets the thumb url.
      *
      * @param string $url
+     *
      * @return MediaInterface|$this
      */
     public function setThumb($url);
@@ -94,6 +99,7 @@ interface MediaInterface extends
      * Sets the front url.
      *
      * @param string $url
+     *
      * @return MediaInterface|$this
      */
     public function setFront($url);
@@ -109,6 +115,7 @@ interface MediaInterface extends
      * Sets the player url.
      *
      * @param string $url
+     *
      * @return MediaInterface|$this
      */
     public function setPlayer($url);

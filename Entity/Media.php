@@ -3,23 +3,22 @@
 namespace Ekyna\Bundle\MediaBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Ekyna\Component\Resource\Model\TranslatableTrait;
+use Ekyna\Component\Resource\Model as RM;
 use Ekyna\Bundle\CoreBundle\Model as Core;
-use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
-use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
+use Ekyna\Bundle\MediaBundle\Model;
 
 /**
  * Class Media
  * @package Ekyna\Bundle\MediaBundle\Entity
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  *
  * @method MediaTranslation translate($locale = null, $create = false)
  */
-class Media implements MediaInterface
+class Media implements Model\MediaInterface
 {
-    use Core\TaggedEntityTrait,
-        Core\UploadableTrait,
-        TranslatableTrait;
+    use Core\UploadableTrait,
+        RM\TranslatableTrait,
+        RM\TaggedEntityTrait;
 
     /**
      * @var integer
@@ -27,7 +26,7 @@ class Media implements MediaInterface
     protected $id;
 
     /**
-     * @var FolderInterface
+     * @var Model\FolderInterface
      */
     protected $folder;
 
@@ -83,9 +82,10 @@ class Media implements MediaInterface
     /**
      * {@inheritdoc}
      */
-    public function setFolder(FolderInterface $folder)
+    public function setFolder(Model\FolderInterface $folder)
     {
         $this->folder = $folder;
+
         return $this;
     }
 
@@ -103,6 +103,7 @@ class Media implements MediaInterface
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -120,6 +121,7 @@ class Media implements MediaInterface
     public function setTitle($title)
     {
         $this->translate()->setTitle($title);
+
         return $this;
     }
 
@@ -137,6 +139,7 @@ class Media implements MediaInterface
     public function setDescription($description)
     {
         $this->translate()->setDescription($description);
+
         return $this;
     }
 
@@ -154,6 +157,7 @@ class Media implements MediaInterface
     public function setThumb($url)
     {
         $this->thumb = $url;
+
         return $this;
     }
 
@@ -171,6 +175,7 @@ class Media implements MediaInterface
     public function setFront($url)
     {
         $this->front = $url;
+
         return $this;
     }
 
@@ -188,6 +193,7 @@ class Media implements MediaInterface
     public function setPlayer($url)
     {
         $this->player = $url;
+
         return $this;
     }
 

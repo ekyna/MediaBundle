@@ -5,15 +5,16 @@ namespace Ekyna\Bundle\MediaBundle\Listener;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
  * Class MediaSubjectSubscriber
  * @package Ekyna\Bundle\MediaBundle\Listener
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class MediaSubjectSubscriber implements EventSubscriber
 {
-    const MEDIA_FQCN = 'Ekyna\Bundle\MediaBundle\Entity\Media';
+    const MEDIA_FQCN        = 'Ekyna\Bundle\MediaBundle\Entity\Media';
     const SUBJECT_INTERFACE = 'Ekyna\Bundle\MediaBundle\Model\MediaSubjectInterface';
 
     /**
@@ -40,15 +41,15 @@ class MediaSubjectSubscriber implements EventSubscriber
         }
 
         $metadata->mapManyToOne([
-            'fieldName'     => 'media',
-            'targetEntity'  => self::MEDIA_FQCN,
-            'cascade'       => ['persist', 'merge', 'refresh', 'detach'],
-            'joinColumns' => [
+            'fieldName'    => 'media',
+            'targetEntity' => self::MEDIA_FQCN,
+            'cascade'      => ['persist', 'merge', 'refresh', 'detach'],
+            'joinColumns'  => [
                 [
-                    'name'                  => 'media_id',
-                    'referencedColumnName'  => 'id',
-                    'onDelete'              => 'SET NULL',
-                    'nullable'              => true,
+                    'name'                 => 'media_id',
+                    'referencedColumnName' => 'id',
+                    'onDelete'             => 'SET NULL',
+                    'nullable'             => true,
                 ],
             ],
         ]);
