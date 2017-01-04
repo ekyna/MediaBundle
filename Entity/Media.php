@@ -56,7 +56,7 @@ class Media implements Model\MediaInterface
      */
     public function __construct()
     {
-        $this->translations = new ArrayCollection();
+        $this->initializeTranslations();
     }
 
     /**

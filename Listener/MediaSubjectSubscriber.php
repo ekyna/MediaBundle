@@ -5,7 +5,6 @@ namespace Ekyna\Bundle\MediaBundle\Listener;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
-use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
  * Class MediaSubjectSubscriber
