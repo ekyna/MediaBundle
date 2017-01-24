@@ -18,7 +18,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class UploadType extends AbstractType
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -46,7 +46,7 @@ class UploadType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -59,7 +59,7 @@ class UploadType extends AbstractType
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function getBlockPrefix()
     {

@@ -13,7 +13,7 @@ use Ekyna\Component\Table\TableBuilderInterface;
 class MediaType extends ResourceTableType
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildTable(TableBuilderInterface $builder, array $options)
     {
@@ -67,7 +67,7 @@ class MediaType extends ResourceTableType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getName()
     {

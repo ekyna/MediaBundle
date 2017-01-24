@@ -43,7 +43,7 @@ class PlayerExtension extends \Twig_Extension
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function initRuntime(\Twig_Environment $twig)
     {
@@ -51,7 +51,7 @@ class PlayerExtension extends \Twig_Extension
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getFilters()
     {
@@ -288,7 +288,7 @@ class PlayerExtension extends \Twig_Extension
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getName()
     {

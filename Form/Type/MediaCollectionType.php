@@ -18,7 +18,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class MediaCollectionType extends AbstractType
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
@@ -29,7 +29,7 @@ class MediaCollectionType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -69,7 +69,7 @@ class MediaCollectionType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getParent()
     {
@@ -77,7 +77,7 @@ class MediaCollectionType extends AbstractType
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function getBlockPrefix()
     {

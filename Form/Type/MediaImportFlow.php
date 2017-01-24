@@ -31,7 +31,7 @@ class MediaImportFlow extends FormFlow
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function loadStepsConfig()
     {
@@ -48,7 +48,7 @@ class MediaImportFlow extends FormFlow
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getFormOptions($step, array $options = [])
     {

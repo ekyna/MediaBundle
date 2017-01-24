@@ -32,7 +32,7 @@ class ImportMediaType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -50,7 +50,7 @@ class ImportMediaType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {

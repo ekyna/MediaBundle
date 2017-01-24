@@ -12,7 +12,7 @@ interface FolderRepositoryInterface extends ResourceRepositoryInterface
 {
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      * @return FolderInterface
      */
     public function createNew();

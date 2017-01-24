@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class EkynaMediaExtension extends AbstractExtension
 {
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function load(array $configs, ContainerBuilder $container)
     {

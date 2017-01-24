@@ -5,6 +5,7 @@ namespace Ekyna\Bundle\MediaBundle\Listener;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
+use Ekyna\Bundle\MediaBundle\Model;
 
 /**
  * Class GalleryMediaSubscriber
@@ -13,9 +14,6 @@ use Doctrine\ORM\Events;
  */
 class GalleryMediaSubscriber implements EventSubscriber
 {
-    const MEDIA_FQCN = 'Ekyna\Bundle\MediaBundle\Entity\Media';
-    const GALLERY_MEDIA_INTERFACE = 'Ekyna\Bundle\MediaBundle\Model\GalleryMediaInterface';
-
     /**
      * @param LoadClassMetadataEventArgs $eventArgs
      */
@@ -30,7 +28,7 @@ class GalleryMediaSubscriber implements EventSubscriber
         }
 
         // Check if class implements the gallery media interface
-        if (!in_array(self::GALLERY_MEDIA_INTERFACE, class_implements($metadata->getName()))) {
+        if (!in_array(Model\GalleryMediaInterface::class, class_implements($metadata->getName()))) {
             return;
         }
 
@@ -41,8 +39,8 @@ class GalleryMediaSubscriber implements EventSubscriber
 
         $metadata->mapManyToOne([
             'fieldName'     => 'media',
-            'targetEntity'  => self::MEDIA_FQCN,
-            'cascade'       => ['persist', 'merge', 'refresh', 'detach'],
+            'targetEntity'  => Model\MediaInterface::class,
+            'cascade'       => ['persist', 'detach'],
             'joinColumns' => [
                 [
                     'name'                  => 'media_id',
@@ -55,7 +53,7 @@ class GalleryMediaSubscriber implements EventSubscriber
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getSubscribedEvents()
     {

@@ -35,7 +35,7 @@ class MediaInstaller extends AbstractInstaller implements OrderedInstallerInterf
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function install(Command $command, InputInterface $input, OutputInterface $output)
     {
@@ -75,7 +75,7 @@ class MediaInstaller extends AbstractInstaller implements OrderedInstallerInterf
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getOrder()
     {

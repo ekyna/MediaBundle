@@ -19,7 +19,7 @@ class MediaTypes extends AbstractConstants
     const ARCHIVE = 'archive';
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     static public function getConfig()
     {

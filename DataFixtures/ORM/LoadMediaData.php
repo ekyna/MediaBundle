@@ -43,7 +43,7 @@ class LoadMediaData extends Loader implements FixtureInterface, OrderedFixtureIn
 
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -56,7 +56,7 @@ class LoadMediaData extends Loader implements FixtureInterface, OrderedFixtureIn
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function load(ObjectManager $om)
     {
@@ -194,7 +194,7 @@ class LoadMediaData extends Loader implements FixtureInterface, OrderedFixtureIn
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function getOrder()
     {

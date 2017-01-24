@@ -80,7 +80,7 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setFolder(Model\FolderInterface $folder)
     {
@@ -90,7 +90,7 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getFolder()
     {
@@ -98,7 +98,7 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setType($type)
     {
@@ -108,7 +108,7 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getType()
     {
@@ -116,7 +116,7 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setTitle($title)
     {
@@ -126,7 +126,7 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getTitle()
     {
@@ -134,7 +134,7 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setDescription($description)
     {
@@ -144,7 +144,7 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getDescription()
     {
@@ -152,7 +152,7 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setThumb($url)
     {
@@ -162,7 +162,7 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getThumb()
     {
@@ -170,7 +170,7 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setFront($url)
     {
@@ -180,7 +180,7 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getFront()
     {
@@ -188,7 +188,7 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setPlayer($url)
     {
@@ -198,7 +198,7 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getPlayer()
     {
@@ -206,7 +206,7 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getFolderId()
     {
@@ -214,7 +214,7 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public static function getEntityTagPrefix()
     {

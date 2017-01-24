@@ -16,7 +16,7 @@ class Media extends Constraint
     public $typeMissMatch = 'ekyna_media.media.type_miss_match';
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function validatedBy()
     {
@@ -24,7 +24,7 @@ class Media extends Constraint
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getTargets()
     {

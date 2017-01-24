@@ -15,7 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 class MediaType extends ResourceFormType
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -32,7 +32,7 @@ class MediaType extends ResourceFormType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getParent()
     {
@@ -40,7 +40,7 @@ class MediaType extends ResourceFormType
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function getBlockPrefix()
     {

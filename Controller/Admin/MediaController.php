@@ -17,7 +17,7 @@ class MediaController extends ResourceController
     use TinymceTrait;
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function listAction(Request $request)
     {

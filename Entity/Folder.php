@@ -74,7 +74,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getId()
     {
@@ -82,7 +82,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setName($name)
     {
@@ -92,7 +92,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getName()
     {
@@ -100,7 +100,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setLeft($left)
     {
@@ -109,7 +109,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getLeft()
     {
@@ -117,7 +117,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setRight($right)
     {
@@ -126,7 +126,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getRight()
     {
@@ -134,7 +134,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setRoot($root)
     {
@@ -143,7 +143,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getRoot()
     {
@@ -151,7 +151,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setLevel($level)
     {
@@ -160,7 +160,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getLevel()
     {
@@ -168,7 +168,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setParent(FolderInterface $parent = null)
     {
@@ -177,7 +177,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getParent()
     {
@@ -185,7 +185,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setChildren(ArrayCollection $children)
     {
@@ -194,7 +194,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function hasChild(FolderInterface $child)
     {
@@ -202,7 +202,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function addChild(FolderInterface $child)
     {
@@ -214,7 +214,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function removeChild(FolderInterface $child)
     {
@@ -226,7 +226,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function hasChildren()
     {
@@ -234,7 +234,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getChildren()
     {
@@ -254,7 +254,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function hasMedia(MediaInterface $media)
     {
@@ -262,7 +262,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function addMedia(MediaInterface $media)
     {
@@ -274,7 +274,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function removeMedia(MediaInterface $media)
     {
@@ -286,7 +286,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function hasMedias()
     {
@@ -304,7 +304,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setActive($active)
     {

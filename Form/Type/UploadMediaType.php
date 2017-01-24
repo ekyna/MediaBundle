@@ -15,7 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 class UploadMediaType extends ResourceFormType
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -37,7 +37,7 @@ class UploadMediaType extends ResourceFormType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getName()
     {
@@ -45,7 +45,7 @@ class UploadMediaType extends ResourceFormType
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function getBlockPrefix()
     {

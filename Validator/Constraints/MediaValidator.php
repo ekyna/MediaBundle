@@ -32,7 +32,7 @@ class MediaValidator extends ConstraintValidator
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function validate($media, Constraint $constraint)
     {

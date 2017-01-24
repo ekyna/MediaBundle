@@ -36,16 +36,18 @@ class MediaChoiceType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $transformer = new ObjectToIdentifierTransformer($this->repository);
         $builder->addViewTransformer($transformer);
+
+        // TODO Constraint against types
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
@@ -58,7 +60,7 @@ class MediaChoiceType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -91,7 +93,7 @@ class MediaChoiceType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getParent()
     {
@@ -99,7 +101,7 @@ class MediaChoiceType extends AbstractType
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function getBlockPrefix()
     {
