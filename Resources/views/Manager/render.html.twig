@@ -4,22 +4,23 @@
         {# --- CREATE --- #}
         <div class="media-browser-controls-group">
             <div class="btn-group">
-                <button type="button" class="btn btn-sm btn-default" data-role="create">
-                    <span class="glyphicon glyphicon-plus"></span>
+                <button type="button" class="btn btn-sm btn-default" data-role="create" title="Upload">
+                    <span class="fa fa-plus"></span>
                 </button>
-                <button type="button" class="btn btn-sm btn-default" data-role="import">
-                    <span class="glyphicon glyphicon-cloud-download"></span>
+                <button type="button" class="btn btn-sm btn-default" data-role="import" title="Import">
+                    <span class="fa fa-cloud-download"></span>
                 </button>
             </div>
         </div>
         {# --- TEXT SEARCH --- #}
         <div class="media-browser-controls-group">
             <div class="input-group" style="max-width: 200px;">
-                <input type="text" name="search" class="form-control input-sm" data-role="search"
-                       placeholder="Rechercher">
+                <input type="text" name="search" class="form-control input-sm"
+                       data-role="search" placeholder="Rechercher" title="Search">
                     <span class="input-group-btn">
-                        <button class="btn btn-sm btn-default" type="button" data-role="clear-search">
-                            <span class="glyphicon glyphicon-remove"></span>
+                        <button class="btn btn-sm btn-default" type="button"
+                                data-role="clear-search" title="Clear search">
+                            <span class="fa fa-remove"></span>
                         </button>
                     </span>
             </div>
@@ -41,29 +42,33 @@
         {% if (config.types is not defined) or (config.types is empty) %}
             <div class="media-browser-controls-group">
                 <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-sm btn-default" data-role="filter">
+                    <label class="btn btn-sm btn-default" data-role="filter" title="Filter file">
                         <input type="checkbox" name="filters[]" value="file">
-                        <span class="glyphicon glyphicon-file"></span>
+                        <span class="fa fa-file"></span>
                     </label>
-                    <label class="btn btn-sm btn-default" data-role="filter">
+                    <label class="btn btn-sm btn-default" data-role="filter" title="Filter image">
                         <input type="checkbox" name="filters[]" value="image">
-                        <span class="glyphicon glyphicon-picture"></span>
+                        <span class="fa fa-picture-o"></span>
                     </label>
-                    <label class="btn btn-sm btn-default" data-role="filter">
+                    <label class="btn btn-sm btn-default" data-role="filter" title="Filter SVG">
+                        <input type="checkbox" name="filters[]" value="svg">
+                        <span class="fa fa-object-ungroup"></span>
+                    </label>
+                    <label class="btn btn-sm btn-default" data-role="filter" title="Filter video">
                         <input type="checkbox" name="filters[]" value="video">
-                        <span class="glyphicon glyphicon-film"></span>
+                        <span class="fa fa-film"></span>
                     </label>
-                    <label class="btn btn-sm btn-default" data-role="filter">
+                    <label class="btn btn-sm btn-default" data-role="filter" title="Filter flash">
                         <input type="checkbox" name="filters[]" value="flash">
-                        <span class="glyphicon glyphicon-flash"></span>
+                        <span class="fa fa-flash"></span>
                     </label>
-                    <label class="btn btn-sm btn-default" data-role="filter">
+                    <label class="btn btn-sm btn-default" data-role="filter" title="Filter audio">
                         <input type="checkbox" name="filters[]" value="audio">
-                        <span class="glyphicon glyphicon-music"></span>
+                        <span class="fa fa-music"></span>
                     </label>
-                    <label class="btn btn-sm btn-default" data-role="filter">
+                    <label class="btn btn-sm btn-default" data-role="filter" title="Filter archive">
                         <input type="checkbox" name="filters[]" value="archive">
-                        <span class="glyphicon glyphicon-compressed"></span>
+                        <span class="fa fa-compress"></span>
                     </label>
                 </div>
             </div>
@@ -71,20 +76,22 @@
         {# --- SORTING --- #}
         <div class="media-browser-controls-group">
             <div class="btn-group" data-toggle="buttons">
-                <label class="btn btn-sm btn-default active" data-role="sort">
+                <label class="btn btn-sm btn-default active" data-role="sort" title="Sort by names">
                     <input type="radio" id="sort-by-filename" name="sort" value="filename" data-dir="asc" checked="checked">
+                    {#<span class="fa fa-sort-alpha-asc"></span>#}
                     <span class="glyphicon glyphicon-sort-by-alphabet"></span>
                 </label>
-                <label class="btn btn-sm btn-default" data-role="sort">
+                <label class="btn btn-sm btn-default" data-role="sort" title="Sort by size">
                     <input type="radio" id="sort-by-size" name="sort" value="size" data-dir="asc">
+                    {#<span class="fa fa-sort-amount-asc"></span>#}
                     <span class="glyphicon glyphicon-sort-by-attributes"></span>
                 </label>
             </div>
         </div>
         {# --- REFRESH --- #}
         <div class="media-browser-controls-group">
-            <button class="btn btn-sm btn-default" type="button" data-role="refresh">
-                <span class="glyphicon glyphicon-refresh"></span>
+            <button class="btn btn-sm btn-default" type="button" data-role="refresh" title="Refresh">
+                <span class="fa fa-refresh"></span>
             </button>
         </div>
     </div>

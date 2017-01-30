@@ -10,7 +10,7 @@ use Liip\ImagineBundle\Imagine\Filter\FilterManager;
 /**
  * Class PlayerExtension
  * @package Ekyna\Bundle\MediaBundle\Twig
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class PlayerExtension extends \Twig_Extension
 {
@@ -38,7 +38,7 @@ class PlayerExtension extends \Twig_Extension
      */
     public function __construct(Generator $generator, FilterManager $filterManager)
     {
-        $this->generator     = $generator;
+        $this->generator = $generator;
         $this->filterManager = $filterManager;
     }
 
@@ -47,7 +47,24 @@ class PlayerExtension extends \Twig_Extension
      */
     public function initRuntime(\Twig_Environment $twig)
     {
+        /** @noinspection PhpInternalEntityUsedInspection */
         $this->elementTemplate = $twig->loadTemplate('EkynaMediaBundle:Media:element.html.twig');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTests()
+    {
+        return [
+            new \Twig_SimpleTest('media_image',   [MediaTypes::class, 'isImage']),
+            new \Twig_SimpleTest('media_svg',     [MediaTypes::class, 'isSvg']),
+            new \Twig_SimpleTest('media_flash',   [MediaTypes::class, 'isFlash']),
+            new \Twig_SimpleTest('media_video',   [MediaTypes::class, 'isVideo']),
+            new \Twig_SimpleTest('media_audio',   [MediaTypes::class, 'isAudio']),
+            new \Twig_SimpleTest('media_file',    [MediaTypes::class, 'isFile']),
+            new \Twig_SimpleTest('media_archive', [MediaTypes::class, 'isArchive']),
+        ];
     }
 
     /**
@@ -62,6 +79,7 @@ class PlayerExtension extends \Twig_Extension
             new \Twig_SimpleFilter('media_flash', [$this, 'renderFlash'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('media_audio', [$this, 'renderAudio'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('media_image', [$this, 'renderImage'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('media_svg',   [$this, 'renderSvg'],   ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('media_file',  [$this, 'renderFile'],  ['is_safe' => ['html']]),
         ];
     }
@@ -84,6 +102,7 @@ class PlayerExtension extends \Twig_Extension
      *
      * @param MediaInterface $media
      * @param array          $params
+     *
      * @return string
      * @throws \InvalidArgumentException
      */
@@ -98,7 +117,10 @@ class PlayerExtension extends \Twig_Extension
                 return $this->renderAudio($media, $params);
             case MediaTypes::IMAGE :
                 return $this->renderImage($media, $params);
+            case MediaTypes::SVG :
+                return $this->renderSvg($media, $params);
         }
+
         return $this->renderFile($media, $params);
     }
 
@@ -107,16 +129,17 @@ class PlayerExtension extends \Twig_Extension
      *
      * @param MediaInterface $video
      * @param array          $params
+     *
      * @return string
      * @throws \InvalidArgumentException
      */
     public function renderVideo(MediaInterface $video, array $params = [])
     {
-        if ($video->getType() !== MediaTypes::VIDEO) {
+        if (!MediaTypes::isVideo($video)) {
             throw new \InvalidArgumentException('Expected media with "video" type.');
         }
 
-        $params = array_merge([
+        $params = array_replace_recursive([
             'responsive'   => false,
             'aspect_ratio' => '16by9',
             'attr'         => [
@@ -142,18 +165,19 @@ class PlayerExtension extends \Twig_Extension
      *
      * @param MediaInterface $flash
      * @param array          $params
+     *
      * @return string
      * @throws \InvalidArgumentException
      */
     public function renderFlash(MediaInterface $flash, array $params = [])
     {
-        if ($flash->getType() !== MediaTypes::FLASH) {
+        if (!MediaTypes::isFlash($flash)) {
             throw new \InvalidArgumentException('Expected media with "flash" type.');
         }
 
-        $params = array_merge([
+        $params = array_replace_recursive([
             //'responsive' => false,
-            'attr'       => [
+            'attr' => [
                 'id'     => 'media-flash-' . $flash->getId(),
                 'class'  => 'swf-object',
                 //'classid' => 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000',
@@ -174,16 +198,17 @@ class PlayerExtension extends \Twig_Extension
      *
      * @param MediaInterface $audio
      * @param array          $params
+     *
      * @return string
      * @throws \InvalidArgumentException
      */
     public function renderAudio(MediaInterface $audio, array $params = [])
     {
-        if ($audio->getType() !== MediaTypes::AUDIO) {
+        if (!MediaTypes::isAudio($audio)) {
             throw new \InvalidArgumentException('Expected media with "audio" type.');
         }
 
-        $params = array_merge([
+        $params = array_replace_recursive([
             'attr' => [
                 'id' => 'media-audio-' . $audio->getId(),
             ],
@@ -201,18 +226,19 @@ class PlayerExtension extends \Twig_Extension
      *
      * @param MediaInterface $image
      * @param array          $params
+     *
      * @return string
      * @throws \InvalidArgumentException
      */
     public function renderImage(MediaInterface $image, array $params = [])
     {
-        if ($image->getType() !== MediaTypes::IMAGE) {
+        if (!MediaTypes::isImage($image)) {
             throw new \InvalidArgumentException('Expected media with "image" type.');
         }
 
-        $params = array_merge([
+        $params = array_replace_recursive([
             'filter' => 'media_front',
-            'attr' => [
+            'attr'   => [
                 'id'  => 'media-image-' . $image->getId(),
                 'alt' => $image->getTitle(),
             ],
@@ -225,31 +251,18 @@ class PlayerExtension extends \Twig_Extension
                 $width = $height = 0;
                 foreach ($filter['filters'] as $cfg) {
                     if (array_key_exists('size', $cfg)) {
-                        $width  = $width  >= $cfg['size'][0] ?: $cfg['size'][0];
+                        $width = $width >= $cfg['size'][0] ?: $cfg['size'][0];
                         $height = $height >= $cfg['size'][1] ?: $cfg['size'][1];
                     }
                 }
                 if ($width && $height) {
-                    $params['attr']['width']  = $width;
+                    $params['attr']['width'] = $width;
                     $params['attr']['height'] = $height;
                 }
             }
         }
 
-        $path = $this->generator->generateFrontUrl($image, $params['filter']);
-
-        // TODO render svg (use wkHtmlToImage ?)
-        /*if (!$this->generator->isImagineFilterable($image)) {
-            $params['attr']['type'] = $this->generator->getMimeType($image);
-            $params['attr']['data'] = $path;
-
-            return $this->elementTemplate->renderBlock('svg', [
-                'attr'     => $params['attr'],
-                'fallback' => $image->getTitle(),
-            ]);
-        }*/
-
-        $params['attr']['src'] = $path;
+        $params['attr']['src'] = $this->generator->generateFrontUrl($image, $params['filter']);
 
         /** @noinspection PhpInternalEntityUsedInspection */
         return $this->elementTemplate->renderBlock('image', [
@@ -258,20 +271,63 @@ class PlayerExtension extends \Twig_Extension
     }
 
     /**
+     * Renders the svg.
+     *
+     * @param MediaInterface $svg
+     * @param array          $params
+     * @param bool           $asImage
+     *
+     * @return string
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function renderSvg(MediaInterface $svg, array $params = [], $asImage = false)
+    {
+        if (!MediaTypes::isSvg($svg)) {
+            throw new \InvalidArgumentException('Expected media with "file" or "archive" type.');
+        }
+
+        $path = $this->generator->generateFrontUrl($svg);
+
+        $params = array_replace_recursive([
+            'attr' => [
+                'id'    => 'media-svg-' . $svg->getId(),
+                'title' => $svg->getTitle(),
+            ],
+        ], $params);
+
+        if ($asImage) {
+            /** @noinspection PhpInternalEntityUsedInspection */
+            return $this->elementTemplate->renderBlock('image', [
+                'attr' => $params['attr'],
+            ]);
+        }
+
+        $params['attr']['data'] = $path;
+
+        /** @noinspection PhpInternalEntityUsedInspection */
+        return $this->elementTemplate->renderBlock('svg', [
+            'attr'     => $params['attr'],
+            'fallback' => $svg->getTitle(),
+        ]);
+    }
+
+    /**
      * Renders the file (link).
      *
      * @param MediaInterface $file
      * @param array          $params
+     *
      * @return string
      * @throws \InvalidArgumentException
      */
     public function renderFile(MediaInterface $file, array $params = [])
     {
-        if (in_array($file->getType(), [MediaTypes::FILE, MediaTypes::ARCHIVE])) {
+        if (!(MediaTypes::isFile($file) || MediaTypes::isArchive($file))) {
             throw new \InvalidArgumentException('Expected media with "file" or "archive" type.');
         }
 
-        $params = array_replace([
+        $params = array_replace_recursive([
             'attr' => [
                 'id'    => 'media-file-' . $file->getId(),
                 'title' => $file->getTitle(),

@@ -15,6 +15,10 @@
     padding-left: 15px;
 }
 
+.media-browser-controls .fa {
+    font-size: 14px;
+}
+
 .media-browser-controls-group {
     float: left;
     margin: 8px 15px 8px 0;

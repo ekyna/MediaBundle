@@ -6,6 +6,13 @@ module.exports = function (grunt, options) {
             options: {
                 spawn: false
             }
+        },
+        media_css: {
+            files: ['src/Ekyna/Bundle/MediaBundle/Resources/private/css/*.css'],
+            tasks: ['cssmin:media_browser'],
+            options: {
+                spawn: false
+            }
         }
     }
 };

@@ -33,9 +33,15 @@ module.exports = function (grunt, options) {
         },
         media_js: { // for watch:media_js
             expand: true,
-            cwd: 'src/Ekyna/Bundle/MediaBundle/Resources/private',
-            src: ['js/**'],
-            dest: 'src/Ekyna/Bundle/MediaBundle/Resources/public'
+            cwd: 'src/Ekyna/Bundle/MediaBundle/Resources/private/js',
+            src: ['**'],
+            dest: 'src/Ekyna/Bundle/MediaBundle/Resources/public/js'
+        },
+        media_css: { // for watch:media_css
+            expand: true,
+            cwd: 'src/Ekyna/Bundle/MediaBundle/Resources/private/css',
+            src: ['browser.css', 'form.css'],
+            dest: 'src/Ekyna/Bundle/MediaBundle/Resources/public/css'
         }
     }
 };

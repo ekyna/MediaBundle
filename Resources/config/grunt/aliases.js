@@ -1,4 +1,8 @@
 module.exports = {
+    'cssmin:media': [
+        'cssmin:fancytree',
+        'cssmin:media_browser'
+    ],
     'copy:media': [
         'copy:media_lib',
         'copy:media_img'
