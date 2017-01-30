@@ -275,16 +275,15 @@ class PlayerExtension extends \Twig_Extension
      *
      * @param MediaInterface $svg
      * @param array          $params
-     * @param bool           $asImage
      *
      * @return string
      *
      * @throws \InvalidArgumentException
      */
-    public function renderSvg(MediaInterface $svg, array $params = [], $asImage = false)
+    public function renderSvg(MediaInterface $svg, array $params = [])
     {
         if (!MediaTypes::isSvg($svg)) {
-            throw new \InvalidArgumentException('Expected media with "file" or "archive" type.');
+            throw new \InvalidArgumentException('Expected media with "svg" type.');
         }
 
         $path = $this->generator->generateFrontUrl($svg);
@@ -296,20 +295,44 @@ class PlayerExtension extends \Twig_Extension
             ],
         ], $params);
 
-        if ($asImage) {
+        $mode = isset($params['mode']) ? $params['mode'] : 'content';
+        unset($params['mode']);
+
+        if ($mode === 'object') {
+            $params['attr']['data'] = $path;
+            $params['attr']['type'] = 'image/svg+xml';
+
+            /** @noinspection PhpInternalEntityUsedInspection */
+            return $this->elementTemplate->renderBlock('object', [
+                'attr'     => $params['attr'],
+                'fallback' => $svg->getTitle(),
+            ]);
+
+        } else if ($mode === 'image') {
+            $params['attr']['src'] = $path;
+            $params['attr']['alt'] = $svg->getTitle();
+
             /** @noinspection PhpInternalEntityUsedInspection */
             return $this->elementTemplate->renderBlock('image', [
                 'attr' => $params['attr'],
             ]);
         }
 
-        $params['attr']['data'] = $path;
+        // By Content
+        $doc = new \DOMDocument();
+        $doc->loadXML($this->generator->getContent($svg));
+        $nodes = $doc->getElementsByTagName('svg');
+        if (1 == $nodes->length) {
+            $node = $nodes->item(0);
 
-        /** @noinspection PhpInternalEntityUsedInspection */
-        return $this->elementTemplate->renderBlock('svg', [
-            'attr'     => $params['attr'],
-            'fallback' => $svg->getTitle(),
-        ]);
+            foreach ($params['attr'] as $key => $value) {
+                $node->setAttribute($key, $value);
+            }
+
+            return $doc->saveHTML($node);
+        }
+
+        return '';
     }
 
     /**

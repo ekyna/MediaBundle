@@ -85,6 +85,22 @@ class Generator
     }
 
     /**
+     * Returns the media file content.
+     *
+     * @param MediaInterface $media
+     *
+     * @return string|null
+     */
+    public function getContent(MediaInterface $media)
+    {
+        if ($this->filesystem->has($media->getPath())) {
+            return $this->filesystem->read($media->getPath()) ?: null;
+        }
+
+        return null;
+    }
+
+    /**
      * Generates a thumb for the given media.
      *
      * @param MediaInterface $media

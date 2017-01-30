@@ -49,13 +49,13 @@
 {% endspaceless %}
 {%- endblock image %}
 
-{% block svg -%}
+{% block object -%}
 {% spaceless %}
-<object type="image/svg+xml" {{ block('attributes') }}>
+<object type="{{ type }}" {{ block('attributes') }}>
     {{ fallback }}
 </object>
 {% endspaceless %}
-{%- endblock svg %}
+{%- endblock object %}
 
 {% block file -%}
 {% spaceless %}
