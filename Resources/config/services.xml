@@ -105,13 +105,14 @@
         <service id="ekyna_media.twig.player_extension"
                  class="Ekyna\Bundle\MediaBundle\Twig\PlayerExtension">
             <argument type="service" id="ekyna_media.generator" />
-            <argument type="service" id="liip_imagine.filter.manager" />
+            <argument type="service" id="ekyna_media.renderer" />
             <tag name="twig.extension" />
         </service>
 
         <!-- Services -->
         <service id="ekyna_media.generator"
-                 class="Ekyna\Bundle\MediaBundle\Service\Generator">
+                 class="Ekyna\Bundle\MediaBundle\Service\Generator"
+                 lazy="true">
             <argument type="service" id="local_media_filesystem" />
             <argument type="service" id="liip_imagine" />
             <argument type="service" id="liip_imagine.cache.manager" />
@@ -120,10 +121,18 @@
             <argument>%ekyna_media.browser.thumbs_directory%</argument>
         </service>
         <service id="ekyna_media.browser"
-                 class="Ekyna\Bundle\MediaBundle\Service\Browser">
+                 class="Ekyna\Bundle\MediaBundle\Service\Browser"
+                 lazy="true">
             <argument type="service" id="doctrine.orm.default_entity_manager" />
             <argument type="service" id="ekyna_media.media.repository" />
             <argument type="service" id="ekyna_media.generator" />
+        </service>
+        <service id="ekyna_media.renderer"
+                 class="Ekyna\Bundle\MediaBundle\Service\Renderer"
+                 lazy="true">
+            <argument type="service" id="twig" />
+            <argument type="service" id="ekyna_media.generator" />
+            <argument type="service" id="liip_imagine.filter.manager" />
         </service>
 
         <!-- Validator -->

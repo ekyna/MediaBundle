@@ -83,12 +83,12 @@ define('ekyna-media-browser',
                 this.clearHandlers();
                 this.$controls.find('button, label').addClass('disabled').prop('disabled', true);
                 this.$controls.find('input').prop('disabled', true);
-                this.$controls.find('[data-role="refresh"] span.glyphicon').addClass('glyphicon-refresh-animate');
+                this.$controls.find('[data-role="refresh"] span').addClass('refresh-animate');
             } else {
                 this.initHandlers();
                 this.$controls.find('button, label').removeClass('disabled').prop('disabled', false);
                 this.$controls.find('input').prop('disabled', false);
-                this.$controls.find('[data-role="refresh"] span.glyphicon').removeClass('glyphicon-refresh-animate');
+                this.$controls.find('[data-role="refresh"] span').removeClass('refresh-animate');
             }
         },
         initHandlers: function () {
