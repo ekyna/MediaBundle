@@ -2,7 +2,7 @@
 
 namespace Ekyna\Bundle\MediaBundle;
 
-use Ekyna\Bundle\CoreBundle\AbstractBundle;
+use Ekyna\Bundle\ResourceBundle\AbstractBundle;
 use Ekyna\Bundle\MediaBundle\DependencyInjection\Compiler\AdminMenuPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Ekyna\Bundle\MediaBundle\Model;
