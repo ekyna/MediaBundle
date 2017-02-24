@@ -408,7 +408,8 @@ class BrowserController extends Controller
 
         $success = false;
         $form->handleRequest($request);
-        if ($form->isValid()) {
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $success = true;
             // TODO use ResourceManager
             foreach ($upload->getMedias() as $media) {
@@ -419,6 +420,7 @@ class BrowserController extends Controller
                 }
             }
         }
+
         if ($success) {
             return new JsonResponse(['success' => true]);
         }
