@@ -9,6 +9,8 @@ use Ekyna\Component\Resource\Model as RM;
  * Interface MediaInterface
  * @package Ekyna\Bundle\MediaBundle\Model
  * @author  Étienne Dauvergne <contact@ekyna.com>
+ *
+ * @method MediaTranslationInterface translate($locale = null, $create = false)
  */
 interface MediaInterface extends
     Core\UploadableInterface,

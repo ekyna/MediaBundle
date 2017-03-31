@@ -2,6 +2,7 @@
 
 namespace Ekyna\Bundle\MediaBundle\Entity;
 
+use Ekyna\Bundle\MediaBundle\Model\MediaTranslationInterface;
 use Ekyna\Component\Resource\Model\AbstractTranslation;
 
 /**
@@ -9,7 +10,7 @@ use Ekyna\Component\Resource\Model\AbstractTranslation;
  * @package Ekyna\Bundle\MediaBundle\Entity
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
-class MediaTranslation extends AbstractTranslation
+class MediaTranslation extends AbstractTranslation implements MediaTranslationInterface
 {
     /**
      * @var int
