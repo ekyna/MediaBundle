@@ -6,7 +6,7 @@
     "ui-contextmenu": "^1.13.0",
     "fancyBox": "^2.1.5",
     "swfobject": "*",
-    "video.js": "^5.10.2"
+    "video.js": "^5.19.2"
   },
   "resolutions": {
     "jquery": "1.9.1 - 2"

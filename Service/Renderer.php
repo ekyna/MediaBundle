@@ -55,6 +55,16 @@ class Renderer
     }
 
     /**
+     * Returns the generator.
+     *
+     * @return Generator
+     */
+    public function getGenerator()
+    {
+        return $this->generator;
+    }
+
+    /**
      * Renders the media.
      *
      * @param MediaInterface $media
@@ -96,22 +106,47 @@ class Renderer
             throw new \InvalidArgumentException('Expected media with "video" type.');
         }
 
+        // TODO Poster attribute
+
         $params = array_replace_recursive([
-            'responsive'   => false,
+            'responsive'   => true,
+            'autoplay'     => true,
+            'loop'         => false,
+            'muted'        => false,
+            'player'       => true,
+            'alt_message'  => 'ekyna_media.player.video_not_supported',
             'aspect_ratio' => '16by9',
             'attr'         => [
                 'id'     => 'media-video-' . $video->getId(),
-                'class'  => 'video-js vjs-default-skin vjs-big-play-centered',
                 'height' => '100%',
                 'width'  => '100%',
             ],
         ], $params);
+
+        if ($params['autoplay']) {
+            $params['attr']['autoplay'] = null;
+        }
+        if ($params['loop']) {
+            $params['attr']['loop'] = null;
+        }
+        if ($params['muted']) {
+            $params['attr']['muted'] = null;
+        }
+        if ($params['player']) {
+            $params['attr']['controls'] = null;
+            $params['attr']['class'] = 'video-js vjs-default-skin vjs-big-play-centered';
+            $params['attr']['data-setup'] = [];
+            if ($params['responsive']) {
+                $params['attr']['data-setup']['fluid'] = 1;
+            }
+        }
 
         return $this->renderBlock('video', [
             'responsive'   => $params['responsive'],
             'aspect_ratio' => $params['aspect_ratio'],
             'src'          => $this->generator->generateFrontUrl($video),
             'mime_type'    => $this->generator->getMimeType($video),
+            'alt_message'  => $params['alt_message'],
             'attr'         => $params['attr'],
         ]);
     }
@@ -164,14 +199,17 @@ class Renderer
         }
 
         $params = array_replace_recursive([
-            'attr' => [
+            'alt_message' => 'ekyna_media.player.audio_not_supported',
+            'attr'        => [
                 'id' => 'media-audio-' . $audio->getId(),
             ],
         ], $params);
 
         return $this->renderBlock('audio', [
-            'src'  => $this->generator->generateFrontUrl($audio),
-            'attr' => $params['attr'],
+            'src'         => $this->generator->generateFrontUrl($audio),
+            'mime_type'   => $this->generator->getMimeType($audio),
+            'alt_message' => $params['alt_message'],
+            'attr'        => $params['attr'],
         ]);
     }
 

@@ -1,9 +1,11 @@
 {% block video -%}
 {% spaceless %}
 {% if responsive %}<div class="embed-responsive embed-responsive-{{ aspect_ratio }}">{% endif %}
-    <video controls preload="auto" autoplay data-setup='{}'{{ block('attributes') }}>
+    <video preload="auto" {{ block('attributes') }}>
         <source src="{{ src }}" type="{{ mime_type }}" />
-        Your browser does not support the video tag.
+        {% if alt_message is not empty -%}
+            {{ alt_message|trans }}
+        {%- endif %}
     </video>
 {% if responsive %}</div>{% endif %}
 {% endspaceless %}
@@ -12,8 +14,10 @@
 {% block audio -%}
 {% spaceless %}
 <audio{{ block('attributes') }} controls>
-    <source src="{{ src }}" type="audio/ogg">
-    Your browser does not support the audio element.
+    <source src="{{ src }}" type="{{ mime_type }}">
+    {% if alt_message is not empty -%}
+        {{ alt_message|trans }}
+    {%- endif %}
 </audio>
 {% endspaceless %}
 {%- endblock audio %}
@@ -64,5 +68,13 @@
 {%- endblock file %}
 
 {% block attributes %}
-{% for key, value in attr %} {{ key }}="{{ value }}"{% endfor %}
+{% for key, value in attr %}
+    {% if value is iterable %}
+        {{ key }}='{{ value|json_encode }}'
+    {% elseif value is null %}
+        {{ key }}
+    {% else %}
+        {{ key }}="{{ value }}"
+    {% endif %}
+{% endfor %}
 {%- endblock attributes %}
