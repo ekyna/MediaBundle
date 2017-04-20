@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Service;
 
 use Ekyna\Bundle\MediaBundle\Exception\InvalidArgumentException;
@@ -7,13 +9,28 @@ use Ekyna\Bundle\MediaBundle\Model\MediaFormats;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
 use Ekyna\Bundle\MediaBundle\Service\FFMpeg\X264;
-use FFMpeg;
-use League\Flysystem\Adapter\Local;
+use Ekyna\Bundle\ResourceBundle\Service\Filesystem\FilesystemHelper;
+use FFMpeg\Coordinate\Dimension;
+use FFMpeg\Coordinate\TimeCode;
+use FFMpeg\Exception\ExceptionInterface as FFMpegException;
+use FFMpeg\FFMpeg;
+use FFMpeg\FFProbe;
+use FFMpeg\Filters\Video\ResizeFilter;
+use FFMpeg\Format\Video\Ogg;
+use FFMpeg\Format\Video\WebM;
 use League\Flysystem\Filesystem as Flysystem;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use LogicException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
+use function array_replace;
+use function dirname;
+use function file_exists;
+use function floor;
+use function getimagesize;
+use function in_array;
+use function pathinfo;
 
 /**
  * Class VideoManager
@@ -22,54 +39,25 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class VideoManager
 {
-    /**
-     * @var Flysystem
-     */
-    private $mediaFilesystem;
+    private Flysystem             $mediaFilesystem;
+    private Flysystem             $videoFilesystem;
+    private FFMpeg                $ffMpeg;
+    private FFProbe               $ffProbe;
+    private CacheManager          $cacheManager;
+    private UrlGeneratorInterface $urlGenerator;
+    private array                 $config;
 
-    /**
-     * @var Flysystem
-     */
-    private $videoFilesystem;
-
-    /**
-     * @var FFMpeg\FFMpeg
-     */
-    private $ffmpeg;
-
-    /**
-     * @var FFMpeg\FFProbe
-     */
-    private $ffprobe;
-
-    /**
-     * @var CacheManager
-     */
-    private $cacheManager;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
-
-    /**
-     * @var string
-     */
-    private $config;
-
-    /**
-     * @var Filesystem
-     */
-    private $fs;
-
+    private Filesystem       $fs;
+    private FilesystemHelper $mediaHelper;
+    private FilesystemHelper $videoHelper;
 
     /**
      * Constructor.
      *
      * @param Flysystem             $mediaFilesystem
      * @param Flysystem             $videoFilesystem
-     * @param FFMpeg\FFMpeg         $ffmpeg
-     * @param FFMpeg\FFProbe        $ffprobe
+     * @param FFMpeg                $ffMpeg
+     * @param FFProbe               $ffProbe
      * @param CacheManager          $cacheManager
      * @param UrlGeneratorInterface $urlGenerator
      * @param array                 $config
@@ -77,25 +65,27 @@ class VideoManager
     public function __construct(
         Flysystem $mediaFilesystem,
         Flysystem $videoFilesystem,
-        FFMpeg\FFMpeg $ffmpeg,
-        FFMpeg\FFProbe $ffprobe,
+        FFMpeg $ffMpeg,
+        FFProbe $ffProbe,
         CacheManager $cacheManager,
         UrlGeneratorInterface $urlGenerator,
         array $config = []
     ) {
         $this->mediaFilesystem = $mediaFilesystem;
         $this->videoFilesystem = $videoFilesystem;
-        $this->ffmpeg          = $ffmpeg;
-        $this->ffprobe         = $ffprobe;
-        $this->cacheManager    = $cacheManager;
-        $this->urlGenerator    = $urlGenerator;
-        $this->config          = array_replace([
+        $this->ffMpeg = $ffMpeg;
+        $this->ffProbe = $ffProbe;
+        $this->cacheManager = $cacheManager;
+        $this->urlGenerator = $urlGenerator;
+        $this->config = array_replace([
             'directory' => 'cache/video',
             'watermark' => null,
             'pending'   => null,
         ], $config);
 
         $this->fs = new Filesystem();
+        $this->mediaHelper = new FilesystemHelper($this->mediaFilesystem);
+        $this->videoHelper = new FilesystemHelper($this->videoFilesystem);
     }
 
     /**
@@ -118,13 +108,13 @@ class VideoManager
             return null;
         }
 
-        if ($this->videoFilesystem->has($targetKey)) {
+        if ($this->videoHelper->fileExists($targetKey, false)) {
             return '/' . $this->config['directory'] . '/' . $targetKey;
         }
 
         return $this->urlGenerator->generate(
             'ekyna_media_video',
-            ['key' => $media->getPath(), '_format' => $format ? $format : MediaFormats::MP4],
+            ['key' => $media->getPath(), '_format' => $format ?: MediaFormats::MP4],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
     }
@@ -155,6 +145,7 @@ class VideoManager
      * @param bool           $override
      *
      * @return string
+     * @noinspection PhpDocMissingThrowsInspection
      */
     public function convertVideo(MediaInterface $media, string $format, bool $override = false): string
     {
@@ -164,14 +155,15 @@ class VideoManager
         $sourceKey = $media->getPath();
 
         if (null === $targetKey = $this->getTargetKey($sourceKey, $format)) {
-            throw new LogicException("Video file not found");
+            throw new LogicException('Video file not found');
         }
 
         $targetPath = $this->getVideoAbsolutePath($targetKey, false);
 
-        if ($this->videoFilesystem->has($targetKey)) {
+        if ($this->videoHelper->fileExists($targetKey, false)) {
             if ($override) {
                 // Remove the file
+                /** @noinspection PhpUnhandledExceptionInspection */
                 $this->videoFilesystem->delete($targetKey);
             } else {
                 // Conversion has been made.
@@ -199,7 +191,7 @@ class VideoManager
 
         $targetPath = $this->getVideoAbsolutePath($targetKey, false);
 
-        if ($this->videoFilesystem->has($targetKey)) {
+        if ($this->videoHelper->fileExists($targetKey, false)) {
             // Conversion has been made.
             return $targetPath;
         }
@@ -221,14 +213,14 @@ class VideoManager
 
         $sourceKey = $media->getPath();
 
-        if (!$this->mediaFilesystem->has($sourceKey)) {
+        if (!$this->mediaHelper->fileExists($sourceKey, false)) {
             return null;
         }
 
-        $info      = pathinfo($sourceKey);
+        $info = pathinfo($sourceKey);
         $targetKey = $info['dirname'] . DIRECTORY_SEPARATOR . $info['filename'] . '.jpg';
 
-        if ($this->mediaFilesystem->has($targetKey)) {
+        if ($this->mediaHelper->fileExists($targetKey, false)) {
             return $this->cacheManager->getBrowserPath($targetKey, $filter);
         }
 
@@ -238,7 +230,7 @@ class VideoManager
         $this->checkDir(dirname($targetPath));
 
         try {
-            $video = $this->ffmpeg->open($sourcePath);
+            $video = $this->ffMpeg->open($sourcePath);
 
             $dimensions = $video
                 ->getStreams()
@@ -247,22 +239,21 @@ class VideoManager
                 ->getDimensions();
 
             if (1280 < $dimensions->getWidth()) {
-                $dimensions = new FFMpeg\Coordinate\Dimension(1280, 1280 / $dimensions->getRatio(false)->getValue());
+                $dimensions = new Dimension(1280, 1280 / $dimensions->getRatio(false)->getValue());
                 $video
                     ->filters()
-                    ->resize($dimensions, FFMpeg\Filters\Video\ResizeFilter::RESIZEMODE_INSET)
+                    ->resize($dimensions, ResizeFilter::RESIZEMODE_INSET)
                     ->synchronize();
             }
 
-            $duration = $this->ffprobe->format($sourcePath)->get('duration');
-            $second   = $duration < 6 ? round($duration / 2, 1) : 3;
+            $duration = $this->ffProbe->format($sourcePath)->get('duration');
+            $second = $duration < 6 ? round($duration / 2, 1) : 3;
 
             // Save frame
             $video
-                ->frame(FFMpeg\Coordinate\TimeCode::fromSeconds($second))
+                ->frame(TimeCode::fromSeconds($second))
                 ->save($targetPath);
-
-        } catch (FFMpeg\Exception\ExceptionInterface $e) {
+        } catch (FFMpegException $exception) {
             return null;
         }
 
@@ -282,20 +273,20 @@ class VideoManager
         $this->checkDir(dirname($targetPath));
 
         switch (pathinfo($targetPath)['extension']) {
-            case MediaFormats::WEBM :
-                $codec = new FFMpeg\Format\Video\WebM();
+            case MediaFormats::WEBM:
+                $codec = new WebM();
                 break;
-            case MediaFormats::MP4 :
+            case MediaFormats::MP4:
                 $codec = new X264();
                 break;
-            case MediaFormats::OGG :
-                $codec = new FFMpeg\Format\Video\Ogg();
+            case MediaFormats::OGG:
+                $codec = new Ogg();
                 break;
             default:
-                throw new InvalidArgumentException("Unexpected video format.");
+                throw new InvalidArgumentException('Unexpected video format.');
         }
 
-        $video = $this->ffmpeg->open($sourcePath);
+        $video = $this->ffMpeg->open($sourcePath);
 
         $dimensions = $video
             ->getStreams()
@@ -308,11 +299,11 @@ class VideoManager
 
         // Resize / use standard ratio
         if (720 < $dimensions->getWidth() || $realRatio !== $normRatio) {
-            $width  = min(720, $dimensions->getWidth());
-            $resize = new FFMpeg\Coordinate\Dimension($width, floor($width / $normRatio));
+            $width = min(720, $dimensions->getWidth());
+            $resize = new Dimension($width, floor($width / $normRatio));
             $video
                 ->filters()
-                ->resize($resize, FFMpeg\Filters\Video\ResizeFilter::RESIZEMODE_INSET)
+                ->resize($resize, ResizeFilter::RESIZEMODE_INSET)
                 ->synchronize();
         }
 
@@ -344,11 +335,11 @@ class VideoManager
      */
     private function getMediaAbsolutePath(string $key, bool $check = true): ?string
     {
-        if ($check && !$this->mediaFilesystem->has($key)) {
+        if ($check && !$this->mediaHelper->fileExists($key, false)) {
             return null;
         }
 
-        return $this->getMediaAdapter()->applyPathPrefix($key);
+        return $this->mediaHelper->getRealPath($key);
     }
 
     /**
@@ -361,33 +352,11 @@ class VideoManager
      */
     private function getVideoAbsolutePath(string $key, bool $check = true): ?string
     {
-        if ($check && !$this->videoFilesystem->has($key)) {
+        if ($check && !$this->videoHelper->fileExists($key, false)) {
             return null;
         }
 
-        return $this->getVideoAdapter()->applyPathPrefix($key);
-    }
-
-    /**
-     * Returns the filesystem adapter.
-     *
-     * @return Local
-     */
-    private function getMediaAdapter(): Local
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->mediaFilesystem->getAdapter();
-    }
-
-    /**
-     * Returns the video filesystem adapter.
-     *
-     * @return Local
-     */
-    private function getVideoAdapter(): Local
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->videoFilesystem->getAdapter();
+        return $this->videoHelper->getRealPath($key);
     }
 
     /**
@@ -398,7 +367,7 @@ class VideoManager
     private function assertVideo(MediaInterface $media): void
     {
         if (!MediaTypes::isVideo($media)) {
-            throw new InvalidArgumentException("Expected video media.");
+            throw new InvalidArgumentException('Expected video media.');
         }
     }
 
@@ -425,7 +394,7 @@ class VideoManager
      */
     private function getTargetKey(string $sourceKey, string $format, bool $check = true): ?string
     {
-        if ($check && !$this->mediaFilesystem->has($sourceKey)) {
+        if ($check && !$this->mediaHelper->fileExists($sourceKey, false)) {
             return null;
         }
 

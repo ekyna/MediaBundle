@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Form\Type;
 
 use A2lix\TranslationFormBundle\Form\Type\TranslationsFormsType;
-use Ekyna\Bundle\AdminBundle\Form\Type\ResourceFormType;
-use Ekyna\Bundle\CoreBundle\Form\Type\UploadType;
+use Ekyna\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
+use Ekyna\Bundle\UiBundle\Form\Type\UploadType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -12,12 +14,12 @@ use Symfony\Component\Form\FormBuilderInterface;
  * @package Ekyna\Bundle\MediaBundle\Form\Type
  * @author Étienne Dauvergne <contact@ekyna.com>
  */
-class MediaType extends ResourceFormType
+class MediaType extends AbstractResourceType
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('translations', TranslationsFormsType::class, [
@@ -32,17 +34,17 @@ class MediaType extends ResourceFormType
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return UploadType::class; // TODO check (from core ?)
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'ekyna_media_media';
     }

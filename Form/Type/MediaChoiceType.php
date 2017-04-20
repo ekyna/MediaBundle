@@ -1,17 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Form\Type;
 
-use Doctrine\ORM\EntityRepository;
-use Ekyna\Bundle\CoreBundle\Form\DataTransformer\IdentifierToObjectTransformer;
-use Ekyna\Bundle\CoreBundle\Form\DataTransformer\ObjectToIdentifierTransformer;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
+use Ekyna\Bundle\MediaBundle\Repository\MediaRepositoryInterface;
+use Ekyna\Bundle\ResourceBundle\Form\DataTransformer\IdentifierToResourceTransformer;
+use Ekyna\Bundle\ResourceBundle\Form\DataTransformer\ResourceToIdentifierTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+
+use function Symfony\Component\Translation\t;
 
 /**
  * Class MediaChoiceType
@@ -20,38 +24,24 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class MediaChoiceType extends AbstractType
 {
-    /**
-     * @var EntityRepository
-     */
-    protected $repository;
+    protected MediaRepositoryInterface $repository;
 
 
-    /**
-     * Constructor.
-     *
-     * @param EntityRepository $repository
-     */
-    public function __construct(EntityRepository $repository)
+    public function __construct(MediaRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         if ($options['transform']) {
-            $builder->addModelTransformer(new IdentifierToObjectTransformer($this->repository));
+            $builder->addModelTransformer(new IdentifierToResourceTransformer($this->repository));
         }
 
-        $builder->addViewTransformer(new ObjectToIdentifierTransformer($this->repository));
+        $builder->addViewTransformer(new ResourceToIdentifierTransformer($this->repository));
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['media'] = $form->getNormData();
         $view->vars['config'] = [
@@ -61,14 +51,11 @@ class MediaChoiceType extends AbstractType
         $view->vars['gallery'] = $options['gallery'];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
-                'label'          => 'ekyna_media.media.label.singular',
+                'label'          => t('media.label.singular', [], 'EkynaMedia'),
                 'types'          => null,
                 'error_bubbling' => false,
                 'controls'       => [
@@ -98,18 +85,12 @@ class MediaChoiceType extends AbstractType
             });
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getParent()
+    public function getParent(): ?string
     {
         return HiddenType::class;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'ekyna_media_choice';
     }

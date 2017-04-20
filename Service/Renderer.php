@@ -1,12 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Service;
 
-use Ekyna\Bundle\MediaBundle\Entity\MediaRepository;
+use DOMDocument;
 use Ekyna\Bundle\MediaBundle\Model\MediaFormats;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
+use Ekyna\Bundle\MediaBundle\Repository\MediaRepositoryInterface;
+use InvalidArgumentException;
 use Liip\ImagineBundle\Imagine\Filter\FilterManager;
+use RuntimeException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\TemplateWrapper;
 
@@ -17,61 +23,44 @@ use Twig\TemplateWrapper;
  */
 class Renderer
 {
-    /**
-     * @var Environment
-     */
-    private $twig;
+    private Environment              $twig;
+    private Generator                $generator;
+    private VideoManager             $videoManager;
+    private FilterManager            $filterManager;
+    private MediaRepositoryInterface $repository;
+    private TranslatorInterface      $translator;
+    private string                   $templatePath;
 
-    /**
-     * @var Generator
-     */
-    private $generator;
-
-    /**
-     * @var VideoManager
-     */
-    private $videoManager;
-
-    /**
-     * @var FilterManager
-     */
-    private $filterManager;
-
-    /**
-     * @var MediaRepository
-     */
-    private $repository;
-
-    /**
-     * @var TemplateWrapper
-     */
-    private $template;
+    private ?TemplateWrapper $template = null;
 
 
     /**
      * Constructor.
      *
-     * @param Environment     $twig
-     * @param Generator       $generator
-     * @param VideoManager    $videoManager
-     * @param FilterManager   $filterManager
-     * @param MediaRepository $repository
-     * @param string          $template
+     * @param Environment              $twig
+     * @param Generator                $generator
+     * @param VideoManager             $videoManager
+     * @param FilterManager            $filterManager
+     * @param MediaRepositoryInterface $repository
+     * @param TranslatorInterface      $translator
+     * @param string                   $templatePath
      */
     public function __construct(
         Environment $twig,
         Generator $generator,
         VideoManager $videoManager,
         FilterManager $filterManager,
-        MediaRepository $repository,
-        $template = '@EkynaMedia/Media/element.html.twig'
+        MediaRepositoryInterface $repository,
+        TranslatorInterface $translator,
+        string $templatePath = '@EkynaMedia/Media/element.html.twig'
     ) {
         $this->twig = $twig;
         $this->generator = $generator;
         $this->videoManager = $videoManager;
         $this->filterManager = $filterManager;
         $this->repository = $repository;
-        $this->template = $template;
+        $this->translator = $translator;
+        $this->templatePath = $templatePath;
     }
 
     /**
@@ -120,15 +109,15 @@ class Renderer
     public function renderMedia(MediaInterface $media, array $params = []): string
     {
         switch ($media->getType()) {
-            case MediaTypes::VIDEO :
+            case MediaTypes::VIDEO:
                 return $this->renderVideo($media, $params);
-            case MediaTypes::FLASH :
+            case MediaTypes::FLASH:
                 return $this->renderFlash($media, $params);
-            case MediaTypes::AUDIO :
+            case MediaTypes::AUDIO:
                 return $this->renderAudio($media, $params);
-            case MediaTypes::IMAGE :
+            case MediaTypes::IMAGE:
                 return $this->renderImage($media, $params);
-            case MediaTypes::SVG :
+            case MediaTypes::SVG:
                 return $this->renderSvg($media, $params);
         }
 
@@ -146,7 +135,7 @@ class Renderer
     public function renderVideo(MediaInterface $video, array $params = []): string
     {
         if (!MediaTypes::isVideo($video)) {
-            throw new \InvalidArgumentException('Expected media with "video" type.');
+            throw new InvalidArgumentException('Expected media with "video" type.');
         }
 
         $params = array_replace_recursive([
@@ -157,7 +146,7 @@ class Renderer
             'loop'         => false,
             'muted'        => false,
             'player'       => true,
-            'alt_message'  => 'ekyna_media.player.video_not_supported',
+            'alt_message'  => $this->translator->trans('player.video_not_supported', [], 'EkynaMedia'),
             'attr'         => [
                 'id'     => 'media-video-' . $video->getId(),
                 'height' => '100%',
@@ -192,7 +181,7 @@ class Renderer
         }
 
         // Poster attribute
-        if (null !== $poster = $this->videoManager->thumb($video, 'video_alt')) {
+        if (null !== $poster = $this->videoManager->thumb($video)) {
             $params['attr']['poster'] = $poster;
         }
 
@@ -223,7 +212,7 @@ class Renderer
     public function renderFlash(MediaInterface $flash, array $params = []): string
     {
         if (!MediaTypes::isFlash($flash)) {
-            throw new \InvalidArgumentException('Expected media with "flash" type.');
+            throw new InvalidArgumentException('Expected media with "flash" type.');
         }
 
         $params = array_replace_recursive([
@@ -254,11 +243,11 @@ class Renderer
     public function renderAudio(MediaInterface $audio, array $params = []): string
     {
         if (!MediaTypes::isAudio($audio)) {
-            throw new \InvalidArgumentException('Expected media with "audio" type.');
+            throw new InvalidArgumentException('Expected media with "audio" type.');
         }
 
         $params = array_replace_recursive([
-            'alt_message' => 'ekyna_media.player.audio_not_supported',
+            'alt_message' => $this->translator->trans('player.audio_not_supported', [], 'EkynaMedia'),
             'attr'        => [
                 'id' => 'media-audio-' . $audio->getId(),
             ],
@@ -283,7 +272,7 @@ class Renderer
     public function renderImage(MediaInterface $image, array $params = []): string
     {
         if (!MediaTypes::isImage($image)) {
-            throw new \InvalidArgumentException('Expected media with "image" type.');
+            throw new InvalidArgumentException('Expected media with "image" type.');
         }
 
         $params = array_replace_recursive([
@@ -310,7 +299,7 @@ class Renderer
     public function renderSvg(MediaInterface $svg, array $params = []): string
     {
         if (!MediaTypes::isSvg($svg)) {
-            throw new \InvalidArgumentException('Expected media with "svg" type.');
+            throw new InvalidArgumentException('Expected media with "svg" type.');
         }
 
         $path = $this->generator->generateFrontUrl($svg);
@@ -343,13 +332,14 @@ class Renderer
         }
 
         // By Content
-        $doc = new \DOMDocument();
+        $doc = new DOMDocument();
         $doc->loadXML($this->generator->getContent($svg));
         $nodes = $doc->getElementsByTagName('svg');
-        if (1 == $nodes->length) {
+        if (1 === $nodes->length) {
             $node = $nodes->item(0);
 
             foreach ($params['attr'] as $key => $value) {
+                /** @noinspection PhpPossiblePolymorphicInvocationInspection */
                 $node->setAttribute($key, $value);
             }
 
@@ -370,7 +360,7 @@ class Renderer
     public function renderFile(MediaInterface $file, array $params = []): string
     {
         if (!(MediaTypes::isFile($file) || MediaTypes::isArchive($file))) {
-            throw new \InvalidArgumentException('Expected media with "file" or "archive" type.');
+            throw new InvalidArgumentException('Expected media with "file" or "archive" type.');
         }
 
         $params = array_replace_recursive([
@@ -399,7 +389,7 @@ class Renderer
     public function renderVideoThumb(MediaInterface $video, array $params = []): string
     {
         if (!MediaTypes::isVideo($video)) {
-            throw new \InvalidArgumentException('Expected media with "video" type.');
+            throw new InvalidArgumentException('Expected media with "video" type.');
         }
 
         $params = array_replace_recursive([
@@ -434,7 +424,7 @@ class Renderer
         ], $params);
 
         if (!isset($params['attr']['src'])) {
-            throw new \RuntimeException("The 'src' attribute must be set.");
+            throw new RuntimeException("The 'src' attribute must be set.");
         }
 
         if (!(isset($params['attr']['width']) && isset($params['attr']['height']))) {
@@ -467,13 +457,16 @@ class Renderer
      * @param $blockVars
      *
      * @return string
+     * @noinspection PhpDocMissingThrowsInspection
      */
     private function renderBlock($blockName, $blockVars): string
     {
-        if (!$this->template instanceof TemplateWrapper) {
-            $this->template = $this->twig->load($this->template);
+        if (null === $this->template) {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $this->template = $this->twig->load($this->templatePath);
         }
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         return $this->template->renderBlock($blockName, $blockVars);
     }
 }

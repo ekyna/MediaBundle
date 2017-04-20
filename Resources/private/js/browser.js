@@ -204,12 +204,12 @@ define('ekyna-media/browser',
             var that = this;
 
             that.$content.empty();
-            this.folderId = id || this.config.folderId;
+            this.folderId = id ? id : this.config.folderId;
 
             if (this.folderId) {
                 that.setBusy(true);
                 that.browseXhr = $.ajax({
-                    url: Router.generate('ekyna_media_browser_admin_list_media', {'id': this.folderId}),
+                    url: Router.generate('admin_ekyna_media_browser_list_media', {'id': this.folderId}),
                     method: 'GET',
                     dataType: 'json',
                     data: {types: that.config.types}
@@ -300,7 +300,7 @@ define('ekyna-media/browser',
         newMedia: function() {
             this.openModal({
                 url: Router.generate(
-                    'ekyna_media_browser_admin_create_media',
+                    'admin_ekyna_media_browser_create_media',
                     {'id': this.folderId}
                 )
             });
@@ -308,7 +308,7 @@ define('ekyna-media/browser',
         importMedia: function() {
             this.openModal({
                 url: Router.generate(
-                    'ekyna_media_browser_admin_import_media',
+                    'admin_ekyna_media_browser_import_media',
                     {'id': this.folderId}
                 )
             });
@@ -317,7 +317,7 @@ define('ekyna-media/browser',
             //var that = this;
             this.openModal({
                 url: Router.generate(
-                    'ekyna_media_media_admin_edit',
+                    'admin_ekyna_media_media_update',
                     {'mediaId': $media.data('media').id}
                 )/*,
                 TODO onData: function(data) {
@@ -334,7 +334,7 @@ define('ekyna-media/browser',
             this.openModal({
                 // TODO modal size
                 url: Router.generate(
-                    'ekyna_media_media_admin_remove',
+                    'admin_ekyna_media_media_delete',
                     {'mediaId': $media.data('media').id}
                 ),
                 onData: function(data) {
@@ -398,7 +398,7 @@ define('ekyna-media/browser',
             var that = this;
             this.$tree.addClass('fancytree-expander').fancytree({
                 source: {
-                    url: Router.generate('ekyna_media_browser_admin_list', that.config.folderId ? {folderId: that.config.folderId} : {})
+                    url: Router.generate('admin_ekyna_media_browser_list', that.config.folderId ? {folderId: that.config.folderId} : {})
                 },
                 activeVisible: true,
                 minExpandLevel: 1,
@@ -456,7 +456,7 @@ define('ekyna-media/browser',
                             var $draggable = $(data.draggable.element);
                             if ($draggable.hasClass('media-thumb')) {
                                 $.ajax({
-                                    url: Router.generate('ekyna_media_browser_admin_move_media', {
+                                    url: Router.generate('admin_ekyna_media_browser_move_media', {
                                         'id': refNode.key,
                                         'mediaId': $draggable.data('media').id
                                     }),
@@ -473,7 +473,7 @@ define('ekyna-media/browser',
                         } else {
                             var node = data.otherNode;
                             $.ajax({
-                                url: Router.generate('ekyna_media_browser_admin_move', {'id': node.key}),
+                                url: Router.generate('admin_ekyna_media_browser_move', {'id': node.key}),
                                 data: {
                                     'reference': refNode.key,
                                     'mode': data.hitMode
@@ -511,7 +511,7 @@ define('ekyna-media/browser',
                         that.setBusy(true);
                         var node = data.node;
                         $.ajax({
-                            url: Router.generate('ekyna_media_browser_admin_rename', {'id': node.key}),
+                            url: Router.generate('admin_ekyna_media_browser_rename', {'id': node.key}),
                             data : { 'name' : data.input.val() },
                             method: 'POST',
                             dataType: 'json'
@@ -546,7 +546,7 @@ define('ekyna-media/browser',
                 that.setBusy(true);
                 mode = mode || "child";
                 $.ajax({
-                    url: Router.generate('ekyna_media_browser_admin_create', {'id': node.key}),
+                    url: Router.generate('admin_ekyna_media_browser_create', {'id': node.key}),
                     data : {
                         'mode' : mode
                     },
@@ -574,7 +574,7 @@ define('ekyna-media/browser',
                 message = message + ' ?';
                 if (confirm(message)) {
                     $.ajax({
-                        url: Router.generate('ekyna_media_browser_admin_delete', {'id': node.key}),
+                        url: Router.generate('admin_ekyna_media_browser_delete', {'id': node.key}),
                         method: 'POST',
                         dataType: 'json'
                     })

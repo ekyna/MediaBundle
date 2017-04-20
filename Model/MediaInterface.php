@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Model;
 
-use Ekyna\Bundle\CoreBundle\Model as Core;
 use Ekyna\Component\Resource\Model as RM;
 
 /**
@@ -11,73 +12,74 @@ use Ekyna\Component\Resource\Model as RM;
  * @author  Étienne Dauvergne <contact@ekyna.com>
  *
  * @method MediaTranslationInterface translate($locale = null, $create = false)
+ * @method MediaTranslationInterface[] getTranslations()
  */
 interface MediaInterface extends
-    Core\UploadableInterface,
+    RM\UploadableInterface,
     RM\TranslatableInterface,
     RM\TaggedEntityInterface
 {
     /**
      * Sets the folder.
      *
-     * @param FolderInterface $folder
+     * @param FolderInterface|null $folder
      *
-     * @return MediaInterface|$this
+     * @return $this|MediaInterface
      */
-    public function setFolder(FolderInterface $folder);
+    public function setFolder(FolderInterface $folder = null): MediaInterface;
 
     /**
      * Returns the folder.
      *
-     * @return FolderInterface
+     * @return FolderInterface|null
      */
-    public function getFolder();
+    public function getFolder(): ?FolderInterface;
 
     /**
      * Sets the type.
      *
      * @param string $type
      *
-     * @return MediaInterface|$this
+     * @return $this|MediaInterface
      */
-    public function setType($type);
+    public function setType(string $type): MediaInterface;
 
     /**
      * Returns the type.
      *
-     * @return string
+     * @return string|null
      */
-    public function getType();
+    public function getType(): ?string;
 
     /**
      * Sets the title.
      *
      * @param string $title
      *
-     * @return MediaInterface|$this
+     * @return $this|MediaInterface
      */
-    public function setTitle($title);
+    public function setTitle(string $title): MediaInterface;
 
     /**
      * Returns the title.
      *
-     * @return string
+     * @return string|null
      */
-    public function getTitle();
+    public function getTitle(): ?string;
 
     /**
      * Sets the description.
      *
-     * @param string $description
+     * @param string|null $description
      *
-     * @return MediaInterface|$this
+     * @return $this|MediaInterface
      */
-    public function setDescription($description);
+    public function setDescription(string $description = null): MediaInterface;
 
     /**
      * Returns the description.
      *
-     * @return string
+     * @return string|null
      */
-    public function getDescription();
+    public function getDescription(): ?string;
 }

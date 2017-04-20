@@ -1,10 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Validator\Constraints;
 
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes as Types;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Symfony\Component\Validator\Constraint;
+
+use function array_key_exists;
+use function is_array;
+use function sprintf;
 
 /**
  * Class MediaTypes
@@ -13,9 +19,8 @@ use Symfony\Component\Validator\Constraint;
  */
 class MediaTypes extends Constraint
 {
-    public $invalidType = 'ekyna_media.media.invalid_type';
-
-    public $types;
+    public string $invalidType = 'ekyna_media.media.invalid_type';
+    public array  $types       = [];
 
 
     /**
@@ -55,7 +60,7 @@ class MediaTypes extends Constraint
     /**
      * @inheritDoc
      */
-    public function getRequiredOptions()
+    public function getRequiredOptions(): array
     {
         return ['types'];
     }

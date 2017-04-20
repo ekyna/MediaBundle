@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Service;
 
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
@@ -9,10 +11,13 @@ use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
-use League\Flysystem\FilesystemInterface;
+use League\Flysystem\FilesystemException;
+use League\Flysystem\FilesystemOperator;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
+use function preg_match;
 
 /**
  * Class Generator
@@ -21,59 +26,24 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class Generator
 {
-    const DEFAULT_THUMB = '/bundles/ekynamedia/img/file.jpg';
-    const NONE_THUMB = '/bundles/ekynamedia/img/media-none.jpg';
+    public const DEFAULT_THUMB = '/bundles/ekynamedia/img/file.jpg';
+    public const NONE_THUMB    = '/bundles/ekynamedia/img/media-none.jpg';
 
-    /**
-     * @var FilesystemInterface
-     */
-    private $filesystem;
-
-    /**
-     * @var ImagineInterface
-     */
-    private $imagine;
-
-    /**
-     * @var CacheManager
-     */
-    private $cacheManager;
-
-    /**
-     * @var VideoManager
-     */
-    private $videoManager;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
-
-    /**
-     * @var string
-     */
-    private $iconsSourcePath;
-
-    /**
-     * @var string
-     */
-    private $webRootDirectory;
-
-    /**
-     * @var string
-     */
-    private $thumbsDirectory;
-
-    /**
-     * @var Filesystem
-     */
-    private $fs;
+    private FilesystemOperator    $filesystem;
+    private ImagineInterface      $imagine;
+    private CacheManager          $cacheManager;
+    private VideoManager          $videoManager;
+    private UrlGeneratorInterface $urlGenerator;
+    private string                $webRootDirectory;
+    private string                $thumbsDirectory;
+    private string                $iconsSourcePath;
+    private Filesystem            $fs;
 
 
     /**
      * Constructor.
      *
-     * @param FilesystemInterface   $filesystem
+     * @param FilesystemOperator    $filesystem
      * @param ImagineInterface      $imagine
      * @param CacheManager          $cacheManager
      * @param VideoManager          $videoManager
@@ -82,13 +52,13 @@ class Generator
      * @param string                $thumbsDirectory
      */
     public function __construct(
-        FilesystemInterface $filesystem,
+        FilesystemOperator $filesystem,
         ImagineInterface $imagine,
         CacheManager $cacheManager,
         VideoManager $videoManager,
         UrlGeneratorInterface $urlGenerator,
-        $webRootDirectory,
-        $thumbsDirectory
+        string $webRootDirectory,
+        string $thumbsDirectory
     ) {
         $this->filesystem = $filesystem;
         $this->imagine = $imagine;
@@ -107,16 +77,27 @@ class Generator
      * Returns the media file content.
      *
      * @param MediaInterface $media
+     * @param bool           $stream
      *
-     * @return string|null
+     * @return string|resource|null
      */
-    public function getContent(MediaInterface $media)
+    public function getContent(MediaInterface $media, bool $stream = false)
     {
-        if ($this->filesystem->has($media->getPath())) {
-            return $this->filesystem->read($media->getPath()) ?: null;
+        try {
+            $this->filesystem->fileExists($media->getPath());
+        } catch (FilesystemException $exception) {
+            return null;
         }
 
-        return null;
+        try {
+            if ($stream) {
+                return $this->filesystem->readStream($media->getPath());
+            }
+
+            return $this->filesystem->read($media->getPath());
+        } catch (FilesystemException $exception) {
+            return null;
+        }
     }
 
     /**
@@ -126,10 +107,8 @@ class Generator
      *
      * @return string
      */
-    public function generateThumbUrl(MediaInterface $media)
+    public function generateThumbUrl(MediaInterface $media): string
     {
-        $path = null;
-
         if ($this->isImagineFilterable($media)) {
             $path = $this->cacheManager->getBrowserPath($media->getPath(), 'media_thumb');
         } elseif (MediaTypes::isVideo($media)) {
@@ -153,10 +132,10 @@ class Generator
      *
      * @return string
      */
-    public function generateFrontUrl(MediaInterface $media, $format = 'media_front')
+    public function generateFrontUrl(MediaInterface $media, string $format = 'media_front'): string
     {
         if ($this->isImagineFilterable($media)) {
-            return $this->cacheManager->getBrowserPath($media->getPath(), $format ? $format : 'media_front');
+            return $this->cacheManager->getBrowserPath($media->getPath(), $format ?: 'media_front');
         }
 
         if (MediaTypes::isVideo($media)) {
@@ -177,7 +156,7 @@ class Generator
      *
      * @return string
      */
-    public function generatePlayerUrl(MediaInterface $media)
+    public function generatePlayerUrl(MediaInterface $media): string
     {
         if (in_array($media->getType(), [MediaTypes::VIDEO, MediaTypes::AUDIO, MediaTypes::FLASH])) {
             return $this->urlGenerator->generate(
@@ -196,9 +175,9 @@ class Generator
      * @param MediaInterface $media
      * @param string         $filter
      *
-     * @return null|string
+     * @return string|null
      */
-    private function generateVideoThumb(MediaInterface $media, $filter = 'video_thumb')
+    private function generateVideoThumb(MediaInterface $media, string $filter = 'video_thumb'): ?string
     {
         if (null !== $path = $this->videoManager->thumb($media, $filter)) {
             return $path;
@@ -212,9 +191,9 @@ class Generator
      *
      * @param MediaInterface $media
      *
-     * @return null|string
+     * @return string|null
      */
-    private function generateFileThumb(MediaInterface $media)
+    private function generateFileThumb(MediaInterface $media): ?string
     {
         $extension = $media->guessExtension();
         $thumbPath = sprintf('/%s/%s.jpg', $this->thumbsDirectory, $extension);
@@ -242,7 +221,7 @@ class Generator
 
             $thumb->paste($icon, $start);
             $thumb->save($destination);
-        } catch (ImagineException $e) {
+        } catch (ImagineException $exception) {
             // Image thumb generation failed
             return null;
         }
@@ -257,7 +236,7 @@ class Generator
      *
      * @return bool
      */
-    public function isImagineFilterable(MediaInterface $media)
+    public function isImagineFilterable(MediaInterface $media): bool
     {
         return $media->getType() === MediaTypes::IMAGE
             && 0 < preg_match('~^image/(jpe?g|gif|png)$~', $this->getMimeType($media));
@@ -270,9 +249,9 @@ class Generator
      *
      * @return string
      */
-    public function getMimeType(MediaInterface $media)
+    public function getMimeType(MediaInterface $media): string
     {
-        return $this->filesystem->getMimetype($media->getPath());
+        return $this->filesystem->mimeType($media->getPath());
     }
 
     /**
@@ -280,7 +259,7 @@ class Generator
      *
      * @return string
      */
-    public function getDefaultThumb()
+    public function getDefaultThumb(): string
     {
         return self::DEFAULT_THUMB;
     }
@@ -290,7 +269,7 @@ class Generator
      *
      * @return string
      */
-    public function getNoneThumb()
+    public function getNoneThumb(): string
     {
         return self::NONE_THUMB;
     }

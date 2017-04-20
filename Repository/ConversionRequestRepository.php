@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -29,7 +31,6 @@ class ConversionRequestRepository extends ServiceEntityRepository
      */
     public function findRunning(): ?ConversionRequest
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->findOneBy([
             'state' => ConversionRequest::STATE_RUNNING,
         ]);
@@ -42,7 +43,6 @@ class ConversionRequestRepository extends ServiceEntityRepository
      */
     public function findNext(): ?ConversionRequest
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->findOneBy([
             'state' => ConversionRequest::STATE_PENDING,
         ], [

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Entity;
 
 use DateTime;
@@ -16,30 +18,11 @@ class ConversionRequest
     public const STATE_RUNNING = 'running';
     public const STATE_ERROR   = 'error';
 
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var MediaInterface
-     */
-    private $media;
-
-    /**
-     * @var string
-     */
-    private $format;
-
-    /**
-     * @var string
-     */
-    private $state;
-
-    /**
-     * @var DateTime
-     */
-    private $createdAt;
+    private ?int $id = null;
+    private ?MediaInterface $media = null;
+    private ?string $format = null;
+    private string $state;
+    private DateTime $createdAt;
 
 
     /**
@@ -54,9 +37,9 @@ class ConversionRequest
     /**
      * Returns the id.
      *
-     * @return int
+     * @return int|null
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -78,9 +61,9 @@ class ConversionRequest
     /**
      * Returns the media.
      *
-     * @return MediaInterface
+     * @return MediaInterface|null
      */
-    public function getMedia(): MediaInterface
+    public function getMedia(): ?MediaInterface
     {
         return $this->media;
     }
@@ -102,9 +85,9 @@ class ConversionRequest
     /**
      * Returns the format.
      *
-     * @return string
+     * @return string|null
      */
-    public function getFormat(): string
+    public function getFormat(): ?string
     {
         return $this->format;
     }

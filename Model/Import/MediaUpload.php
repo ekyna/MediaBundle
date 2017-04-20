@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Model\Import;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -30,13 +32,15 @@ class MediaUpload
      * Adds the media.
      *
      * @param MediaInterface $media
+     *
      * @return MediaUpload
      */
-    public function addMedia(MediaInterface $media)
+    public function addMedia(MediaInterface $media): MediaUpload
     {
         if (!$this->medias->contains($media)) {
             $this->medias->add($media);
         }
+
         return $this;
     }
 
@@ -44,13 +48,15 @@ class MediaUpload
      * Removes the media.
      *
      * @param MediaInterface $media
+     *
      * @return MediaUpload
      */
-    public function removeMedia(MediaInterface $media)
+    public function removeMedia(MediaInterface $media): MediaUpload
     {
         if ($this->medias->contains($media)) {
             $this->medias->removeElement($media);
         }
+
         return $this;
     }
 
@@ -58,11 +64,13 @@ class MediaUpload
      * Returns the medias.
      *
      * @param ArrayCollection $medias
+     *
      * @return MediaUpload
      */
-    public function setMedias(ArrayCollection $medias)
+    public function setMedias(ArrayCollection $medias): MediaUpload
     {
         $this->medias = $medias;
+
         return $this;
     }
 
@@ -71,7 +79,7 @@ class MediaUpload
      *
      * @return ArrayCollection|MediaInterface[]
      */
-    public function getMedias()
+    public function getMedias(): ArrayCollection
     {
         return $this->medias;
     }

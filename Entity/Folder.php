@@ -1,67 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
+use Ekyna\Component\Resource\Model\TreeTrait;
 
 /**
  * Class Folder
  * @package Ekyna\Bundle\MediaBundle\Entity
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class Folder implements FolderInterface
 {
-    /**
-     * @var integer
-     */
-    private $id;
+    use TreeTrait;
 
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var integer
-     */
-    protected $left;
-
-    /**
-     * @var integer
-     */
-    protected $right;
-
-    /**
-     * @var integer
-     */
-    protected $root;
-
-    /**
-     * @var integer
-     */
-    protected $level;
-
-    /**
-     * @var Folder
-     */
-    protected $parent;
-
-    /**
-     * @var ArrayCollection|FolderInterface[]
-     */
-    protected $children;
-
-    /**
-     * @var ArrayCollection|MediaInterface[]
-     */
-    protected $medias;
-
-    /**
-     * @var bool
-     */
-    protected $active = false;
+    private ?int    $id   = null;
+    private ?string $name = null;
+    /** @var Collection|MediaInterface[] */
+    protected Collection $medias;
+    /** Non persisted - Js usage. */
+    protected bool $active = false;
 
 
     /**
@@ -69,8 +32,9 @@ class Folder implements FolderInterface
      */
     public function __construct()
     {
-        $this->children = new ArrayCollection();
         $this->medias = new ArrayCollection();
+
+        $this->initializeNode();
     }
 
     /**
@@ -84,17 +48,17 @@ class Folder implements FolderInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function setName($name)
+    public function setName(string $name): FolderInterface
     {
         $this->name = $name;
 
@@ -102,176 +66,25 @@ class Folder implements FolderInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function setLeft($left)
-    {
-        $this->left = $left;
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getLeft()
-    {
-        return $this->left;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setRight($right)
-    {
-        $this->right = $right;
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getRight()
-    {
-        return $this->right;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setRoot($root)
-    {
-        $this->root = $root;
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getRoot()
-    {
-        return $this->root;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setLevel($level)
-    {
-        $this->level = $level;
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getLevel()
-    {
-        return $this->level;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setParent(FolderInterface $parent = null)
-    {
-        $this->parent = $parent;
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setChildren(ArrayCollection $children)
-    {
-        $this->children = $children;
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function hasChild(FolderInterface $child)
-    {
-        return $this->children->contains($child);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function addChild(FolderInterface $child)
-    {
-        if (!$this->hasChild($child)) {
-            $this->children->add($child);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function removeChild(FolderInterface $child)
-    {
-        if ($this->hasChild($child)) {
-            $this->children->removeElement($child);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function hasChildren()
-    {
-        return 0 < $this->children->count();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getChildren()
-    {
-        return $this->children;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setMedias(ArrayCollection $medias)
-    {
-        $this->medias = $medias;
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function hasMedia(MediaInterface $media)
+    public function hasMedia(MediaInterface $media): bool
     {
         return $this->medias->contains($media);
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function addMedia(MediaInterface $media)
+    public function addMedia(MediaInterface $media): FolderInterface
     {
         if (!$this->hasMedia($media)) {
             $this->medias->add($media);
@@ -281,9 +94,9 @@ class Folder implements FolderInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function removeMedia(MediaInterface $media)
+    public function removeMedia(MediaInterface $media): FolderInterface
     {
         if ($this->hasMedia($media)) {
             $this->medias->removeElement($media);
@@ -293,25 +106,25 @@ class Folder implements FolderInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function hasMedias()
+    public function hasMedias(): bool
     {
         return 0 < $this->children->count();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getMedias()
+    public function getMedias(): Collection
     {
         return $this->medias;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function setActive($active)
+    public function setActive(bool $active): FolderInterface
     {
         $this->active = $active;
 
@@ -319,9 +132,9 @@ class Folder implements FolderInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getActive()
+    public function getActive(): bool
     {
         return $this->active;
     }

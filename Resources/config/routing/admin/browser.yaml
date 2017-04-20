@@ -1,0 +1,81 @@
+admin_ekyna_media_browser_index:
+    path: ""
+    controller: \Ekyna\Bundle\MediaBundle\Controller\Admin\BrowserController::index
+    methods: [GET]
+
+admin_ekyna_media_browser_modal:
+    path: /modal
+    controller: Ekyna\Bundle\MediaBundle\Controller\Admin\BrowserController::modal
+    methods: [GET]
+    options: { expose: true }
+
+admin_ekyna_media_browser_list:
+    path: /list
+    controller: Ekyna\Bundle\MediaBundle\Controller\Admin\BrowserController::list
+    methods: [GET]
+    options: { expose: true }
+
+admin_ekyna_media_browser_create:
+    path: /{id}/create
+    controller: Ekyna\Bundle\MediaBundle\Controller\Admin\BrowserController::create
+    methods: [POST]
+    requirements:
+        id: \d+
+    options: { expose: true }
+
+admin_ekyna_media_browser_rename:
+    path: /{id}/rename
+    controller: Ekyna\Bundle\MediaBundle\Controller\Admin\BrowserController::rename
+    methods: [POST]
+    requirements:
+        id: \d+
+    options: { expose: true }
+
+admin_ekyna_media_browser_delete:
+    path: /{id}/delete
+    controller: Ekyna\Bundle\MediaBundle\Controller\Admin\BrowserController::delete
+    methods: [POST]
+    requirements:
+        id: \d+
+    options: { expose: true }
+
+admin_ekyna_media_browser_move:
+    path: /{id}/move
+    controller: Ekyna\Bundle\MediaBundle\Controller\Admin\BrowserController::move
+    methods: [POST]
+    requirements:
+        id: \d+
+    options: { expose: true }
+
+admin_ekyna_media_browser_list_media:
+    path: /{id}/medias
+    controller: Ekyna\Bundle\MediaBundle\Controller\Admin\BrowserController::listMedia
+    methods: [GET]
+    requirements:
+        id: \d+
+    options: { expose: true }
+
+admin_ekyna_media_browser_create_media:
+    path: /{id}/medias/create
+    controller: Ekyna\Bundle\MediaBundle\Controller\Admin\BrowserController::createMedia
+    methods: [GET|POST]
+    requirements:
+        id: \d+
+    options: { expose: true }
+
+admin_ekyna_media_browser_import_media:
+    path: /{id}/medias/import
+    controller: Ekyna\Bundle\MediaBundle\Controller\Admin\BrowserController::importMedia
+    methods: [GET|POST]
+    requirements:
+        id: \d+
+    options: { expose: true }
+
+admin_ekyna_media_browser_move_media:
+    path: /{id}/medias/move/{mediaId}
+    controller: Ekyna\Bundle\MediaBundle\Controller\Admin\BrowserController::moveMedia
+    methods: [POST]
+    requirements:
+        id: \d+
+        mediaId: \d+
+    options: { expose: true }

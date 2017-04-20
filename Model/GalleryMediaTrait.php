@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Model;
 
 use Ekyna\Component\Resource\Model\SortableTrait;
@@ -7,37 +9,25 @@ use Ekyna\Component\Resource\Model\SortableTrait;
 /**
  * Trait GalleryMediaTrait
  * @package Ekyna\Bundle\MediaBundle\Model
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 trait GalleryMediaTrait
 {
     use SortableTrait;
 
-    /**
-     * @var MediaInterface
-     */
-    protected $media;
-
+    protected ?MediaInterface $media = null;
 
     /**
-     * Sets the media.
-     *
-     * @param MediaInterface $media
-     * @return MediaSubjectInterface|$this
+     * @return $this|GalleryMediaInterface
      */
-    public function setMedia(MediaInterface $media)
+    public function setMedia(MediaInterface $media): GalleryMediaInterface
     {
         $this->media = $media;
 
         return $this;
     }
 
-    /**
-     * Returns the media.
-     *
-     * @return MediaInterface
-     */
-    public function getMedia()
+    public function getMedia(): ?MediaInterface
     {
         return $this->media;
     }

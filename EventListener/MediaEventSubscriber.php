@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\EventListener;
 
 use Ekyna\Bundle\MediaBundle\Entity\ConversionRequest;
@@ -11,9 +13,11 @@ use Ekyna\Bundle\MediaBundle\Repository\ConversionRequestRepository;
 use Ekyna\Component\Resource\Event\ResourceEventInterface;
 use Ekyna\Component\Resource\Exception\UnexpectedTypeException;
 use Ekyna\Component\Resource\Persistence\PersistenceHelperInterface;
-use League\Flysystem\Adapter\Local;
-use League\Flysystem\Filesystem as Flysystem;
+use League\Flysystem\Filesystem;
+use League\Flysystem\FilesystemException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+use function pathinfo;
 
 /**
  * Class MediaEventSubscriber
@@ -22,20 +26,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class MediaEventSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var ConversionRequestRepository
-     */
-    protected $requestRepository;
-
-    /**
-     * @var PersistenceHelperInterface
-     */
-    protected $persistenceHelper;
-
-    /**
-     * @var Flysystem
-     */
-    protected $videoFilesystem;
+    protected ConversionRequestRepository $requestRepository;
+    protected PersistenceHelperInterface  $persistenceHelper;
+    protected Filesystem                  $videoFilesystem;
 
 
     /**
@@ -43,16 +36,16 @@ class MediaEventSubscriber implements EventSubscriberInterface
      *
      * @param ConversionRequestRepository $requestRepository
      * @param PersistenceHelperInterface  $persistenceHelper
-     * @param Flysystem                   $videoFilesystem
+     * @param Filesystem                  $videoFilesystem
      */
     public function __construct(
         ConversionRequestRepository $requestRepository,
         PersistenceHelperInterface $persistenceHelper,
-        Flysystem $videoFilesystem
+        Filesystem $videoFilesystem
     ) {
         $this->requestRepository = $requestRepository;
         $this->persistenceHelper = $persistenceHelper;
-        $this->videoFilesystem   = $videoFilesystem;
+        $this->videoFilesystem = $videoFilesystem;
     }
 
     /**
@@ -120,13 +113,18 @@ class MediaEventSubscriber implements EventSubscriberInterface
         foreach (MediaFormats::getFormatsByType(MediaTypes::VIDEO) as $format) {
             $key = $info['dirname'] . '/' . $info['filename'] . '.' . $format;
 
-            if (!$this->videoFilesystem->has($key)) {
+            try {
+                if (!$this->videoFilesystem->fileExists($key)) {
+                    continue;
+                }
+            } catch (FilesystemException $exception) {
                 continue;
             }
 
-            $path = $this->getVideoAdapter()->applyPathPrefix($key);
-
-            @unlink($path);
+            try {
+                $this->videoFilesystem->delete($key);
+            } catch (FilesystemException $exception) {
+            }
         }
     }
 
@@ -142,7 +140,7 @@ class MediaEventSubscriber implements EventSubscriberInterface
         }
 
         $requests = $this->requestRepository->findByMedia($media);
-        $formats  = [];
+        $formats = [];
 
         foreach (MediaFormats::getFormatsByType(MediaTypes::VIDEO) as $format) {
             foreach ($requests as $request) {
@@ -215,20 +213,9 @@ class MediaEventSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Returns the video filesystem adapter.
-     *
-     * @return Local
-     */
-    private function getVideoAdapter(): Local
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->videoFilesystem->getAdapter();
-    }
-
-    /**
      * @inheritDoc
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             MediaEvents::INSERT => ['onInsert', 0],

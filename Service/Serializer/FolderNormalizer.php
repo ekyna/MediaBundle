@@ -1,44 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Service\Serializer;
 
 use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\SerializerAwareInterface;
-use Symfony\Component\Serializer\SerializerAwareTrait;
+use Ekyna\Component\Resource\Bridge\Symfony\Serializer\ResourceNormalizer;
+use Exception;
 
 /**
  * Class FolderNormalizer
  * @package Ekyna\Bundle\MediaBundle\Service\Serializer
  * @author  Etienne Dauvergne <contact@ekyna.com>
- *
- * @property \Symfony\Component\Serializer\Serializer $serializer
  */
-class FolderNormalizer implements NormalizerInterface, DenormalizerInterface, SerializerAwareInterface
+class FolderNormalizer extends ResourceNormalizer
 {
-    use SerializerAwareTrait;
-
     /**
-     * @inheritdoc
+     * @inheritDoc
      *
-     * @param FolderInterface $folder
+     * @param FolderInterface $object
      */
-    public function normalize($folder, $format = null, array $context = [])
+    public function normalize($object, $format = null, array $context = [])
     {
-        $groups = isset($context['groups']) ? (array)$context['groups'] : [];
-
-        if (in_array('Manager', $groups, true)) {
+        if ($this->contextHasGroup('Manager', $context)) {
             $data = [
-                'level'    => $folder->getLevel(),
-                'key'      => $folder->getId(),
-                'title'    => $folder->getName(),
+                'level'    => $object->getLevel(),
+                'key'      => $object->getId(),
+                'title'    => $object->getName(),
                 'folder'   => true,
-                'active'   => $folder->getActive(),
+                'active'   => $object->getActive(),
                 'children' => [],
             ];
 
-            foreach ($folder->getChildren() as $child) {
+            foreach ($object->getChildren() as $child) {
                 $data['children'][] = $this->serializer->normalize($child, $format, $context);
             }
 
@@ -46,32 +40,16 @@ class FolderNormalizer implements NormalizerInterface, DenormalizerInterface, Se
         }
 
         return [
-            'id'   => $folder->getId(),
-            'name' => $folder->getName(),
+            'id'   => $object->getId(),
+            'name' => $object->getName(),
         ];
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function denormalize($data, $class, $format = null, array $context = [])
+    public function denormalize($data, $type, $format = null, array $context = [])
     {
-        throw new \Exception("Not yet implemented.");
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function supportsNormalization($data, $format = null)
-    {
-        return $data instanceof FolderInterface;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function supportsDenormalization($data, $type, $format = null)
-    {
-        return false;
+        throw new Exception('Not yet implemented.');
     }
 }

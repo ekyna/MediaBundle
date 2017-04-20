@@ -117,7 +117,7 @@ define('ekyna-media/form/collection',
             if (that.config.types.length > 0) {
                 params.types = this.config.types;
             }
-            modal.load({url: Router.generate('ekyna_media_browser_admin_modal', params)});
+            modal.load({url: Router.generate('admin_ekyna_media_browser_modal', params)});
         },
         updateCollection: function() {
             var that = this,

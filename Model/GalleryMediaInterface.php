@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Model;
 
 use Ekyna\Component\Resource\Model\SortableInterface;
@@ -7,22 +9,14 @@ use Ekyna\Component\Resource\Model\SortableInterface;
 /**
  * Interface GalleryMediaInterface
  * @package Ekyna\Bundle\MediaBundle\Model
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 interface GalleryMediaInterface extends SortableInterface
 {
     /**
-     * Sets the media.
-     *
-     * @param MediaInterface $media
-     * @return MediaSubjectInterface|$this
+     * @return $this|GalleryMediaInterface
      */
-    public function setMedia(MediaInterface $media);
+    public function setMedia(MediaInterface $media): GalleryMediaInterface;
 
-    /**
-     * Returns the media.
-     *
-     * @return MediaInterface
-     */
-    public function getMedia();
+    public function getMedia(): ?MediaInterface;
 }

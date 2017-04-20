@@ -1,22 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Listener;
 
-use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-use Doctrine\ORM\Events;
 use Ekyna\Bundle\MediaBundle\Model;
+
+use function class_exists;
+use function is_subclass_of;
 
 /**
  * Class GalleryMediaSubscriber
  * @package Ekyna\Bundle\MediaBundle\Listener
  * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-class GalleryMediaSubscriber implements EventSubscriber
+class GalleryMediaSubscriber
 {
-    /**
-     * @param LoadClassMetadataEventArgs $eventArgs
-     */
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
     {
         $metadata = $eventArgs->getClassMetadata();
@@ -27,7 +27,7 @@ class GalleryMediaSubscriber implements EventSubscriber
         }
 
         // Check if class implements the gallery media interface
-        if (!in_array(Model\GalleryMediaInterface::class, class_implements($metadata->getName()))) {
+        if (!is_subclass_of($metadata->getName(), Model\GalleryMediaInterface::class)) {
             return;
         }
 
@@ -49,15 +49,5 @@ class GalleryMediaSubscriber implements EventSubscriber
                 ],
             ],
         ]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getSubscribedEvents()
-    {
-        return [
-            Events::loadClassMetadata,
-        ];
     }
 }

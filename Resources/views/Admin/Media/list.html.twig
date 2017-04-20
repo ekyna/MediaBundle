@@ -1,9 +1,9 @@
 {% extends '@EkynaAdmin/Entity/layout.html.twig' %}
 
-{% block page_title %}{{ 'ekyna_media.media.label.plural'|trans|raw }} - {{ parent() }}{% endblock page_title %}
+{% block page_title %}{{ 'media.label.plural'|trans({}, 'EkynaMedia')|raw }}{% endblock page_title %}
 
 {% block title %}
-    <h1>{{ 'ekyna_media.media.header.list'|trans|raw }}</h1>
+    <h1>{{ 'media.header.list'|trans({}, 'EkynaMedia')|raw }}</h1>
 {% endblock title %}
 
 {% block actions %}{% endblock actions %}

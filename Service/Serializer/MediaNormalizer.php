@@ -1,83 +1,66 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Service\Serializer;
 
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 use Ekyna\Bundle\MediaBundle\Service\Generator;
-use Ekyna\Component\Resource\Serializer\AbstractResourceNormalizer;
+use Ekyna\Component\Resource\Bridge\Symfony\Serializer\ResourceNormalizer;
+use Exception;
 
 /**
  * Class MediaNormalizer
  * @package Ekyna\Bundle\MediaBundle\Service\Serializer
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class MediaNormalizer extends AbstractResourceNormalizer
+class MediaNormalizer extends ResourceNormalizer
 {
-    /**
-     * @var Generator
-     */
-    private $generator;
-
+    private Generator $generator;
 
     /**
-     * Sets the generator.
+     * Constructor.
      *
      * @param Generator $generator
      */
-    public function setGenerator(Generator $generator)
+    public function __construct(Generator $generator)
     {
         $this->generator = $generator;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      *
-     * @param MediaInterface $media
+     * @param MediaInterface $object
      */
-    public function normalize($media, $format = null, array $context = [])
+    public function normalize($object, $format = null, array $context = [])
     {
-        $folder = $media->getFolder();
+        $folder = $object->getFolder();
 
         $data = [
-            'id'       => $media->getId(),
-            'title'    => $media->getTitle(),
-            'front'    => $this->generator->generateFrontUrl($media),
-            'player'   => $this->generator->generatePlayerUrl($media),
+            'id'       => $object->getId(),
+            'title'    => $object->getTitle(),
+            'front'    => $this->generator->generateFrontUrl($object),
+            'player'   => $this->generator->generatePlayerUrl($object),
             'folderId' => $folder ? $folder->getId() : null,
         ];
 
         if ($this->contextHasGroup('Manager', $context)) {
-            $data['path'] = $media->getPath();
-            $data['size'] = $media->getSize();
-            $data['type'] = $media->getType();
-            $data['filename'] = $media->getFilename();
-            $data['thumb'] = $this->generator->generateThumbUrl($media);
+            $data['path'] = $object->getPath();
+            $data['size'] = $object->getSize();
+            $data['type'] = $object->getType();
+            $data['filename'] = $object->getFilename();
+            $data['thumb'] = $this->generator->generateThumbUrl($object);
         }
 
         return $data;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function denormalize($data, $class, $format = null, array $context = [])
+    public function denormalize($data, $type, $format = null, array $context = [])
     {
-        throw new \Exception('Not yet implemented');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function supportsNormalization($data, $format = null)
-    {
-        return $data instanceof MediaInterface;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function supportsDenormalization($data, $type, $format = null)
-    {
-        return false;
+        throw new Exception('Not yet implemented');
     }
 }

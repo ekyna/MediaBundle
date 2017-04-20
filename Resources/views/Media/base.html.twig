@@ -19,10 +19,9 @@
         overflow: hidden !important;
     }
     </style>
-    {#<link rel="stylesheet" href="{{ absolute_url(asset('assets/bootstrap/css/bootstrap.min.css')) }}">#}
     {% endblock stylesheets %}
 
-    {% include '@EkynaCore/Ui/ie-fix.html.twig' %}
+    {% include '@EkynaUi/Fix/ie.html.twig' %}
 
     {{ require_js(not app.debug) }}
 </head>

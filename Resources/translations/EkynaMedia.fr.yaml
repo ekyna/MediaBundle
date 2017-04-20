@@ -1,0 +1,32 @@
+label: Médias
+media:
+    label:
+        singular: Média
+        plural: Médias
+    header:
+        list: Médias <small>Liste des médias</small>
+        read: Détail du média
+        create: Créer un nouveau média
+        update: Modifier le média
+        delete: Supprimer le média
+    button:
+        list: Liste des médias
+        read: Détail du média
+        create: Nouveau média
+        update: Modifier le média
+        delete: Supprimer le média
+    alert:
+        no_item: Aucun média configuré
+browser:
+    title:
+        browse: Gestionnaire de médias
+        single_selection: Choisissez un média
+        multiple_selection: Sélectionnez des médias
+player:
+    video_not_supported: Votre navigateur ne prend pas en charge la balise "video".
+    audio_not_supported: Votre navigateur ne prend pas en charge la balise "audio".
+import:
+    title: Importer des médias
+upload:
+    title: Télécharger des médias
+    drop_zone: Déposez des fichiers ici

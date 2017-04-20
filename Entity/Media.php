@@ -1,38 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Entity;
 
-use Ekyna\Component\Resource\Model as RM;
-use Ekyna\Bundle\CoreBundle\Model as Core;
 use Ekyna\Bundle\MediaBundle\Model;
+use Ekyna\Component\Resource\Model as RM;
 
 /**
  * Class Media
  * @package Ekyna\Bundle\MediaBundle\Entity
  * @author  Étienne Dauvergne <contact@ekyna.com>
  *
- * @method MediaTranslation translate($locale = null, $create = false)
+ * @method Model\MediaTranslationInterface translate($locale = null, $create = false)
+ * @method Model\MediaTranslationInterface[] getTranslations()
  */
 class Media implements Model\MediaInterface
 {
-    use Core\UploadableTrait,
-        RM\TranslatableTrait,
-        RM\TaggedEntityTrait;
+    use RM\UploadableTrait;
+    use RM\TaggedEntityTrait;
+    use RM\TranslatableTrait;
 
-    /**
-     * @var integer
-     */
-    protected $id;
-
-    /**
-     * @var Model\FolderInterface
-     */
-    protected $folder;
-
-    /**
-     * @var string
-     */
-    protected $type;
+    protected ?int $id = null;
+    protected ?Model\FolderInterface $folder = null;
+    protected ?string $type = null;
 
 
     /**
@@ -55,9 +46,7 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * Returns the id.
-     *
-     * @return int
+     * @inheritDoc
      */
     public function getId(): ?int
     {
@@ -65,9 +54,9 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function setFolder(Model\FolderInterface $folder)
+    public function setFolder(Model\FolderInterface $folder = null): Model\MediaInterface
     {
         $this->folder = $folder;
 
@@ -75,17 +64,17 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getFolder()
+    public function getFolder(): ?Model\FolderInterface
     {
         return $this->folder;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function setType($type)
+    public function setType($type): Model\MediaInterface
     {
         $this->type = $type;
 
@@ -93,17 +82,17 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->type;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function setTitle($title)
+    public function setTitle($title): Model\MediaInterface
     {
         $this->translate()->setTitle($title);
 
@@ -111,17 +100,17 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->translate()->getTitle();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function setDescription($description)
+    public function setDescription(string $description = null): Model\MediaInterface
     {
         $this->translate()->setDescription($description);
 
@@ -129,17 +118,17 @@ class Media implements Model\MediaInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->translate()->getDescription();
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public static function getEntityTagPrefix()
+    public static function getEntityTagPrefix(): string
     {
         return 'ekyna_media.media';
     }

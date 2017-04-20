@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Event;
 
 /**
@@ -9,21 +11,18 @@ namespace Ekyna\Bundle\MediaBundle\Event;
  */
 final class MediaEvents
 {
-    const INSERT      = 'ekyna_media.media.insert';
-    const UPDATE      = 'ekyna_media.media.update';
-    const DELETE      = 'ekyna_media.media.delete';
+    public const INSERT      = 'ekyna_media.media.insert';
+    public const UPDATE      = 'ekyna_media.media.update';
+    public const DELETE      = 'ekyna_media.media.delete';
 
-    const INITIALIZE  = 'ekyna_media.media.initialize';
+    public const PRE_CREATE  = 'ekyna_media.media.pre_create';
+    public const POST_CREATE = 'ekyna_media.media.post_create';
 
-    const PRE_CREATE  = 'ekyna_media.media.pre_create';
-    const POST_CREATE = 'ekyna_media.media.post_create';
+    public const PRE_UPDATE  = 'ekyna_media.media.pre_update';
+    public const POST_UPDATE = 'ekyna_media.media.post_update';
 
-    const PRE_UPDATE  = 'ekyna_media.media.pre_update';
-    const POST_UPDATE = 'ekyna_media.media.post_update';
-
-    const PRE_DELETE  = 'ekyna_media.media.pre_delete';
-    const POST_DELETE = 'ekyna_media.media.post_delete';
-
+    public const PRE_DELETE  = 'ekyna_media.media.pre_delete';
+    public const POST_DELETE = 'ekyna_media.media.post_delete';
 
     /**
      * Disabled constructor.

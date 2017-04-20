@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Listener;
 
-use Ekyna\Bundle\CoreBundle\Uploader\UploaderInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 
 /**
@@ -13,38 +14,13 @@ use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 class MediaListener
 {
     /**
-     * @var UploaderInterface
-     */
-    private $uploader;
-
-
-    /**
-     * @param UploaderInterface $uploader
-     */
-    public function __construct(UploaderInterface $uploader)
-    {
-        $this->uploader = $uploader;
-    }
-
-    /**
      * Pre persist event handler.
      *
      * @param MediaInterface $media
      */
-    public function prePersist(MediaInterface $media)
+    public function prePersist(MediaInterface $media): void
     {
         $this->cleanTranslations($media);
-        $this->uploader->prepare($media);
-    }
-
-    /**
-     * Post persist event handler.
-     *
-     * @param MediaInterface $media
-     */
-    public function postPersist(MediaInterface $media)
-    {
-        $this->uploader->upload($media);
     }
 
     /**
@@ -52,40 +28,9 @@ class MediaListener
      *
      * @param MediaInterface $media
      */
-    public function preUpdate(MediaInterface $media)
+    public function preUpdate(MediaInterface $media): void
     {
         $this->cleanTranslations($media);
-        $this->uploader->prepare($media);
-    }
-
-    /**
-     * Post update event handler.
-     *
-     * @param MediaInterface $media
-     */
-    public function postUpdate(MediaInterface $media)
-    {
-        $this->uploader->upload($media);
-    }
-
-    /**
-     * Pre remove event handler.
-     *
-     * @param MediaInterface $media
-     */
-    public function preRemove(MediaInterface $media)
-    {
-        $media->setOldPath($media->getPath());
-    }
-
-    /**
-     * Post remove event handler.
-     *
-     * @param MediaInterface $media
-     */
-    public function postRemove(MediaInterface $media)
-    {
-        $this->uploader->remove($media);
     }
 
     /**
@@ -93,10 +38,10 @@ class MediaListener
      *
      * @param MediaInterface $media
      */
-    private function cleanTranslations(MediaInterface $media)
+    private function cleanTranslations(MediaInterface $media): void
     {
         foreach ($media->getTranslations() as $trans) {
-            if (0 == strlen($trans->getTitle()) && 0 == strlen($trans->getDescription())) {
+            if (empty($trans->getTitle()) && empty($trans->getDescription())) {
                 $media->removeTranslation($trans);
             }
         }

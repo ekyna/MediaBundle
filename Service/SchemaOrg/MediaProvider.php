@@ -1,12 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Service\SchemaOrg;
 
 use Ekyna\Bundle\CmsBundle\Service\SchemaOrg\ProviderInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
 use Ekyna\Bundle\MediaBundle\Service\Generator;
+use Spatie\SchemaOrg\AudioObject;
+use Spatie\SchemaOrg\DataDownload;
+use Spatie\SchemaOrg\ImageObject;
 use Spatie\SchemaOrg\Schema;
+use Spatie\SchemaOrg\VideoObject;
+use Spatie\SchemaOrg\Type;
 
 /**
  * Class MediaProvider
@@ -15,10 +22,7 @@ use Spatie\SchemaOrg\Schema;
  */
 class MediaProvider implements ProviderInterface
 {
-    /**
-     * @var Generator
-     */
-    protected $generator;
+    protected Generator $generator;
 
 
     /**
@@ -36,7 +40,7 @@ class MediaProvider implements ProviderInterface
      *
      * @param MediaInterface $object
      */
-    public function build($object)
+    public function build(object $object): ?Type
     {
         switch ($object->getType()) {
             case MediaTypes::IMAGE:
@@ -69,9 +73,9 @@ class MediaProvider implements ProviderInterface
     /**
      * @param MediaInterface $media
      *
-     * @return \Spatie\SchemaOrg\ImageObject
+     * @return ImageObject
      */
-    private function buildImage(MediaInterface $media)
+    private function buildImage(MediaInterface $media): ImageObject
     {
         $schema = Schema::imageObject();
 
@@ -92,9 +96,9 @@ class MediaProvider implements ProviderInterface
     /**
      * @param MediaInterface $media
      *
-     * @return \Spatie\SchemaOrg\VideoObject
+     * @return VideoObject
      */
-    private function buildVideo(MediaInterface $media)
+    private function buildVideo(MediaInterface $media): VideoObject
     {
         return Schema::videoObject();
     }
@@ -102,9 +106,9 @@ class MediaProvider implements ProviderInterface
     /**
      * @param MediaInterface $media
      *
-     * @return \Spatie\SchemaOrg\VideoObject
+     * @return VideoObject
      */
-    private function buildFlash(MediaInterface $media)
+    private function buildFlash(MediaInterface $media): VideoObject
     {
         return $this
             ->buildVideo($media)
@@ -114,9 +118,9 @@ class MediaProvider implements ProviderInterface
     /**
      * @param MediaInterface $media
      *
-     * @return \Spatie\SchemaOrg\AudioObject
+     * @return AudioObject
      */
-    private function buildAudio(MediaInterface $media)
+    private function buildAudio(MediaInterface $media): AudioObject
     {
         return Schema::audioObject();
     }
@@ -124,9 +128,9 @@ class MediaProvider implements ProviderInterface
     /**
      * @param MediaInterface $media
      *
-     * @return \Spatie\SchemaOrg\DataDownload
+     * @return DataDownload
      */
-    private function buildDownload(MediaInterface $media)
+    private function buildDownload(MediaInterface $media): DataDownload
     {
         return Schema::dataDownload();
     }
@@ -134,7 +138,7 @@ class MediaProvider implements ProviderInterface
     /**
      * @inheritDoc
      */
-    public function supports($object)
+    public function supports(object $object): bool
     {
         return $object instanceof MediaInterface;
     }

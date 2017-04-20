@@ -1,27 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Table\Type;
 
-use Ekyna\Bundle\AdminBundle\Table\Type\ResourceTableType;
+use Ekyna\Bundle\AdminBundle\Action;
+use Ekyna\Bundle\ResourceBundle\Table\Type\AbstractResourceType;
 use Ekyna\Bundle\TableBundle\Extension\Type as BType;
 use Ekyna\Component\Table\Extension\Core\Type as CType;
 use Ekyna\Component\Table\TableBuilderInterface;
+
+use function Symfony\Component\Translation\t;
 
 /**
  * Class MediaType
  * @package Ekyna\Bundle\MediaBundle\Table\Type
  * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-class MediaType extends ResourceTableType
+class MediaType extends AbstractResourceType
 {
-    /**
-     * @inheritdoc
-     */
-    public function buildTable(TableBuilderInterface $builder, array $options)
+    public function buildTable(TableBuilderInterface $builder, array $options): void
     {
         $builder
             ->addColumn('title', BType\Column\AnchorType::class, [
-                'label'                => 'ekyna_core.field.title',
+                'label'                => t('field.title', [], 'EkynaUi'),
                 'sortable'             => true,
                 'route_name'           => 'ekyna_media_media_admin_show',
                 'route_parameters_map' => [
@@ -30,30 +32,15 @@ class MediaType extends ResourceTableType
                 'position'             => 10,
             ])
             ->addColumn('updatedAt', CType\Column\DateTimeType::class, [
+                'label'    => t('field.updated_at', [], 'EkynaUi'),
                 'sortable' => true,
-                'label'    => 'ekyna_core.field.updated_at',
                 'position' => 20,
             ])
             ->addColumn('actions', BType\Column\ActionsType::class, [
-                'buttons' => [
-                    [
-                        'label'                => 'ekyna_core.button.edit',
-                        'class'                => 'warning',
-                        'route_name'           => 'ekyna_media_media_admin_edit',
-                        'route_parameters_map' => [
-                            'mediaId' => 'id',
-                        ],
-                        'permission'           => 'edit',
-                    ],
-                    [
-                        'label'                => 'ekyna_core.button.remove',
-                        'class'                => 'danger',
-                        'route_name'           => 'ekyna_media_media_admin_remove',
-                        'route_parameters_map' => [
-                            'mediaId' => 'id',
-                        ],
-                        'permission'           => 'delete',
-                    ],
+                'resource' => $this->dataClass,
+                'actions'  => [
+                    Action\UpdateAction::class,
+                    Action\DeleteAction::class,
                 ],
             ]);
     }

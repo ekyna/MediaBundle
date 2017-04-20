@@ -1,8 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Model;
 
 use Ekyna\Bundle\ResourceBundle\Model\AbstractConstants;
+
+use function preg_match;
+use function substr;
 
 /**
  * Class RootFolders
@@ -21,20 +26,20 @@ final class MediaTypes extends AbstractConstants
 
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public static function getConfig(): array
     {
         $prefix = '';
 
         return [
-            static::FILE    => [$prefix . static::FILE,    '125955'],
-            static::IMAGE   => [$prefix . static::IMAGE,   'e6ab2e'],
-            static::SVG     => [$prefix . static::SVG,     'e6ab2e'],
-            static::VIDEO   => [$prefix . static::VIDEO,   'de4935'],
-            static::FLASH   => [$prefix . static::FLASH,   'de4935'],
-            static::AUDIO   => [$prefix . static::AUDIO,   'b1212a'],
-            static::ARCHIVE => [$prefix . static::ARCHIVE, '63996b'],
+            self::FILE    => [$prefix . self::FILE,    '125955'],
+            self::IMAGE   => [$prefix . self::IMAGE,   'e6ab2e'],
+            self::SVG     => [$prefix . self::SVG,     'e6ab2e'],
+            self::VIDEO   => [$prefix . self::VIDEO,   'de4935'],
+            self::FLASH   => [$prefix . self::FLASH,   'de4935'],
+            self::AUDIO   => [$prefix . self::AUDIO,   'b1212a'],
+            self::ARCHIVE => [$prefix . self::ARCHIVE, '63996b'],
         ];
     }
 
@@ -45,33 +50,30 @@ final class MediaTypes extends AbstractConstants
      *
      * @return string
      */
-    public static function guessByMimeType($mimeType)
+    public static function guessByMimeType($mimeType): string
     {
         if ($mimeType === 'image/svg+xml') {
-            return static::SVG;
+            return self::SVG;
         }
 
         switch (substr($mimeType, 0, strpos($mimeType, '/'))) {
             case 'audio' :
-                return static::AUDIO;
-                break;
+                return self::AUDIO;
             case 'image' :
-                return static::IMAGE;
-                break;
+                return self::IMAGE;
             case 'video' :
-                return static::VIDEO;
-                break;
+                return self::VIDEO;
         }
 
         if (preg_match('~zip|rar|compress~', $mimeType)) {
-            return static::ARCHIVE;
+            return self::ARCHIVE;
         }
 
         if ($mimeType === 'application/x-shockwave-flash') {
-            return static::FLASH;
+            return self::FLASH;
         }
 
-        return static::FILE;
+        return self::FILE;
     }
 
     /**
@@ -89,10 +91,10 @@ final class MediaTypes extends AbstractConstants
      *
      * @return string
      */
-    public static function getColor($type)
+    public static function getColor(string $type): string
     {
-        if (static::isValid($type)) {
-            return static::getConfig()[$type][1];
+        if (self::isValid($type)) {
+            return self::getConfig()[$type][1];
         }
 
         return '595959';
@@ -105,9 +107,9 @@ final class MediaTypes extends AbstractConstants
      *
      * @return bool
      */
-    public static function isFile(MediaInterface $media)
+    public static function isFile(MediaInterface $media): bool
     {
-        return $media->getType() === static::FILE;
+        return $media->getType() === self::FILE;
     }
 
     /**
@@ -117,9 +119,9 @@ final class MediaTypes extends AbstractConstants
      *
      * @return bool
      */
-    public static function isImage(MediaInterface $media)
+    public static function isImage(MediaInterface $media): bool
     {
-        return $media->getType() === static::IMAGE;
+        return $media->getType() === self::IMAGE;
     }
 
     /**
@@ -129,9 +131,9 @@ final class MediaTypes extends AbstractConstants
      *
      * @return bool
      */
-    public static function isSvg(MediaInterface $media)
+    public static function isSvg(MediaInterface $media): bool
     {
-        return $media->getType() === static::SVG;
+        return $media->getType() === self::SVG;
     }
 
     /**
@@ -141,9 +143,9 @@ final class MediaTypes extends AbstractConstants
      *
      * @return bool
      */
-    public static function isVideo(MediaInterface $media)
+    public static function isVideo(MediaInterface $media): bool
     {
-        return $media->getType() === static::VIDEO;
+        return $media->getType() === self::VIDEO;
     }
 
     /**
@@ -153,9 +155,9 @@ final class MediaTypes extends AbstractConstants
      *
      * @return bool
      */
-    public static function isFlash(MediaInterface $media)
+    public static function isFlash(MediaInterface $media): bool
     {
-        return $media->getType() === static::FLASH;
+        return $media->getType() === self::FLASH;
     }
 
     /**
@@ -165,9 +167,9 @@ final class MediaTypes extends AbstractConstants
      *
      * @return bool
      */
-    public static function isAudio(MediaInterface $media)
+    public static function isAudio(MediaInterface $media): bool
     {
-        return $media->getType() === static::AUDIO;
+        return $media->getType() === self::AUDIO;
     }
 
     /**
@@ -177,8 +179,8 @@ final class MediaTypes extends AbstractConstants
      *
      * @return bool
      */
-    public static function isArchive(MediaInterface $media)
+    public static function isArchive(MediaInterface $media): bool
     {
-        return $media->getType() === static::ARCHIVE;
+        return $media->getType() === self::ARCHIVE;
     }
 }

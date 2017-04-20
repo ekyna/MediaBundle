@@ -1,12 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Show\Type;
 
-use Ekyna\Bundle\AdminBundle\Show\Exception\InvalidArgumentException;
+use Ekyna\Bundle\AdminBundle\Show\Exception\UnexpectedTypeException;
 use Ekyna\Bundle\AdminBundle\Show\Type\AbstractType;
 use Ekyna\Bundle\AdminBundle\Show\View;
-use Ekyna\Bundle\MediaBundle\Entity\MediaRepository;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
+use Ekyna\Bundle\MediaBundle\Repository\MediaRepositoryInterface;
+
+use function is_numeric;
 
 /**
  * Class MediaType
@@ -15,18 +19,15 @@ use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
  */
 class MediaType extends AbstractType
 {
-    /**
-     * @var MediaRepository
-     */
-    private $repository;
+    private MediaRepositoryInterface $repository;
 
 
     /**
      * Constructor.
      *
-     * @param MediaRepository $repository
+     * @param MediaRepositoryInterface $repository
      */
-    public function __construct(MediaRepository $repository)
+    public function __construct(MediaRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }
@@ -34,14 +35,14 @@ class MediaType extends AbstractType
     /**
      * @inheritDoc
      */
-    public function build(View $view, $value, array $options = [])
+    public function build(View $view, $value, array $options = []): void
     {
         if (is_numeric($value)) {
-            $value = $this->repository->find($value);
+            $value = $this->repository->find((int)$value);
         }
 
         if ($value && !$value instanceof MediaInterface) {
-            throw new InvalidArgumentException("Expected instance of " . MediaInterface::class);
+            throw new UnexpectedTypeException($value, MediaInterface::class);
         }
 
         parent::build($view, $value, $options);
@@ -50,8 +51,8 @@ class MediaType extends AbstractType
     /**
      * @inheritDoc
      */
-    public function getWidgetPrefix()
+    public static function getName(): string
     {
-        return 'media';
+        return 'media_media';
     }
 }

@@ -1,7 +1,0 @@
-ekyna_media_browser_admin:
-    resource: "admin/browser.yml"
-    prefix:   /media-browser
-
-ekyna_media_media_admin:
-    resource: "admin/media.yml"
-    prefix:   /medias

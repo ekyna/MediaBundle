@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Validator\Constraints;
 
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+
+use function in_array;
 
 /**
  * Class MediaTypesValidator
@@ -15,22 +19,22 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 class MediaTypesValidator extends ConstraintValidator
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function validate($media, Constraint $constraint)
+    public function validate($value, Constraint $constraint)
     {
-        if (null === $media) {
+        if (null === $value) {
             return;
         }
 
-        if (!$media instanceof MediaInterface) {
-            throw new UnexpectedTypeException($media, MediaInterface::class);
+        if (!$value instanceof MediaInterface) {
+            throw new UnexpectedTypeException($value, MediaInterface::class);
         }
         if (!$constraint instanceof MediaTypes) {
             throw new UnexpectedTypeException($constraint, MediaTypes::class);
         }
 
-        if (!in_array($media->getType(), $constraint->types, true)) {
+        if (!in_array($value->getType(), $constraint->types, true)) {
             $this->context->addViolation(
                 $constraint->invalidType
             );

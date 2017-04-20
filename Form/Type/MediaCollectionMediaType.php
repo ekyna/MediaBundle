@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Form\Type;
 
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
@@ -16,7 +18,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class MediaCollectionMediaType extends AbstractType
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -39,7 +41,7 @@ class MediaCollectionMediaType extends AbstractType
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -61,13 +63,13 @@ class MediaCollectionMediaType extends AbstractType
                     }
                 }
                 return true;
-            });;
+            });
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'ekyna_media_collection_media';
     }

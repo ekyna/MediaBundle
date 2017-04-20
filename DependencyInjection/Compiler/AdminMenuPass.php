@@ -1,41 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\DependencyInjection\Compiler;
 
-use Ekyna\Bundle\AdminBundle\Menu\MenuPool;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Ekyna\Bundle\CmsBundle\DependencyInjection\Compiler\AdminMenuPass as CmsPass;
+use Ekyna\Bundle\MediaBundle\Action\Admin\MediaListAction;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Class AdminMenuPass
  * @package Ekyna\Bundle\MediaBundle\DependencyInjection\Compiler
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class AdminMenuPass implements CompilerPassInterface
 {
-    /**
-     * @inheritdoc
-     */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
-        if (!$container->hasDefinition(MenuPool::class)) {
-            return;
-        }
+        $pool = $container->getDefinition('ekyna_admin.menu.pool');
 
-        $pool = $container->getDefinition(MenuPool::class);
+        $pool->addMethodCall('createGroup', [CmsPass::GROUP]);
 
-        $pool->addMethodCall('createGroup', [[
-            'name'     => 'content',
-            'label'    => 'ekyna_core.field.content',
-            'icon'     => 'file',
-            'position' => 20,
-        ]]);
-        $pool->addMethodCall('createEntry', ['content', [
-            'name'     => 'medias',
-            'route'    => 'ekyna_media_media_admin_list',
-            'label'    => 'ekyna_media.media.label.plural',
-            'resource' => 'ekyna_media_media',
-            'position' => 91,
-        ]]);
+        $pool->addMethodCall('createEntry', [
+            'content',
+            [
+                'name'     => 'media',
+                'resource' => 'ekyna_media.media',
+                'action'   => MediaListAction::class,
+                'position' => 80,
+            ],
+        ]);
     }
 }

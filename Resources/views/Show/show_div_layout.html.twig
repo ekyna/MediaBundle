@@ -1,14 +1,14 @@
-{% block widget_attributes -%}{% for key, value in attr %} {{ key }}="{{ value }}"{% endfor -%}{% endblock widget_attributes %}
+{% use '@EkynaAdmin/Show/show_div_layout.html.twig' %}
 
-{% block media_widget %}
-{% apply spaceless %}
+{% block media_media_widget -%}
+{% apply spaceless -%}
     {{ value|media_thumb }}
-{% endapply %}
-{% endblock media_widget %}
+{%- endapply %}
+{%- endblock media_media_widget %}
 
 
-{% block medias_widget %}
-{% apply spaceless %}
+{% block media_medias_widget -%}
+{% apply spaceless -%}
     {% set attr = attr|merge({'class': ('show-widget show-widget-block ' ~ attr.class|default(''))|trim }) %}
     <div{{ block('widget_attributes') }}>
         {% for media in value %}
@@ -17,5 +17,5 @@
             {{ null|media_thumb }}
         {% endfor %}
     </div>
-{% endapply %}
-{% endblock medias_widget %}
+{%- endapply %}
+{%- endblock media_medias_widget %}

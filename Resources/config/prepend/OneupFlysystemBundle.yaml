@@ -2,10 +2,10 @@ oneup_flysystem:
     adapters:
         local_media:
             local:
-                directory: "%kernel.data_dir%/media"
+                location: "%kernel.data_dir%/media"
         local_video:
             local:
-                directory: "%kernel.project_dir%/web/%ekyna_media.video.directory%"
+                location: "%kernel.project_dir%/public/%ekyna_media.video.directory%"
     filesystems:
         local_media:
             adapter: local_media

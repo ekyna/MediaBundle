@@ -1,0 +1,10 @@
+{% apply spaceless %}
+    <div class="panel-body form-body">
+        {{ bootstrap_set_style('horizontal') }}
+        {{ bootstrap_set_col_size('md') }}
+        {{ form_errors(form, {'global_errors': true}) }}
+        {{ form_widget(form) }}
+        {{ form_rest(form) }}
+        {% include '@EkynaAdmin/Form/form_flow_buttons.html.twig' %}
+    </div>
+{% endapply %}

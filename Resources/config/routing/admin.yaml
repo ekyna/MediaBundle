@@ -1,0 +1,3 @@
+admin_media_browser:
+    resource: "admin/browser.yaml"
+    prefix:   /media-browser

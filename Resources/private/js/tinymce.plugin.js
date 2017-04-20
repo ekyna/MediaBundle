@@ -7,17 +7,13 @@ tinymce.PluginManager.add('filemanager', function (editor) {
             title = editor.settings.filemanager_title;
         }
 
-        var path = '';
-        if (/\/app_dev\.php\//.test(window.location.href)) {
-            path = '/app_dev.php';
-        }
-        path += '/admin/content/media-browser?mode=tinymce';
-
+        var path = '/admin/content/media-browser?mode=tinymce';
         if (type === 'image') {
-            path = path + '&types[]=image&types[]=svg';
+            path += '&types[]=image&types[]=svg';
         } else if (type === 'media') {
-            path = path + '&types[]=video&types[]=audio'
+            path += '&types[]=video&types[]=audio'
         }
+
         tinymce.activeEditor.windowManager.open({
             title: title,
             file: path,
@@ -46,7 +42,7 @@ tinymce.PluginManager.add('filemanager', function (editor) {
 
         xhr = new XMLHttpRequest();
         xhr.withCredentials = false;
-        xhr.open('POST', "/app_dev.php/tinymce/upload");
+        xhr.open('POST', "/tinymce/upload");
         //xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 

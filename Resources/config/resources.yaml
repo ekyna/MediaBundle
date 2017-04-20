@@ -1,0 +1,64 @@
+namespaces:
+    ekyna_media:
+        label: label
+        prefix: /media
+        trans_domain: EkynaMedia
+
+resources:
+    ekyna_media:
+        folder:
+            driver: doctrine/orm
+            entity:
+                interface: Ekyna\Bundle\MediaBundle\Model\FolderInterface
+                class: Ekyna\Bundle\MediaBundle\Entity\Folder
+            repository:
+                interface: Ekyna\Bundle\MediaBundle\Repository\FolderRepositoryInterface
+                class: Ekyna\Bundle\MediaBundle\Repository\FolderRepository
+            manager:
+                interface: Ekyna\Bundle\MediaBundle\Manager\FolderManagerInterface
+                class: Ekyna\Bundle\MediaBundle\Manager\FolderManager
+            factory:
+                interface: Ekyna\Bundle\MediaBundle\Factory\FolderFactoryInterface
+                class: Ekyna\Bundle\MediaBundle\Factory\FolderFactory
+            normalizer: Ekyna\Bundle\MediaBundle\Service\Serializer\FolderNormalizer
+            trans_domain: EkynaMedia
+
+        media:
+            driver: doctrine/orm
+            entity:
+                interface: Ekyna\Bundle\MediaBundle\Model\MediaInterface
+                class: Ekyna\Bundle\MediaBundle\Entity\Media
+            repository:
+                interface: Ekyna\Bundle\MediaBundle\Repository\MediaRepositoryInterface
+                class: Ekyna\Bundle\MediaBundle\Repository\MediaRepository
+            manager:
+                interface: Ekyna\Bundle\MediaBundle\Manager\MediaManagerInterface
+                class: Ekyna\Bundle\MediaBundle\Manager\MediaManager
+            factory:
+                interface: Ekyna\Bundle\MediaBundle\Factory\MediaFactoryInterface
+                class: Ekyna\Bundle\MediaBundle\Factory\MediaFactory
+            normalizer: Ekyna\Bundle\MediaBundle\Service\Serializer\MediaNormalizer
+            form: Ekyna\Bundle\MediaBundle\Form\Type\MediaType
+            table: Ekyna\Bundle\MediaBundle\Table\Type\MediaType
+            trans_domain: EkynaMedia
+            translation:
+                interface: Ekyna\Bundle\MediaBundle\Model\MediaTranslationInterface
+                class: Ekyna\Bundle\MediaBundle\Entity\MediaTranslation
+                fields: [title, description]
+            actions:
+                admin_crud:
+                    list: false
+                    create:
+                        expose: true
+                    read:
+                        template: '@EkynaMedia/Admin/Media/read.html.twig'
+                        expose: true
+                    update:
+                        expose: true
+                    delete:
+                        expose: true
+                Ekyna\Bundle\MediaBundle\Action\Admin\MediaListAction:
+                    template: '@EkynaMedia/Admin/Media/list.html.twig'
+            behaviors:
+                uploadable:
+                    uploader: ekyna_media.uploader

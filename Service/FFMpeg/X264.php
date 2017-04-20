@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Service\FFMpeg;
 
 use FFMpeg\Format\Video\DefaultVideo;
@@ -11,10 +13,15 @@ use FFMpeg\Format\Video\DefaultVideo;
  */
 class X264 extends DefaultVideo
 {
-    /** @var boolean */
-    private $bframesSupport = true;
+    private bool $bFramesSupport = true;
 
-    public function __construct($audioCodec = 'aac', $videoCodec = 'libx264')
+    /**
+     * Constructor.
+     *
+     * @param string $audioCodec
+     * @param string $videoCodec
+     */
+    public function __construct(string $audioCodec = 'aac', string $videoCodec = 'libx264')
     {
         $this
             ->setAudioCodec($audioCodec)
@@ -22,43 +29,43 @@ class X264 extends DefaultVideo
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function supportBFrames()
+    public function supportBFrames(): bool
     {
-        return $this->bframesSupport;
+        return $this->bFramesSupport;
     }
 
     /**
      * @param $support
      *
-     * @return \FFMpeg\Format\Video\X264
+     * @return X264
      */
-    public function setBFramesSupport($support)
+    public function setBFramesSupport($support): X264
     {
-        $this->bframesSupport = $support;
+        $this->bFramesSupport = $support;
 
         return $this;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getAvailableAudioCodecs()
+    public function getAvailableAudioCodecs(): array
     {
-        return array('aac', 'libvo_aacenc', 'libfaac', 'libmp3lame', 'libfdk_aac');
+        return ['aac', 'libvo_aacenc', 'libfaac', 'libmp3lame', 'libfdk_aac'];
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getAvailableVideoCodecs()
+    public function getAvailableVideoCodecs(): array
     {
-        return array('libx264');
+        return ['libx264'];
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getPasses()
     {
@@ -68,7 +75,7 @@ class X264 extends DefaultVideo
     /**
      * @return int
      */
-    public function getModulus()
+    public function getModulus(): int
     {
         return 2;
     }

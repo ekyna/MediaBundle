@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Form\Type;
 
 use Craue\FormFlowBundle\Form\FormFlow;
 use Ekyna\Bundle\MediaBundle\Form\Type\Step\MediaImportCreationType;
 use Ekyna\Bundle\MediaBundle\Form\Type\Step\MediaImportSelectionType;
+use Ekyna\Bundle\MediaBundle\Model\Import\MediaImport;
+use Exception;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -14,10 +18,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class MediaImportFlow extends FormFlow
 {
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
+    private UrlGeneratorInterface $urlGenerator;
 
 
     /**
@@ -31,9 +32,9 @@ class MediaImportFlow extends FormFlow
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    protected function loadStepsConfig()
+    protected function loadStepsConfig(): array
     {
         return [
             [
@@ -48,20 +49,24 @@ class MediaImportFlow extends FormFlow
     }
 
     /**
-     * @inheritdoc
+     * @param       $step
+     * @param array $options
+     *
+     * @return array
+     * @throws Exception
      */
-    public function getFormOptions($step, array $options = [])
+    public function getFormOptions($step, array $options = []): array
     {
         $options = parent::getFormOptions($step, $options);
 
-        /** @var \Ekyna\Bundle\MediaBundle\Model\Import\MediaImport $import */
+        /** @var MediaImport $import */
         if (null === $import = $this->getFormData()) {
-            throw new \Exception('Initial import object must be set.');
+            throw new Exception('Initial import object must be set.');
         }
 
         $options['validation_groups'] = ['Default']; //, $step == 1 ? 'Selection' : 'Creation'
         $options['action'] = $this->urlGenerator->generate(
-            'ekyna_media_browser_admin_import_media',
+            'admin_ekyna_media_browser_import_media',
             ['id' => $import->getFolder()->getId()]
         );
         $options['method'] = 'post';

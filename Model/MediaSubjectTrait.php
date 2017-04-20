@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Model;
 
 /**
@@ -9,31 +11,20 @@ namespace Ekyna\Bundle\MediaBundle\Model;
  */
 trait MediaSubjectTrait
 {
-    /**
-     * @var MediaInterface
-     */
-    protected $media;
+    protected ?MediaInterface $media = null;
 
 
     /**
-     * Sets the media.
-     *
-     * @param MediaInterface $media
-     * @return MediaSubjectInterface|$this
+     * @return $this|MediaSubjectInterface
      */
-    public function setMedia(MediaInterface $media = null)
+    public function setMedia(?MediaInterface $media): MediaSubjectInterface
     {
         $this->media = $media;
 
         return $this;
     }
 
-    /**
-     * Returns the media.
-     *
-     * @return MediaInterface
-     */
-    public function getMedia()
+    public function getMedia(): ?MediaInterface
     {
         return $this->media;
     }

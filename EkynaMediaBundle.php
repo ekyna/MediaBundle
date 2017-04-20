@@ -1,36 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle;
 
-use Ekyna\Bundle\ResourceBundle\AbstractBundle;
 use Ekyna\Bundle\MediaBundle\DependencyInjection\Compiler\AdminMenuPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Ekyna\Bundle\MediaBundle\Model;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Class EkynaMediaBundle
  * @package Ekyna\Bundle\MediaBundle
  * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-class EkynaMediaBundle extends AbstractBundle
+class EkynaMediaBundle extends Bundle
 {
-    /**
-     * @inheritdoc
-     */
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
-        parent::build($container);
-
         $container->addCompilerPass(new AdminMenuPass());
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function getModelInterfaces()
-    {
-        return [
-            Model\MediaInterface::class => 'ekyna_media.media.class',
-        ];
     }
 }

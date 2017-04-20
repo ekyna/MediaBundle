@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Command;
 
-use Ekyna\Bundle\MediaBundle\Entity\MediaRepository;
 use Ekyna\Bundle\MediaBundle\Model\MediaFormats;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
+use Ekyna\Bundle\MediaBundle\Repository\MediaRepositoryInterface;
 use Ekyna\Bundle\MediaBundle\Service\VideoManager;
-use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,24 +23,11 @@ class ConvertVideoCommand extends Command
 {
     protected static $defaultName = 'ekyna:media:convert_video';
 
-    /**
-     * @var MediaRepository
-     */
-    private $repository;
-
-    /**
-     * @var VideoManager
-     */
-    private $manager;
+    private MediaRepositoryInterface $repository;
+    private VideoManager $manager;
 
 
-    /**
-     * Constructor.
-     *
-     * @param MediaRepository $repository
-     * @param VideoManager    $manager
-     */
-    public function __construct(MediaRepository $repository, VideoManager $manager)
+    public function __construct(MediaRepositoryInterface $repository, VideoManager $manager)
     {
         parent::__construct();
 
@@ -47,10 +35,7 @@ class ConvertVideoCommand extends Command
         $this->manager    = $manager;
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->addArgument('id', InputArgument::REQUIRED, 'The video id.')
@@ -58,13 +43,14 @@ class ConvertVideoCommand extends Command
             ->addOption('override', 'o', InputOption::VALUE_NONE, 'Whether to override existing conversions.');
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (!$video = $this->repository->find($input->getArgument('id'))) {
-            throw new Exception("Media not found");
+        $id = (int)$input->getArgument('id');
+
+        if (!$video = $this->repository->find($id)) {
+            $output->writeln('Media not found');
+
+            return Command::FAILURE;
         }
 
         $formats = $input->getOption('format');
@@ -72,7 +58,7 @@ class ConvertVideoCommand extends Command
             $formats = MediaFormats::getFormatsByType(MediaTypes::VIDEO);
         }
 
-        $override = $input->getOption('override');
+        $override = (bool)$input->getOption('override');
 
         foreach ($formats as $format) {
             $output->write('Converting to <comment>' . strtoupper($format) . '</comment> ... ');
@@ -81,5 +67,7 @@ class ConvertVideoCommand extends Command
 
             $output->writeln('<info>done</info>');
         }
+
+        return Command::SUCCESS;
     }
 }

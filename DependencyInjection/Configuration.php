@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -14,72 +15,54 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 class Configuration implements ConfigurationInterface
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('ekyna_media');
+        $builder = new TreeBuilder('ekyna_media');
 
-        $rootNode
+        $root = $builder->getRootNode();
+
+        $root
             ->children()
+                ->arrayNode('image')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('quality')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->integerNode('jpeg')->defaultValue(80)->end()
+                                ->integerNode('png')->defaultValue(80)->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('video')
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('directory')->defaultValue('cache/video')->end()
                         ->scalarNode('watermark')->defaultNull()->end()
                         ->scalarNode('pending')->defaultNull()->end()
                     ->end()
                 ->end()
-            ->end()
-        ;
-
-        $this->addPoolsSection($rootNode);
-
-        return $treeBuilder;
-    }
-
-    /**
-     * Adds `pools` section.
-     *
-     * @param ArrayNodeDefinition $node
-     */
-    private function addPoolsSection(ArrayNodeDefinition $node)
-    {
-        $node
-            ->children()
-                ->arrayNode('pools')
+                ->arrayNode('ffmpeg')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->arrayNode('media')
-                            ->addDefaultsIfNotSet()
-                            ->children()
-                                ->variableNode('templates')->defaultValue([
-                                    'list.html'  => '@EkynaMedia/Admin/Media/list.html',
-                                    'show.html'  => '@EkynaMedia/Admin/Media/show.html',
-                                ])->end()
-                                ->scalarNode('entity')->defaultValue('Ekyna\Bundle\MediaBundle\Entity\Media')->end()
-                                ->scalarNode('controller')->defaultValue('Ekyna\Bundle\MediaBundle\Controller\Admin\MediaController')->end()
-                                ->scalarNode('repository')->defaultValue('Ekyna\Bundle\MediaBundle\Entity\MediaRepository')->end()
-                                ->scalarNode('form')->defaultValue('Ekyna\Bundle\MediaBundle\Form\Type\MediaType')->end()
-                                ->scalarNode('table')->defaultValue('Ekyna\Bundle\MediaBundle\Table\Type\MediaType')->end()
-                                ->scalarNode('event')->end()
-                                ->scalarNode('parent')->end()
-                                ->arrayNode('translation')
-                                    ->addDefaultsIfNotSet()
-                                    ->children()
-                                        ->scalarNode('entity')->defaultValue('Ekyna\Bundle\MediaBundle\Entity\MediaTranslation')->end()
-                                        ->scalarNode('repository')->end()
-                                        ->arrayNode('fields')
-                                            ->prototype('scalar')->end()
-                                            ->defaultValue(['title', 'description'])
-                                        ->end()
-                                    ->end()
-                                ->end()
-                            ->end()
+                        ->scalarNode('ffmpeg_binary')
+                            ->defaultValue('/usr/local/bin/ffmpeg')
+                            ->isRequired()
                         ->end()
+                        ->scalarNode('ffprobe_binary')
+                            ->defaultValue('/usr/local/bin/ffprobe')
+                            ->isRequired()
+                        ->end()
+                        ->integerNode('binary_timeout')->defaultValue(60)->end()
+                        ->integerNode('threads_count')->defaultValue(4)->end()
                     ->end()
                 ->end()
             ->end()
         ;
+
+        return $builder;
     }
 }

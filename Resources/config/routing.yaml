@@ -1,10 +1,10 @@
-ekyna_media_admin:
-    resource: "routing/admin.yml"
-    prefix:   /admin/content
+admin_media:
+    resource: 'routing/admin.yaml'
+    prefix:   '/%ekyna_admin.routing_prefix%/content'
 
 ekyna_media_download:
     path: /media/download/{key}
-    defaults: { _controller: "EkynaMediaBundle:Media:download" }
+    controller: Ekyna\Bundle\MediaBundle\Controller\MediaController::download
     methods: [GET]
     requirements:
         key: '[a-z0-9-\./]+'
@@ -12,7 +12,7 @@ ekyna_media_download:
 
 ekyna_media_player:
     path: /media/player/{key}
-    defaults: { _controller: "EkynaMediaBundle:Media:player" }
+    controller: Ekyna\Bundle\MediaBundle\Controller\MediaController::player
     methods: [GET]
     requirements:
         key: '[a-z0-9-\./]+'
@@ -20,16 +20,11 @@ ekyna_media_player:
 
 ekyna_media_video:
     path: /media/video/{key}.{_format}
-    defaults: { _controller: "EkynaMediaBundle:Media:video" }
+    controller: Ekyna\Bundle\MediaBundle\Controller\MediaController::download
     methods: [GET]
     requirements:
         key: '[a-z0-9-\./]+'
         _format: mp4|webm|ogg
 
 _liip_imagine:
-    resource: "@LiipImagineBundle/Resources/config/routing.yaml"
-
-_oneup_uploader:
-    resource: .
-    type: uploader
-    options: { i18n: false }
+    resource: '@LiipImagineBundle/Resources/config/routing.yaml'

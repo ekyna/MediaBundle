@@ -1,14 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\DataFixtures\ORM;
 
-use Ekyna\Bundle\CoreBundle\DataFixtures\ORM\Fixtures;
-use Ekyna\Bundle\MediaBundle\Entity\MediaRepository;
 use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
-use Ekyna\Bundle\MediaBundle\Model\FolderRepositoryInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
+use Ekyna\Bundle\MediaBundle\Repository\FolderRepositoryInterface;
+use Ekyna\Bundle\MediaBundle\Repository\MediaRepository;
+use InvalidArgumentException;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+
+use function copy;
+use function is_file;
+use function pathinfo;
+use function sprintf;
+use function sys_get_temp_dir;
+use function uniqid;
+
+use const PATHINFO_BASENAME;
+use const PATHINFO_EXTENSION;
 
 /**
  * Class MediaProvider
@@ -17,25 +30,13 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class MediaProvider
 {
-    /**
-     * @var FolderRepositoryInterface
-     */
-    private $folderRepository;
+    private FolderRepositoryInterface $folderRepository;
+    private MediaRepository           $mediaRepository;
 
-    /**
-     * @var MediaRepository
-     */
-    private $mediaRepository;
-
-
-    /**
-     * Constructor.
-     *
-     * @param FolderRepositoryInterface $folderRepository
-     * @param MediaRepository           $mediaRepository
-     */
-    public function __construct(FolderRepositoryInterface $folderRepository, MediaRepository $mediaRepository)
-    {
+    public function __construct(
+        FolderRepositoryInterface $folderRepository,
+        MediaRepository $mediaRepository
+    ) {
         $this->folderRepository = $folderRepository;
         $this->mediaRepository = $mediaRepository;
     }
@@ -64,8 +65,8 @@ class MediaProvider
     /**
      * Fake upload the media file.
      *
-     * @param string $path
-     * @param int    $num
+     * @param string   $path
+     * @param int|null $num
      *
      * @return UploadedFile
      */
@@ -75,16 +76,19 @@ class MediaProvider
             $path = sprintf($path, $num);
         }
 
-        return Fixtures::uploadFile(__DIR__ . '/../../Resources/fixtures/' . $path);
-    }
+        $path = __DIR__ . "/../../Resources/fixtures/media/$path";
 
-    /**
-     * Returns the media fixtures root directory.
-     *
-     * @return string
-     */
-    public function mediaFixturesRoot(): string
-    {
-        return __DIR__ . '/../../Resources/fixtures';
+        if (!is_file($path)) {
+            throw new InvalidArgumentException(sprintf('Source file %s not found.', $path));
+        }
+
+        $fileName = pathinfo($path, PATHINFO_BASENAME);
+        $target = sys_get_temp_dir() . '/' . uniqid() . '.' . pathinfo($path, PATHINFO_EXTENSION);
+
+        if (!copy($path, $target)) {
+            throw new RuntimeException(sprintf('Failed to copy %s file.', $fileName));
+        }
+
+        return new UploadedFile($target, $fileName, null, null, true); // Last arg fakes the upload test
     }
 }

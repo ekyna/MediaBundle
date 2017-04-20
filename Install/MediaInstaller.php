@@ -1,43 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Install;
 
 use Ekyna\Bundle\InstallBundle\Install\AbstractInstaller;
-use Ekyna\Bundle\MediaBundle\Entity\Folder;
-use Ekyna\Bundle\InstallBundle\Install\OrderedInstallerInterface;
+use Ekyna\Bundle\MediaBundle\Factory\FolderFactoryInterface;
+use Ekyna\Bundle\MediaBundle\Manager\FolderManagerInterface;
 use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
+use Ekyna\Bundle\MediaBundle\Repository\FolderRepositoryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class MediaInstaller
  * @package Ekyna\Bundle\MediaBundle\Install
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-class MediaInstaller extends AbstractInstaller implements OrderedInstallerInterface, ContainerAwareInterface
+class MediaInstaller extends AbstractInstaller
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    private FolderRepositoryInterface $repository;
+    private FolderManagerInterface    $manager;
+    private FolderFactoryInterface    $factory;
+
 
     /**
-     * Sets the container.
+     * Constructor.
      *
-     * @param ContainerInterface $container
+     * @param FolderRepositoryInterface $repository
+     * @param FolderManagerInterface    $manager
+     * @param FolderFactoryInterface    $factory
      */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
+    public function __construct(
+        FolderRepositoryInterface $repository,
+        FolderManagerInterface $manager,
+        FolderFactoryInterface $factory
+    ) {
+        $this->repository = $repository;
+        $this->manager = $manager;
+        $this->factory = $factory;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function install(Command $command, InputInterface $input, OutputInterface $output)
+    public function install(Command $command, InputInterface $input, OutputInterface $output): void
     {
         $output->writeln('<info>[Media] Creating root folder:</info>');
         $this->createRootFolders($output);
@@ -49,44 +57,35 @@ class MediaInstaller extends AbstractInstaller implements OrderedInstallerInterf
      *
      * @param OutputInterface $output
      */
-    private function createRootFolders(OutputInterface $output)
+    private function createRootFolders(OutputInterface $output): void
     {
-        $em = $this->container->get('doctrine.orm.default_entity_manager');
-        $repository = $this->container->get('ekyna_media.folder.repository');
-
         $name = FolderInterface::ROOT;
+
         $output->write(sprintf(
             '- <comment>%s</comment> %s ',
             ucfirst($name),
             str_pad('.', 44 - mb_strlen($name), '.', STR_PAD_LEFT)
         ));
 
-        if (null !== $folder = $repository->findRoot()) {
+        if ($this->repository->findRoot()) {
             $output->writeln('already exists.');
-        } else {
-            $folder = new Folder();
-            $folder->setName($name);
 
-            $em->persist($folder);
-            $em->flush();
-
-            $output->writeln('created.');
+            return;
         }
+
+        $folder = $this->factory->create();
+        $folder->setName($name);
+
+        $this->manager->save($folder);
+
+        $output->writeln('created.');
     }
 
     /**
      * @inheritDoc
      */
-    public function getName()
+    public static function getName(): string
     {
         return 'ekyna_media';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getOrder()
-    {
-        return -512;
     }
 }

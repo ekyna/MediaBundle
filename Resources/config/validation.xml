@@ -13,7 +13,7 @@
     </class>
 
     <class name="Ekyna\Bundle\MediaBundle\Entity\Media">
-        <constraint name="Ekyna\Bundle\CoreBundle\Validator\Constraints\Uploadable" />
+        <constraint name="Ekyna\Bundle\ResourceBundle\Validator\Constraints\Uploadable" />
         <constraint name="Ekyna\Bundle\MediaBundle\Validator\Constraints\Media" />
         <property name="file">
             <constraint name="File" />

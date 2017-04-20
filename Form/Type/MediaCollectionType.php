@@ -1,14 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Form\Type;
 
-use Ekyna\Bundle\CoreBundle\Form\Type\CollectionType;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
+use Ekyna\Bundle\UiBundle\Form\Type\CollectionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+
+use function is_array;
+use function is_string;
 
 /**
  * Class MediaCollectionType
@@ -18,7 +23,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class MediaCollectionType extends AbstractType
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
@@ -29,7 +34,7 @@ class MediaCollectionType extends AbstractType
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -69,17 +74,17 @@ class MediaCollectionType extends AbstractType
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return CollectionType::class;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'ekyna_media_collection';
     }

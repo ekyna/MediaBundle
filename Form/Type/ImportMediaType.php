@@ -1,12 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Form\Type;
 
 use A2lix\TranslationFormBundle\Form\Type\TranslationsFormsType;
-use Braincrafted\Bundle\BootstrapBundle\Form\Type\FormStaticControlType;
+use Ekyna\Bundle\UiBundle\Form\Type\FormStaticControlType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+
+use function Symfony\Component\Translation\t;
 
 /**
  * Class ImportMediaType
@@ -15,30 +19,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ImportMediaType extends AbstractType
 {
-    /**
-     * @var string
-     */
-    private $dataClass;
+    private string $dataClass;
 
-
-    /**
-     * Constructor.
-     *
-     * @param string $dataClass
-     */
-    public function __construct($dataClass)
+    public function __construct(string $dataClass)
     {
         $this->dataClass = $dataClass;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('key', FormStaticControlType::class, [
-                'label' => 'Fichier',
+                'label' => t('field.file', [], 'EkynaUi'),
             ])
             ->add('translations', TranslationsFormsType::class, [
                 'form_type' => MediaTranslationType::class,
@@ -49,14 +41,8 @@ class ImportMediaType extends AbstractType
             ]);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver
-            ->setDefaults([
-                'data_class' => $this->dataClass,
-            ]);
+        $resolver->setDefault('data_class', $this->dataClass);
     }
 }

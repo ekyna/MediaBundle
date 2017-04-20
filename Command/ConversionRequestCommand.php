@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,53 +23,32 @@ class ConversionRequestCommand extends Command
 {
     protected static $defaultName = 'ekyna:media:conversion_request';
 
-    /**
-     * @var ConversionRequestRepository
-     */
-    private $repository;
-
-    /**
-     * @var VideoManager
-     */
-    private $converter;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $manager;
+    private ConversionRequestRepository $repository;
+    private VideoManager                $converter;
+    private EntityManagerInterface      $manager;
+    private bool                        $debug;
 
 
-    /**
-     * Constructor.
-     *
-     * @param ConversionRequestRepository $repository
-     * @param VideoManager                $converter
-     * @param EntityManagerInterface      $manager
-     */
     public function __construct(
         ConversionRequestRepository $repository,
         VideoManager $converter,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        bool $debug = false
     ) {
         parent::__construct();
 
         $this->repository = $repository;
-        $this->converter  = $converter;
-        $this->manager    = $manager;
+        $this->converter = $converter;
+        $this->manager = $manager;
+        $this->debug = $debug;
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this->addArgument('id', InputArgument::OPTIONAL, 'The request ID');
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $id = $input->getArgument('id');
 
@@ -76,33 +57,33 @@ class ConversionRequestCommand extends Command
             if (null === $request = $this->repository->find($id)) {
                 $output->writeln('Request not found');
 
-                return 1;
+                return Command::FAILURE;
             }
 
             if ($request->getState() === ConversionRequest::STATE_RUNNING) {
                 $output->writeln('Request is already running');
 
-                return 0;
+                return Command::SUCCESS;
             }
 
             $this->convert($request);
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         // Abort if another request is running
         if ($this->repository->findRunning()) {
-            return 0;
+            return Command::SUCCESS;
         }
 
         // Abort if no other request to run
         if (!$request = $this->repository->findNext()) {
-            return 0;
+            return Command::SUCCESS;
         }
 
         $this->convert($request);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function convert(ConversionRequest $request): void
@@ -123,14 +104,19 @@ class ConversionRequestCommand extends Command
         try {
             $this->converter->convertVideo($media, $format);
             $success = true;
-        } catch (Throwable $t) {
+        } catch (Throwable $throwable) {
+            if ($this->debug) {
+                /** @noinspection PhpUnhandledExceptionInspection */
+                throw $throwable;
+            }
+
             $success = false;
         }
 
         // If request has been deleted, abort
         if (!$request = $this->repository->find($id)) {
             // The media has been deleted -> clear converted video
-            @unlink($this->converter->getConvertedPath($media, $format));
+            unlink($this->converter->getConvertedPath($media, $format));
 
             return;
         }

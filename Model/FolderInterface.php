@@ -1,179 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Model;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Ekyna\Component\Resource\Model\TreeInterface;
 
 /**
  * Interface FolderInterface
  * @package Ekyna\Bundle\MediaBundle\Model
  * @author  Étienne Dauvergne <contact@ekyna.com>
+ *
+ * @method Collection|FolderInterface[] getChildren()
+ * @method FolderInterface|null getParent()
  */
-interface FolderInterface
+interface FolderInterface extends TreeInterface
 {
-    const ROOT = 'Medias';
+    public const ROOT = 'Medias';
+
 
     /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId();
-
-    /**
-     * Set name
+     * Sets the name.
      *
      * @param string $name
      *
-     * @return FolderInterface|$this
+     * @return $this|FolderInterface
      */
-    public function setName($name);
+    public function setName(string $name): FolderInterface;
 
     /**
-     * Get name
+     * Returns the name.
      *
      * @return string
      */
-    public function getName();
-
-    /**
-     * Sets the left.
-     *
-     * @param int $left
-     *
-     * @return FolderInterface|$this
-     */
-    public function setLeft($left);
-
-    /**
-     * Returns the left.
-     *
-     * @return int
-     */
-    public function getLeft();
-
-    /**
-     * Sets the right.
-     *
-     * @param int $right
-     *
-     * @return FolderInterface|$this
-     */
-    public function setRight($right);
-
-    /**
-     * Returns the right.
-     *
-     * @return int
-     */
-    public function getRight();
-
-    /**
-     * Sets the root.
-     *
-     * @param int $root
-     *
-     * @return FolderInterface|$this
-     */
-    public function setRoot($root);
-
-    /**
-     * Returns the root.
-     *
-     * @return int
-     */
-    public function getRoot();
-
-    /**
-     * Sets the level.
-     *
-     * @param int $level
-     *
-     * @return FolderInterface|$this
-     */
-    public function setLevel($level);
-
-    /**
-     * Returns the level.
-     *
-     * @return int
-     */
-    public function getLevel();
-
-    /**
-     * Sets the parent.
-     *
-     * @param FolderInterface $parent
-     *
-     * @return FolderInterface|$this
-     */
-    public function setParent(FolderInterface $parent = null);
-
-    /**
-     * Returns the parent.
-     *
-     * @return FolderInterface|$this
-     */
-    public function getParent();
-
-    /**
-     * Sets the children.
-     *
-     * @param ArrayCollection|FolderInterface[] $children
-     *
-     * @return FolderInterface|$this
-     */
-    public function setChildren(ArrayCollection $children);
-
-    /**
-     * Returns whether the folder as the child folder or not.
-     *
-     * @param FolderInterface $child
-     *
-     * @return bool
-     */
-    public function hasChild(FolderInterface $child);
-
-    /**
-     * Adds the child folder.
-     *
-     * @param FolderInterface $child
-     *
-     * @return FolderInterface|$this
-     */
-    public function addChild(FolderInterface $child);
-
-    /**
-     * Removes the child folder.
-     *
-     * @param FolderInterface $child
-     *
-     * @return FolderInterface|$this
-     */
-    public function removeChild(FolderInterface $child);
-
-    /**
-     * Returns whether the folder has children or not.
-     *
-     * @return bool
-     */
-    public function hasChildren();
-
-    /**
-     * Returns the children.
-     *
-     * @return ArrayCollection|FolderInterface[]
-     */
-    public function getChildren();
-
-    /**
-     * Sets the medias.
-     *
-     * @param ArrayCollection|MediaInterface[] $medias
-     *
-     * @return FolderInterface|$this
-     */
-    public function setMedias(ArrayCollection $medias);
+    public function getName(): ?string;
 
     /**
      * Returns whether the folder has the given media or not.
@@ -182,53 +43,55 @@ interface FolderInterface
      *
      * @return bool
      */
-    public function hasMedia(MediaInterface $media);
+    public function hasMedia(MediaInterface $media): bool;
 
     /**
      * Adds the media.
      *
      * @param MediaInterface $media
      *
-     * @return FolderInterface|$this
+     * @return $this|FolderInterface
      */
-    public function addMedia(MediaInterface $media);
+    public function addMedia(MediaInterface $media): FolderInterface;
 
     /**
      * Removes the media.
      *
      * @param MediaInterface $media
      *
-     * @return FolderInterface|$this
+     * @return $this|FolderInterface
      */
-    public function removeMedia(MediaInterface $media);
+    public function removeMedia(MediaInterface $media): FolderInterface;
 
     /**
      * Returns whether the folder has medias or not.
      *
      * @return bool
      */
-    public function hasMedias();
+    public function hasMedias(): bool;
 
     /**
      * Returns the medias.
      *
-     * @return ArrayCollection|MediaInterface[]
+     * @return Collection|MediaInterface[]
      */
-    public function getMedias();
+    public function getMedias(): Collection;
 
     /**
-     * [Tree] Sets active.
+     * Sets whether this folder is active.
+     * Non persisted - Js usage.
      *
-     * @param boolean $active
+     * @param bool $active
      *
-     * @return FolderInterface|$this
+     * @return $this|FolderInterface
      */
-    public function setActive($active);
+    public function setActive(bool $active): FolderInterface;
 
     /**
-     * [Tree] Returns whether this folder is active.
+     * Returns whether this folder is active.
+     * Non persisted - Js usage.
      *
-     * @return boolean
+     * @return bool
      */
-    public function getActive();
+    public function getActive(): bool;
 }

@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Form\Type;
 
-use Ekyna\Bundle\CoreBundle\Form\Type\CollectionType;
 use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
 use Ekyna\Bundle\MediaBundle\Model\Import\MediaUpload;
+use Ekyna\Bundle\UiBundle\Form\Type\CollectionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,9 +20,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class UploadType extends AbstractType
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('medias', CollectionType::class, [
             'label'          => false,
@@ -35,7 +37,7 @@ class UploadType extends AbstractType
             },
             // Sets the folder (form view => model)
             function ($data) use ($options) {
-                /** @var \Ekyna\Bundle\MediaBundle\Model\Import\MediaUpload $data */
+                /** @var MediaUpload $data */
                 foreach ($data->getMedias() as $media) {
                     $media->setFolder($options['folder']);
                 }
@@ -46,22 +48,20 @@ class UploadType extends AbstractType
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults([
-                'data_class' => MediaUpload::class,
-                'folder'     => null,
-            ])
+            ->setRequired(['folder'])
+            ->setDefault('data_class', MediaUpload::class)
             ->setAllowedTypes('folder', FolderInterface::class);
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'ekyna_media_upload';
     }

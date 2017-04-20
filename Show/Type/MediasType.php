@@ -1,11 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Show\Type;
 
 use Doctrine\Common\Collections\Collection;
-use Ekyna\Bundle\AdminBundle\Show\Exception\InvalidArgumentException;
+use Ekyna\Bundle\AdminBundle\Show\Exception\UnexpectedTypeException;
 use Ekyna\Bundle\AdminBundle\Show\Type\AbstractType;
 use Ekyna\Bundle\AdminBundle\Show\View;
+use Ekyna\Bundle\MediaBundle\Model\MediaSubjectInterface;
+
+use function array_map;
 
 /**
  * Class MediasType
@@ -17,16 +22,16 @@ class MediasType extends AbstractType
     /**
      * @inheritDoc
      */
-    public function build(View $view, $value, array $options = [])
+    public function build(View $view, $value, array $options = []): void
     {
         if (!$value instanceof Collection) {
-            throw new InvalidArgumentException("Expected instance of " . Collection::class);
+            throw new UnexpectedTypeException($value, Collection::class);
         }
 
         parent::build($view, $value, $options);
 
         $view->vars['value'] = array_map(function ($m) {
-            /** @var \Ekyna\Bundle\MediaBundle\Model\MediaSubjectInterface $m */
+            /** @var MediaSubjectInterface $m */
             return $m->getMedia();
         }, $value->toArray());
     }
@@ -34,8 +39,8 @@ class MediasType extends AbstractType
     /**
      * @inheritDoc
      */
-    public function getWidgetPrefix()
+    public static function getName(): string
     {
-        return 'medias';
+        return 'media_medias';
     }
 }

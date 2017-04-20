@@ -1,36 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Model\Import;
 
 use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
+use RuntimeException;
+
+use function in_array;
 
 /**
  * Class MediaImport
  * @package Ekyna\Bundle\MediaBundle\Model\Import
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class MediaImport
 {
-    /**
-     * @var FolderInterface
-     */
-    protected $folder;
-
-    /**
-     * @var string
-     */
-    protected $filesystem = 'local_ftp';
-
-    /**
-     * @var array
-     */
-    protected $keys = [];
-
-    /**
-     * @var array|MediaInterface[]
-     */
-    protected $medias = [];
+    protected FolderInterface $folder;
+    protected string          $filesystem = 'local_ftp';
+    /** @var string[] */
+    protected array $keys = [];
+    /** @var array|MediaInterface[] */
+    protected array $medias = [];
 
 
     /**
@@ -48,7 +40,7 @@ class MediaImport
      *
      * @return FolderInterface
      */
-    public function getFolder()
+    public function getFolder(): FolderInterface
     {
         return $this->folder;
     }
@@ -57,11 +49,13 @@ class MediaImport
      * Sets the filesystem.
      *
      * @param string $filesystem
+     *
      * @return MediaImport
      */
-    public function setFilesystem($filesystem)
+    public function setFilesystem(string $filesystem): MediaImport
     {
         $this->filesystem = $filesystem;
+
         return $this;
     }
 
@@ -70,7 +64,7 @@ class MediaImport
      *
      * @return string
      */
-    public function getFilesystem()
+    public function getFilesystem(): string
     {
         return $this->filesystem;
     }
@@ -79,11 +73,13 @@ class MediaImport
      * Sets the keys.
      *
      * @param array $keys
+     *
      * @return MediaImport
      */
-    public function setKeys(array $keys)
+    public function setKeys(array $keys): MediaImport
     {
         $this->keys = $keys;
+
         return $this;
     }
 
@@ -92,7 +88,7 @@ class MediaImport
      *
      * @return array
      */
-    public function getKeys()
+    public function getKeys(): array
     {
         return $this->keys;
     }
@@ -101,21 +97,23 @@ class MediaImport
      * Adds the media.
      *
      * @param MediaInterface $media
+     *
      * @return MediaImport
      */
-    public function addMedia(MediaInterface $media)
+    public function addMedia(MediaInterface $media): MediaImport
     {
         if (!in_array($media->getKey(), $this->keys)) {
-            throw new \RuntimeException("Key {$media->getKey()} is not selected.");
+            throw new RuntimeException("Key {$media->getKey()} is not selected.");
         }
 
-        foreach ($this->medias as $m) {
-            if ($m->getKey() == $media->getKey()) {
+        foreach ($this->medias as $selected) {
+            if ($selected->getKey() == $media->getKey()) {
                 return $this;
             }
         }
 
         $media->setFolder($this->folder);
+
         $this->medias[] = $media;
 
         return $this;
@@ -124,9 +122,9 @@ class MediaImport
     /**
      * Returns the medias.
      *
-     * @return array|\Ekyna\Bundle\MediaBundle\Model\MediaInterface[]
+     * @return array|MediaInterface[]
      */
-    public function getMedias()
+    public function getMedias(): array
     {
         return $this->medias;
     }

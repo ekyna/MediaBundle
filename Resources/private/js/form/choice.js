@@ -1,4 +1,5 @@
-define('ekyna-media/form/choice',
+define(
+    'ekyna-media/form/choice',
     ['jquery', 'routing', 'ekyna-modal', 'ekyna-media/browser', 'ekyna-media/templates'],
     function($, Router, Modal, Browser, Templates) {
     "use strict";
@@ -78,7 +79,7 @@ define('ekyna-media/form/choice',
             if (that.config.types.length > 0) {
                 params.types = this.config.types;
             }
-            modal.load({url: Router.generate('ekyna_media_browser_admin_modal', params)});
+            modal.load({url: Router.generate('admin_ekyna_media_browser_modal', params)});
         },
         removeMedia: function() {
             var $empty = $(this.$elem.data('empty-thumb'));

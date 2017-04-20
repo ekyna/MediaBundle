@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
@@ -11,20 +13,20 @@ use Symfony\Component\Validator\Constraint;
  */
 class Media extends Constraint
 {
-    public $invalidKey = 'ekyna_media.media.invalid_key';
-    public $invalidType = 'ekyna_media.media.invalid_type';
-    public $typeMissMatch = 'ekyna_media.media.type_miss_match';
+    public string $invalidKey    = 'ekyna_media.media.invalid_key';
+    public string $invalidType   = 'ekyna_media.media.invalid_type';
+    public string $typeMissMatch = 'ekyna_media.media.type_miss_match';
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function validatedBy()
+    public function validatedBy(): string
     {
-        return 'ekyna_media_media';
+        return MediaValidator::class;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function getTargets()
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Model;
 
 use Ekyna\Bundle\ResourceBundle\Model\AbstractConstants;
@@ -9,22 +11,15 @@ use Ekyna\Bundle\ResourceBundle\Model\AbstractConstants;
  * @package Ekyna\Bundle\MediaBundle\Model
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class MediaFormats extends AbstractConstants
+final class MediaFormats extends AbstractConstants
 {
     // Video
     public const MP4  = 'mp4';
     public const WEBM = 'webm';
     public const OGG  = 'ogg';
 
-    /**
-     * @var array
-     */
-    private static $config;
-
-    /**
-     * @var array array
-     */
-    private static $typeCache = [];
+    private static ?array $config = null;
+    private static array $typeCache = [];
 
 
     /**

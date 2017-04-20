@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ekyna\Bundle\MediaBundle\Entity;
 
 use Ekyna\Bundle\MediaBundle\Model\MediaTranslationInterface;
@@ -12,57 +14,40 @@ use Ekyna\Component\Resource\Model\AbstractTranslation;
  */
 class MediaTranslation extends AbstractTranslation implements MediaTranslationInterface
 {
-    /**
-     * @var string
-     */
-    protected $title;
-
-    /**
-     * @var string
-     */
-    protected $description;
+    protected ?string $title = null;
+    protected ?string $description = null;
 
 
     /**
-     * Sets the title.
-     *
-     * @param string $title
-     * @return MediaTranslation
+     * @inheritDoc
      */
-    public function setTitle($title)
+    public function setTitle(string $title = null): MediaTranslationInterface
     {
         $this->title = $title;
         return $this;
     }
 
     /**
-     * Returns the title.
-     *
-     * @return string
+     * @inheritDoc
      */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
     /**
-     * Sets the description.
-     *
-     * @param string $description
-     * @return MediaTranslation
+     * @inheritDoc
      */
-    public function setDescription($description)
+    public function setDescription(string $description = null): MediaTranslationInterface
     {
         $this->description = $description;
         return $this;
     }
 
     /**
-     * Returns the description.
-     *
-     * @return string
+     * @inheritDoc
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
