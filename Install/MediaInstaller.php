@@ -75,6 +75,14 @@ class MediaInstaller extends AbstractInstaller implements OrderedInstallerInterf
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getName()
+    {
+        return 'ekyna_media';
+    }
+
+    /**
      * @inheritdoc
      */
     public function getOrder()
