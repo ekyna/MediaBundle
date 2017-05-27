@@ -3,6 +3,8 @@
 namespace Ekyna\Bundle\MediaBundle\Table\Type;
 
 use Ekyna\Bundle\AdminBundle\Table\Type\ResourceTableType;
+use Ekyna\Bundle\TableBundle\Extension\Type as BType;
+use Ekyna\Component\Table\Extension\Core\Type as CType;
 use Ekyna\Component\Table\TableBuilderInterface;
 
 /**
@@ -18,10 +20,7 @@ class MediaType extends ResourceTableType
     public function buildTable(TableBuilderInterface $builder, array $options)
     {
         $builder
-            ->addColumn('id', 'number', [
-                'sortable' => true,
-            ])
-            ->addColumn('title', 'anchor', [
+            ->addColumn('title', BType\Column\AnchorType::class, [
                 'label'                => 'ekyna_core.field.title',
                 'sortable'             => true,
                 'route_name'           => 'ekyna_media_media_admin_show',
@@ -30,12 +29,12 @@ class MediaType extends ResourceTableType
                 ],
                 'position'             => 10,
             ])
-            ->addColumn('updatedAt', 'datetime', [
+            ->addColumn('updatedAt', CType\Column\DateTimeType::class, [
                 'sortable' => true,
                 'label'    => 'ekyna_core.field.updated_at',
                 'position' => 20,
             ])
-            ->addColumn('actions', 'admin_actions', [
+            ->addColumn('actions', BType\Column\ActionsType::class, [
                 'buttons' => [
                     [
                         'label'                => 'ekyna_core.button.edit',
@@ -56,21 +55,6 @@ class MediaType extends ResourceTableType
                         'permission'           => 'delete',
                     ],
                 ],
-            ])/*->addFilter('id', 'number')
-            ->addFilter('path', 'text', array(
-                'label' => 'ekyna_core.field.path'
-            ))
-            ->addFilter('alt', 'number', array(
-                'label' => 'ekyna_core.field.alt'
-            ))*/
-        ;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getName()
-    {
-        return 'ekyna_media_media';
+            ]);
     }
 }
