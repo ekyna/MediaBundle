@@ -1,5 +1,7 @@
 {
   "name": "ekyna/MediaBundle",
+  "license": "UNLICENSED",
+  "private": true,
   "devDependencies": {
     "bootstrap": "^3.3.6",
     "jquery.fancytree": "fancytree#^2.20.0",
