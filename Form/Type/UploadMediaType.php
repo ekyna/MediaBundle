@@ -32,16 +32,7 @@ class UploadMediaType extends ResourceFormType
             ->add('rename', Type\TextType::class, [
                 'label'    => false,
                 'required' => true,
-                'sizing'   => 'sm',
             ]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getName()
-    {
-        return 'ekyna_media_upload_media';
     }
 
     /**
