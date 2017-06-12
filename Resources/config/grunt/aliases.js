@@ -5,6 +5,7 @@ module.exports = {
     ],
     'copy:media': [
         'copy:media_lib',
+        'copy:media_libs_fix',
         'copy:media_img'
     ],
     'build:media': [
@@ -12,6 +13,7 @@ module.exports = {
         'copy:media',
         'cssmin:media',
         'twig:media',
-        'uglify:media'
+        'uglify:media',
+        'clean:media_post'
     ]
 };

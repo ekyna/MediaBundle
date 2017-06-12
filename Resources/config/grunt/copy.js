@@ -25,6 +25,23 @@ module.exports = function (grunt, options) {
                 }
             ]
         },
+        media_libs_fix: {
+            files: [
+                {
+                    src: 'bower_components/ui-contextmenu/jquery.ui-contextmenu.js',
+                    dest: 'src/Ekyna/Bundle/MediaBundle/Resources/public/tmp/jquery.ui-contextmenu.js' // tmp to uglify
+                }
+            ],
+            options: {
+                process: function (content, srcpath) {
+                    if (/jquery\.ui-contextmenu/.test(srcpath)) {
+                        content = content.replace(/jquery-ui\/ui\/widgets\/menu/g, 'jquery-ui/menu');
+                    }
+
+                    return content;
+                }
+            }
+        },
         media_img: {
             expand: true,
             cwd: 'src/Ekyna/Bundle/MediaBundle/Resources/private',

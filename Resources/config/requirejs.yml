@@ -2,7 +2,7 @@ config:
     shim:
         'fancytree':
             deps: ['jquery', 'jquery-ui/core', 'jquery-ui/effect-blind', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/droppable']
-        'ekyna-media-thumb':
+        'ekyna-media-templates':
             deps: ['twig']
         'fancybox':
             deps: ['jquery']
@@ -10,7 +10,6 @@ config:
             deps: ['jquery']
     paths:
         'ekyna-media-templates': 'bundles/ekynamedia/js/ekyna-media-templates'
-#            route: ekyna_media_thumb_template
         'ekyna-media-browser': 'bundles/ekynamedia/js/media-browser'
         'ekyna-form/media-choice': 'bundles/ekynamedia/js/form-media-choice'
         'ekyna-form/media-collection': 'bundles/ekynamedia/js/form-media-collection'
