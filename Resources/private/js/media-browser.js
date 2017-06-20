@@ -328,7 +328,7 @@ define('ekyna-media-browser',
             });
         },
         showMedia: function($media) {
-            if ($media.data('media').type == 'file' || $media.data('media').type == 'file') {
+            if ($media.data('media').type === 'file') {
                 this.downloadMedia($media);
                 return;
             }
@@ -345,7 +345,7 @@ define('ekyna-media-browser',
                 closeEffect : 'none',
                 padding     : 0
             };
-            if ($media.data('media').type == 'image') {
+            if ($media.data('media').type === 'image') {
                 params.type  = 'image';
             } else {
                 params.type = 'ajax';

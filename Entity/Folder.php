@@ -74,6 +74,16 @@ class Folder implements FolderInterface
     }
 
     /**
+     * Returns the string representation.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
+    }
+
+    /**
      * @inheritdoc
      */
     public function getId()
