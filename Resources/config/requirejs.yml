@@ -15,10 +15,16 @@ config:
         'ekyna-form/media-collection': 'bundles/ekynamedia/js/form-media-collection'
         'ekyna-form/media-upload': 'bundles/ekynamedia/js/form-media-upload'
         'ekyna-media-player': 'bundles/ekynamedia/js/media-player'
+        'ekyna-fancybox': 'bundles/ekynamedia/js/fancybox'
+        'fancybox': 'bundles/ekynamedia/lib/fancybox/jquery.fancybox'
         'fancytree': 'bundles/ekynamedia/lib/fancytree/fancytree'
-        'fancybox': 'bundles/ekynamedia/lib/fancybox/jquery.fancybox.pack'
         'videojs': 'bundles/ekynamedia/lib/videojs/video'
         'swfobject': 'bundles/ekynamedia/lib/swfobject/swfobject'
+    map:
+        '*':
+            'fancybox': 'ekyna-fancybox'
+        'ekyna-fancybox':
+            'fancybox': 'fancybox'
 #build:
 #    include:
 #        - 'ekyna-media-player'

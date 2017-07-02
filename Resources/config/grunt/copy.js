@@ -4,7 +4,7 @@ module.exports = function (grunt, options) {
             files: [
                 {
                     expand: true,
-                    cwd: 'bower_components/fancyBox/source',
+                    cwd: 'bower_components/fancybox/dist',
                     src: ['**'],
                     dest: 'src/Ekyna/Bundle/MediaBundle/Resources/public/lib/fancybox'
                 },

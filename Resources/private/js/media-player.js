@@ -18,8 +18,7 @@
         .attr('media', 'all')
         .attr('rel', 'stylesheet')
         .attr('href', '/bundles/ekynamedia/lib/videojs/video-js.css')
-        .appendTo($('head'))
-    ;
+        .appendTo($('head'));
 
     swfobject.switchOffAutoHideShow();
 

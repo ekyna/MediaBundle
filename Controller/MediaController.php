@@ -8,12 +8,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use TwigJs\CompileRequest;
 
 /**
  * Class MediaController
  * @package Ekyna\Bundle\MediaBundle\Controller
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class MediaController extends Controller
 {
@@ -21,6 +20,7 @@ class MediaController extends Controller
      * Download local file.
      *
      * @param Request $request
+     *
      * @return Response
      * @throws NotFoundHttpException
      */
@@ -28,7 +28,7 @@ class MediaController extends Controller
     {
         /**
          * @var \Ekyna\Bundle\MediaBundle\Model\MediaInterface $media
-         * @var \League\Flysystem\File $file
+         * @var \League\Flysystem\File                         $file
          */
         list($media, $file) = $this->findMedia($request->attributes->get('key'));
 
@@ -38,7 +38,7 @@ class MediaController extends Controller
         $response = new Response();
         $response->setPublic();
         $response->setLastModified($lastModified);
-        $response->setEtag(md5($file->getPath().$lastModified->getTimestamp()));
+        $response->setEtag(md5($file->getPath() . $lastModified->getTimestamp()));
         if ($response->isNotModified($request)) {
             return $response;
         }
@@ -49,7 +49,7 @@ class MediaController extends Controller
         $response = new StreamedResponse();
         $response->setPublic();
         $response->setLastModified($lastModified);
-        $response->setEtag(md5($file->getPath().$lastModified->getTimestamp()));
+        $response->setEtag(md5($file->getPath() . $lastModified->getTimestamp()));
 
         // Set the headers
         $response->headers->set('Content-Type', $file->getMimetype());
@@ -66,6 +66,7 @@ class MediaController extends Controller
      * Download local file.
      *
      * @param Request $request
+     *
      * @return Response
      * @throws NotFoundHttpException
      */
@@ -73,7 +74,7 @@ class MediaController extends Controller
     {
         /**
          * @var \Ekyna\Bundle\MediaBundle\Model\MediaInterface $media
-         * @var \League\Flysystem\File $file
+         * @var \League\Flysystem\File                         $file
          */
         list ($media, $file) = $this->findMedia($request->attributes->get('key'));
 
@@ -83,9 +84,9 @@ class MediaController extends Controller
 
         $lastModified = $media->getUpdatedAt();
         if ($request->isXmlHttpRequest()) {
-            $eTag = md5($file->getPath().'-xhr-'.$lastModified->getTimestamp());
+            $eTag = md5($file->getPath() . '-xhr-' . $lastModified->getTimestamp());
         } else {
-            $eTag = md5($file->getPath().$lastModified->getTimestamp());
+            $eTag = md5($file->getPath() . $lastModified->getTimestamp());
         }
 
         $response = new Response();
@@ -102,11 +103,14 @@ class MediaController extends Controller
             /** @var \Ekyna\Bundle\MediaBundle\Twig\PlayerExtension $extension */
             $extension = $twig->getExtension('ekyna_media_player');
             $content = $extension->renderMedia($media);
+            if ('true' === $request->query->get('fancybox')) {
+                $content = '<div style="width:90%;max-width:1200px;">' . $content . '</div>';
+            }
         } else {
             $template = "EkynaMediaBundle:Media:{$media->getType()}.html.twig";
             $content = $this->renderView($template, [
-                'media' => $media,
-                'file' => $file,
+                'media'    => $media,
+                'file'     => $file,
             ]);
         }
 
@@ -122,6 +126,7 @@ class MediaController extends Controller
      * Finds the media by his path.
      *
      * @param string $path
+     *
      * @return array
      * @throws NotFoundHttpException
      */
@@ -130,8 +135,7 @@ class MediaController extends Controller
         /** @var \Ekyna\Bundle\MediaBundle\Model\MediaInterface $media */
         $media = $this
             ->get('ekyna_media.media.repository')
-            ->findOneBy(['path' => $path])
-        ;
+            ->findOneBy(['path' => $path]);
         if (null === $media) {
             throw new NotFoundHttpException('Media not found');
         }

@@ -333,30 +333,32 @@ define('ekyna-media-browser',
                 return;
             }
             var params = {
-                href        : $media.data('media').player,
-                maxWidth    : 1200,
-                //maxHeight   : 600,
-                fitToView   : false,
-                width       : '90%',
-                height      : '90%',
-                autoSize    : false,
-                closeClick  : false,
-                openEffect  : 'none',
-                closeEffect : 'none',
-                padding     : 0
+                src        : $media.data('media').player,
+                // maxWidth    : 1200,
+                // //maxHeight   : 600,
+                // fitToView   : false,
+                // width       : '90%',
+                // height      : '90%',
+                // autoSize    : false,
+                // closeClick  : false,
+                // openEffect  : 'none',
+                // closeEffect : 'none',
+                // padding     : 0
             };
             if ($media.data('media').type === 'image') {
                 params.type  = 'image';
             } else {
                 params.type = 'ajax';
+
                 params.beforeShow = function() {
-                    Player.init($('.fancybox-inner'));
+                    Player.init($('.fancybox-stage'));
                 };
                 params.beforeClose = function() {
-                    Player.destroy($('.fancybox-inner'));
+                    Player.destroy($('.fancybox-stage'));
                 };
             }
-            $.fancybox(params);
+
+            $.fancybox.open(params);
         },
         editMedia: function($media) {
             var that = this;
