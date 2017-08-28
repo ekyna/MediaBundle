@@ -32,32 +32,38 @@ class MediaController extends Controller
          */
         list($media, $file) = $this->findMedia($request->attributes->get('key'));
 
+        // TODO use content disposition
+        // TODO Don't stream small files ?
+        // TODO Use BinaryFileResponse when needed
+        // TODO Does streamed response can really be cached ???
+
+        if (1024*1024 < $size = $file->getSize()) { // Larger than 1Mo
+            $response = new StreamedResponse(function () use ($file) {
+                fpassthru($file->readStream());
+            });
+
+            $response->headers->set('Content-Type', $file->getMimetype());
+            $response->headers->set('Content-Length', $size);
+            $response->headers->set('X-Accel-Buffering', 'no');
+
+            return $response;
+        }
+
         $lastModified = $media->getUpdatedAt();
 
-        // TODO Does streamed response can really be cached ???
         $response = new Response();
-        $response->setPublic();
-        $response->setLastModified($lastModified);
         $response->setEtag(md5($file->getPath() . $lastModified->getTimestamp()));
+        $response->setLastModified($lastModified);
+        $response->setPublic();
+
         if ($response->isNotModified($request)) {
             return $response;
         }
 
-        // TODO use content disposition
-        // TODO Don't stream small files ?
-        // TODO Use BinaryFileResponse when needed
-        $response = new StreamedResponse();
-        $response->setPublic();
-        $response->setLastModified($lastModified);
-        $response->setEtag(md5($file->getPath() . $lastModified->getTimestamp()));
+        $response->setContent($file->read());
 
-        // Set the headers
         $response->headers->set('Content-Type', $file->getMimetype());
-        $response->headers->set('Content-Length', $file->getSize());
-
-        $response->setCallback(function () use ($file) {
-            fpassthru($file->readStream());
-        });
+        $response->headers->set('Content-Length', $size);
 
         return $response;
     }
@@ -90,9 +96,10 @@ class MediaController extends Controller
         }
 
         $response = new Response();
-        $response->setPublic();
-        $response->setLastModified($lastModified);
         $response->setEtag($eTag);
+        $response->setLastModified($lastModified);
+        $response->setPublic();
+
         if ($response->isNotModified($request)) {
             return $response;
         }
@@ -115,9 +122,6 @@ class MediaController extends Controller
         }
 
         $response->setContent($content);
-        $response->setPublic();
-        $response->setLastModified($lastModified);
-        $response->setEtag($eTag);
 
         return $response;
     }
