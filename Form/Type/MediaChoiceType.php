@@ -51,7 +51,7 @@ class MediaChoiceType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['media'] = $form->getData();
+        $view->vars['media'] = $form->getNormData();
         $view->vars['config'] = [
             'types'    => (array)$options['types'],
             'controls' => $options['controls'],
