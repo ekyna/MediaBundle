@@ -61,7 +61,7 @@ define('ekyna-media-browser',
         constructor: EkynaMediaBrowser,
         init: function(config) {
             this.config = $.extend({}, this.config, config || {});
-            if (-1 == $.inArray(this.config.mode, ['browse', 'single_selection', 'multiple_selection', 'tinymce'])) {
+            if (-1 === $.inArray(this.config.mode, ['browse', 'single_selection', 'multiple_selection', 'tinymce'])) {
                 throw 'Unexpected browser mode "' + this.config.mode + '".';
             }
 
@@ -75,7 +75,7 @@ define('ekyna-media-browser',
             if (busy && this.browseXhr) {
                 this.browseXhr.abort();
             }
-            if (this.busy == busy) {
+            if (this.busy === busy) {
                 return;
             }
             this.busy = busy;
@@ -142,8 +142,8 @@ define('ekyna-media-browser',
                 var $input = $(e.currentTarget).find('input');
                 var $icon = $(e.currentTarget).find('span.glyphicon');
                 if ($input.is(':checked')) {
-                    var icon = $input.val() == 'filename' ? 'glyphicon-sort-by-alphabet' : 'glyphicon-sort-by-attributes';
-                    if ($input.data('dir') == 'asc') {
+                    var icon = $input.val() === 'filename' ? 'glyphicon-sort-by-alphabet' : 'glyphicon-sort-by-attributes';
+                    if ($input.data('dir') === 'asc') {
                         $icon.removeClass(icon).addClass(icon + '-alt');
                         $input.data('dir', 'desc');
                     } else {
@@ -164,16 +164,16 @@ define('ekyna-media-browser',
                 e.preventDefault();
                 e.stopPropagation();
                 var $element = $(e.currentTarget).parents('.media-thumb').eq(0);
-                if (that.config.mode == 'tinymce' && parent.tinymce && parent.tinymce.activeEditor) {
+                if (that.config.mode === 'tinymce' && parent.tinymce && parent.tinymce.activeEditor) {
                     parent.tinymce.activeEditor.windowManager.getParams().setUrl(
                         $element.data('media').front
                     );
                     parent.tinymce.activeEditor.windowManager.close();
-                } else if (that.config.mode == 'single_selection') {
+                } else if (that.config.mode === 'single_selection') {
                     var event = jQuery.Event('ekyna.media-browser.selection');
                     event.media = $element.data('media');
                     $(that).trigger(event);
-                } else if (that.config.mode == 'multiple_selection') {
+                } else if (that.config.mode === 'multiple_selection') {
                     var $checkbox = $element.find('input[type="checkbox"]');
                     $checkbox.prop('checked', !$checkbox.is(':checked'));
                 }
@@ -236,7 +236,7 @@ define('ekyna-media-browser',
                     }
                     if (d.hasOwnProperty('medias')) {
                         var selector = false;
-                        if (that.config.mode == 'multiple_selection') {
+                        if (that.config.mode === 'multiple_selection') {
                             selector = true;
                         }
                         var controls = [
@@ -291,12 +291,13 @@ define('ekyna-media-browser',
             that.setBusy(true);
 
             that.modal = new Modal();
-            $(that.modal).on('ekyna.modal.response', function (e) {
+            $(that.modal).on('ekyna.modal.response', function (modalEvent) {
                 //settings.onShow(e);
-                if (e.contentType == 'json') {
-                    e.preventDefault();
-                    settings.onData(e.content);
+                if (modalEvent.contentType === 'json') {
+                    modalEvent.preventDefault();
+                    settings.onData(modalEvent.content);
                     that.browse();
+                    modalEvent.modal.close();
                 }
             });
 
@@ -333,7 +334,7 @@ define('ekyna-media-browser',
                 return;
             }
             var params = {
-                src        : $media.data('media').player,
+                src        : $media.data('media').player
                 // maxWidth    : 1200,
                 // //maxHeight   : 600,
                 // fitToView   : false,
@@ -361,7 +362,7 @@ define('ekyna-media-browser',
             $.fancybox.open(params);
         },
         editMedia: function($media) {
-            var that = this;
+            //var that = this;
             this.openModal({
                 url: Router.generate(
                     'ekyna_media_media_admin_edit',
@@ -430,13 +431,13 @@ define('ekyna-media-browser',
         sortList: function() {
             var $input = $(this.$controls.find('input[name="sort"]:checked'));
             var prop = $input.val();
-            var dir = $input.data('dir') == 'asc' ? 1 : -1;
+            var dir = $input.data('dir') === 'asc' ? 1 : -1;
             this.$content.find('.media-thumb').sortElements(function(a, b) {
                 return $(a).data('media')[prop] > $(b).data('media')[prop] ? dir : -dir;
             });
         },
         getSelection: function() {
-            if (this.config.mode != 'multiple_selection') {
+            if (this.config.mode !== 'multiple_selection') {
                 return [];
             }
             var result = [];
@@ -490,7 +491,7 @@ define('ekyna-media-browser',
                     dragStart: function(node) { // , data
                         return node.data.level > 0;
                     },
-                    dragEnter: function(node, data) {
+                    dragEnter: function() { // node, data
                         // return ["before", "after"];
                         /*if( !data.otherNode ) {
                             return ["over"];

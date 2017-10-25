@@ -25,6 +25,11 @@ class Generator
     const NONE_THUMB    = '/bundles/ekynamedia/img/media-none.jpg';
 
     /**
+     * @var FilesystemInterface
+     */
+    private $filesystem;
+
+    /**
      * @var \Imagine\Image\ImagineInterface
      */
     private $imagine;
@@ -53,6 +58,7 @@ class Generator
      * @var string
      */
     private $thumbsDirectory;
+
 
     /**
      * Constructor.
