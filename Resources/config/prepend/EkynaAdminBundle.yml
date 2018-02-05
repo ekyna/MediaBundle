@@ -3,5 +3,6 @@ ekyna_admin:
         - 'bundles/ekynamedia/lib/fancytree/fancytree.css'
         - 'bundles/ekynamedia/lib/fancybox/jquery.fancybox.css'
         - 'bundles/ekynamedia/css/browser.css'
-# TODO ?       - "bundles/ekynamedia/lib/fancybox/helpers/jquery.fancybox-buttons.css"
-# TODO ?       - "bundles/ekynamedia/lib/fancybox/helpers/jquery.fancybox-thumbs.css"
+    show:
+        templates:
+            - EkynaMediaBundle:Show:show_div_layout.html.twig

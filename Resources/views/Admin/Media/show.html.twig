@@ -25,9 +25,17 @@
     <div class="show-body">
         <div class="tab-content">
             <div class="tab-pane active" id="media-general">
-                {{ show_row(media.title, 'text', 'ekyna_core.field.title', {'label_nb_col': 4}) }}
-                {{ show_row(path('ekyna_media_media_admin_tinymce', identifiers|merge({'mediaId': media.id})), 'tinymce', 'ekyna_core.field.description') }}
-                {{ show_row(media, 'media', 'ekyna_core.field.image', {'label_nb_col': 4}) }}
+                {{ show_row(media.title, 'text', {
+                    'label': 'ekyna_core.field.title',
+                    'label_col': 4
+                }) }}
+                {{ show_row(path('ekyna_media_media_admin_tinymce', identifiers|merge({'mediaId': media.id})), 'tinymce', {
+                    'label': 'ekyna_core.field.description'
+                }) }}
+                {{ show_row(media, 'media', {
+                    'label': 'ekyna_core.field.image',
+                    'label_col': 4
+                }) }}
             </div>
         </div>
     </div>

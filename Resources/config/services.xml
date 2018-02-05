@@ -70,6 +70,16 @@
             <tag name="form.type" />
         </service>
 
+        <!-- Show types -->
+        <service id="ekyna_cms.show.media_type"
+                 class="Ekyna\Bundle\MediaBundle\Show\Type\MediaType">
+            <tag name="ekyna_admin.show.type" alias="media"/>
+        </service>
+        <service id="ekyna_cms.show.medias_type"
+                 class="Ekyna\Bundle\MediaBundle\Show\Type\MediasType">
+            <tag name="ekyna_admin.show.type" alias="medias"/>
+        </service>
+
         <!-- Uploader -->
         <service id="ekyna_media.media.uploader"
                  class="Ekyna\Bundle\CoreBundle\Uploader\Uploader">
