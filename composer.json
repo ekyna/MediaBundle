@@ -18,7 +18,7 @@
         "php" : ">=7.0",
         "ekyna/admin-bundle" : "0.7.x-dev",
         "liip/imagine-bundle" : "^1.3",
-        "craue/formflow-bundle": "dev-master"
+        "craue/formflow-bundle": "~3.0"
     },
     "autoload" : {
         "psr-4" : {

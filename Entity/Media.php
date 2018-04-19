@@ -2,7 +2,6 @@
 
 namespace Ekyna\Bundle\MediaBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Ekyna\Component\Resource\Model as RM;
 use Ekyna\Bundle\CoreBundle\Model as Core;
 use Ekyna\Bundle\MediaBundle\Model;
