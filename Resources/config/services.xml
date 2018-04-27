@@ -145,6 +145,13 @@
             <argument type="service" id="liip_imagine.filter.manager" />
         </service>
 
+        <!-- Schema.org provider -->
+        <service id="ekyna_media.media.schema_provider"
+                 class="Ekyna\Bundle\MediaBundle\Service\SchemaOrg\MediaProvider">
+            <argument type="service" id="ekyna_media.generator"/>
+            <tag name="ekyna_cms.schema_org_provider"/>
+        </service>
+
         <!-- Validator -->
         <service id="ekyna_media.media.validator"
                  class="Ekyna\Bundle\MediaBundle\Validator\Constraints\MediaValidator">
