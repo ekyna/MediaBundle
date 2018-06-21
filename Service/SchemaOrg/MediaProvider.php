@@ -73,11 +73,14 @@ class MediaProvider implements ProviderInterface
      */
     private function buildImage(MediaInterface $media)
     {
-        $schema = Schema::imageObject()
-            /*->thumbnail(
+        $schema = Schema::imageObject();
+
+        /*if ($media->getType() !== MediaTypes::SVG) {
+            $schema->thumbnail(
                 Schema::imageObject()
                     ->contentUrl($this->generator->generateThumbUrl($media))
-            )*/;
+            );
+        }*/
 
         if (!empty($title = $media->getTitle())) {
             $schema->caption($title);

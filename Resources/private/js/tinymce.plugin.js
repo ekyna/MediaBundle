@@ -2,7 +2,7 @@ tinymce.PluginManager.add('filemanager', function (editor) {
 
     function filemanager(id, value, type, win) {
 
-        var title = "Gestionnaire de médias"; // TODO
+        var title = "Media manager";
         if (typeof editor.settings.filemanager_title !== "undefined" && editor.settings.filemanager_title) {
             title = editor.settings.filemanager_title;
         }
@@ -13,9 +13,9 @@ tinymce.PluginManager.add('filemanager', function (editor) {
         }
         path += '/admin/content/media-browser?mode=tinymce';
 
-        if (type == 'image') {
-            path = path + '&types[]=image';
-        } else if (type == 'media') {
+        if (type === 'image') {
+            path = path + '&types[]=image&types[]=svg';
+        } else if (type === 'media') {
             path = path + '&types[]=video&types[]=audio'
         }
         tinymce.activeEditor.windowManager.open({
@@ -26,7 +26,6 @@ tinymce.PluginManager.add('filemanager', function (editor) {
             resizable: true/*,
              maximizable: true,
              inline: 1*/
-
         }, {
             setUrl: function (url) {
                 var fieldElm = win.document.getElementById(id);
