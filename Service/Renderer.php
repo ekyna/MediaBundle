@@ -125,6 +125,8 @@ class Renderer
 
         if ($params['autoplay']) {
             $params['attr']['autoplay'] = null;
+            // https://developers.google.com/web/updates/2017/09/autoplay-policy-changes#best-practices
+            $params['attr']['muted'] = null;
         }
         if ($params['loop']) {
             $params['attr']['loop'] = null;

@@ -347,7 +347,7 @@ define('ekyna-media-browser',
                 // padding     : 0
             };
             if ($media.data('media').type === 'image') {
-                params.type  = 'image';
+                params.type = 'image';
             } else {
                 params.type = 'ajax';
 
