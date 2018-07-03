@@ -1,74 +1,86 @@
-(function(root, factory) {
+define(['require', 'jquery'], function(require, $) {
     "use strict";
 
-    if (typeof module !== 'undefined' && module.exports) {
-        module.exports = factory(require('jquery'), require('videojs'), require('swfobject'));
-    } else if (typeof define === 'function' && define.amd) {
-        define('ekyna-media-player', ['jquery', 'videojs', 'swfobject'], function(jQuery, videojs) {
-            return factory(jQuery, videojs);
+    function initVideos($videos) {
+        if (0 === $videos.length) {
+            return
+        }
+
+        if (0 === $('link#videojs-css').length) {
+            $('<link>')
+                .attr('id', 'videojs-css')
+                .attr('media', 'all')
+                .attr('rel', 'stylesheet')
+                .attr('href', '/bundles/ekynamedia/lib/videojs/video-js.css')
+                .appendTo($('head'));
+        }
+
+        require(['videojs'], function() {
+            var vJsI = setInterval(function() {
+                if (typeof window['videojs'] === 'undefined') {
+                    return;
+                }
+
+                clearInterval(vJsI);
+
+                $videos.each(function() {
+                    videojs($(this).attr('id'))
+                });
+            }, 50);
         });
-    } else {
-        root.EkynaMediaPlayer = factory(root.jQuery, root.videojs);
     }
 
-}(this, function($, VideoJs) {
-    "use strict";
+    function destroyVideos($videos) {
+        if (0 === $videos.length) {
+            return
+        }
 
-    $('<link>')
-        .attr('media', 'all')
-        .attr('rel', 'stylesheet')
-        .attr('href', '/bundles/ekynamedia/lib/videojs/video-js.css')
-        .appendTo($('head'));
+        if (typeof window['videojs'] === 'undefined') {
+            return;
+        }
 
-    swfobject.switchOffAutoHideShow();
+        $videos.each(function() {
+            videojs($(this).attr('id')).dispose();
+        });
+    }
 
-    var MediaPlayer = function() {};
+    function initFlashes($flashes) {
+        if (0 === $flashes.length) {
+            return
+        }
 
-    MediaPlayer.prototype = {
-        constructor: MediaPlayer,
+        require(['swfobject'], function() {
+            var swoI = setInterval(function() {
+                if (typeof window['swfobject'] === 'undefined') {
+                    return;
+                }
+
+                clearInterval(swoI);
+
+                swfobject.switchOffAutoHideShow();
+
+                $flashes.each(function () {
+                    var id = $(this).attr('id');
+                    if (id) {
+                        swfobject.registerObject(id, "9.0.0", "/bundles/ekynamedia/lib/swfobject/expressInstall.swf");
+                    }
+                });
+            }, 50);
+        });
+    }
+
+    return {
         init: function ($container) {
-            var that = this;
-
             $container = $container || $('body');
 
-            var $videos = $container.find('.video-js');
-            if (0 < $videos.length) {
-                $videos.each(function() {
-                    that.initVideo($(this));
-                });
-            }
+            //initVideos($container.find('video.video-js'));
 
-            var $swfObjects = $container.find('.swf-object');
-            if (0 < $swfObjects.length) {
-                $swfObjects.each(function() {
-                    that.initFlash($(this));
-                });
-            }
+            initFlashes($container.find('object.swf-object'));
         },
         destroy: function($container) {
-            var that = this;
-
             $container = $container || $('body');
 
-            var $videos = $container.find('.video-js');
-            if (0 < $videos.length) {
-                $videos.each(function() {
-                    that.destroyVideo($(this));
-                });
-            }
-        },
-        initVideo: function($element) {
-            return VideoJs($element.attr('id'));
-        },
-        destroyVideo: function($element) {
-            var video = VideoJs($element.attr('id'));
-            video.dispose();
-            return video;
-        },
-        initFlash: function($element) {
-            swfobject.registerObject($element.attr('id'), "9.0.0", "/bundles/ekynamedia/lib/swfobject/expressInstall.swf");
+            //destroyVideos($container.find('video.video-js'));
         }
     };
-
-    return new MediaPlayer();
-}));
+});

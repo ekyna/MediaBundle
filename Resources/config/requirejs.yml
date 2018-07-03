@@ -11,10 +11,10 @@ config:
     paths:
         'ekyna-media-templates': 'bundles/ekynamedia/js/ekyna-media-templates'
         'ekyna-media-browser': 'bundles/ekynamedia/js/media-browser'
+        'ekyna-media-player': 'bundles/ekynamedia/js/media-player'
         'ekyna-form/media-choice': 'bundles/ekynamedia/js/form-media-choice'
         'ekyna-form/media-collection': 'bundles/ekynamedia/js/form-media-collection'
         'ekyna-form/media-upload': 'bundles/ekynamedia/js/form-media-upload'
-        'ekyna-media-player': 'bundles/ekynamedia/js/media-player'
         'ekyna-fancybox': 'bundles/ekynamedia/js/fancybox'
         'fancybox': 'bundles/ekynamedia/lib/fancybox/jquery.fancybox'
         'fancytree': 'bundles/ekynamedia/lib/fancytree/fancytree'
@@ -25,8 +25,8 @@ config:
             'fancybox': 'ekyna-fancybox'
         'ekyna-fancybox':
             'fancybox': 'fancybox'
-#build:
-#    include:
-#        - 'ekyna-media-player'
+build:
+    include:
+        - 'ekyna-media-player'
 #    paths:
 #        'ekyna-media-thumb': 'empty:'

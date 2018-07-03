@@ -4,6 +4,8 @@ namespace Ekyna\Bundle\MediaBundle\Controller;
 
 use Ekyna\Bundle\CoreBundle\Controller\Controller;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
+use League\Flysystem\Adapter\Local;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -32,12 +34,22 @@ class MediaController extends Controller
          */
         list($media, $file) = $this->findMedia($request->attributes->get('key'));
 
-        // TODO use content disposition
-        // TODO Don't stream small files ?
-        // TODO Use BinaryFileResponse when needed
-        // TODO Does streamed response can really be cached ???
+        // ---- BINARY ---- //
 
-        if (1024*1024 < $size = $file->getSize()) { // Larger than 1Mo
+        /** @var \League\Flysystem\Filesystem $filesystem */
+        $filesystem = $file->getFilesystem();
+        $adapter = $filesystem->getAdapter();
+        if ($adapter instanceof Local) {
+            $path = $adapter->applyPathPrefix($file->getPath());
+
+            BinaryFileResponse::trustXSendfileTypeHeader();
+
+            return new BinaryFileResponse($path);
+        }
+
+        // ---- STREAMED ---- //
+
+        if (1024 * 1024 < $size = $file->getSize()) { // Larger than 1Mo
             $response = new StreamedResponse(function () use ($file) {
                 fpassthru($file->readStream());
             });
@@ -48,6 +60,8 @@ class MediaController extends Controller
 
             return $response;
         }
+
+        // ---- CLASSIC ---- //
 
         $lastModified = $media->getUpdatedAt();
 
@@ -116,8 +130,8 @@ class MediaController extends Controller
         } else {
             $template = "EkynaMediaBundle:Media:{$media->getType()}.html.twig";
             $content = $this->renderView($template, [
-                'media'    => $media,
-                'file'     => $file,
+                'media' => $media,
+                'file'  => $file,
             ]);
         }
 
@@ -140,6 +154,7 @@ class MediaController extends Controller
         $media = $this
             ->get('ekyna_media.media.repository')
             ->findOneBy(['path' => $path]);
+
         if (null === $media) {
             throw new NotFoundHttpException('Media not found');
         }
@@ -148,8 +163,7 @@ class MediaController extends Controller
         if (!$fs->has($media->getPath())) {
             throw new NotFoundHttpException('Media not found');
         }
-        $file = $fs->get($media->getPath());
 
-        return [$media, $file];
+        return [$media, $fs->get($media->getPath())];
     }
 }

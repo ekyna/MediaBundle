@@ -127,6 +127,8 @@ class Renderer
             $params['attr']['autoplay'] = null;
             // https://developers.google.com/web/updates/2017/09/autoplay-policy-changes#best-practices
             $params['attr']['muted'] = null;
+            // https://webkit.org/blog/6784/new-video-policies-for-ios/
+            $params['attr']['playsinline'] = null;
         }
         if ($params['loop']) {
             $params['attr']['loop'] = null;
@@ -139,7 +141,8 @@ class Renderer
             $params['attr']['class'] = 'video-js vjs-default-skin vjs-big-play-centered';
             $params['attr']['data-setup'] = [];
             if ($params['responsive']) {
-                $params['attr']['data-setup']['fluid'] = 1;
+                $params['attr']['data-setup']['fluid'] = true;
+                $params['attr']['data-setup']['textTrackSettings'] = false;
             }
         }
 

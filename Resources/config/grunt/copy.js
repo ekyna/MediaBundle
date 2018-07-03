@@ -17,7 +17,7 @@ module.exports = function (grunt, options) {
                 {
                     expand: true,
                     cwd: 'bower_components/video.js/dist',
-                    src: ['font/**', 'lang/**', 'ie8/videojs-ie8.min.js', 'video.min.js', 'video-js.min.css', 'video-js.swf'],
+                    src: ['font/**', 'lang/**', 'video.min.js', 'video-js.min.css'],
                     dest: 'src/Ekyna/Bundle/MediaBundle/Resources/public/lib/videojs',
                     rename: function (dest, src) {
                         return dest + '/' + src.replace(/\.min/, '');
