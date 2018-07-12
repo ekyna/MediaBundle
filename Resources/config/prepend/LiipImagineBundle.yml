@@ -9,15 +9,6 @@ liip_imagine:
             filesystem:
                 data_root: "%kernel.data_dir%/media"
     filter_sets:
-        media_thumb:
-            quality: 70
-            cache: local_media
-            data_loader: local_media
-            filters:
-                thumbnail: { size: [120, 90], mode: inset }
-                background: { size: [120, 90], color: '#ffffff' }
-            post_processors:
-                jpegoptim: {}
         media_front:
             quality: 85
             cache: local_media
@@ -41,5 +32,31 @@ liip_imagine:
             data_loader: local_media
             filters:
                 thumbnail: { size: [24, 24], mode: outbound }
+            post_processors:
+                jpegoptim: {}
+        media_thumb:
+            quality: 60
+            cache: local_media
+            data_loader: local_media
+            filters:
+                thumbnail: { size: [120, 90], mode: inset }
+                background: { size: [120, 90], color: '#ffffff' }
+            post_processors:
+                jpegoptim: {}
+        video_thumb:
+            quality: 60
+            cache: local_media
+            data_loader: local_media
+            filters:
+                thumbnail: { size: [120, 90], mode: inset }
+                background: { size: [120, 90], color: '#ffffff' }
+            post_processors:
+                jpegoptim: {}
+        video_alt:
+            quality: 60
+            cache: local_media
+            data_loader: local_media
+            filters:
+                relative_resize: { widen: 720 }
             post_processors:
                 jpegoptim: {}

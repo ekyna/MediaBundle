@@ -3,8 +3,15 @@ oneup_flysystem:
         local_media:
             local:
                 directory: "%kernel.data_dir%/media"
+        local_video:
+            local:
+                directory: "%kernel.project_dir%/web/%ekyna_media.video.directory%"
     filesystems:
         local_media:
             adapter: local_media
             alias: local_media_filesystem
             mount: local_media
+        local_video:
+            adapter: local_video
+            alias: local_video_filesystem
+            mount: local_video

@@ -24,6 +24,11 @@ class Renderer
     private $generator;
 
     /**
+     * @var VideoManager
+     */
+    private $videoManager;
+
+    /**
      * @var FilterManager
      */
     private $filterManager;
@@ -39,17 +44,20 @@ class Renderer
      *
      * @param \Twig_Environment $twig
      * @param Generator         $generator
+     * @param VideoManager      $videoManager
      * @param FilterManager     $filterManager
      * @param string            $template
      */
     public function __construct(
         \Twig_Environment $twig,
         Generator $generator,
+        VideoManager $videoManager,
         FilterManager $filterManager,
         $template = 'EkynaMediaBundle:Media:element.html.twig'
     ) {
         $this->twig = $twig;
         $this->generator = $generator;
+        $this->videoManager = $videoManager;
         $this->filterManager = $filterManager;
         $this->template = $template;
     }
@@ -106,7 +114,6 @@ class Renderer
             throw new \InvalidArgumentException('Expected media with "video" type.');
         }
 
-        // TODO Poster attribute
 
         $params = array_replace_recursive([
             'responsive'   => true,
@@ -138,19 +145,29 @@ class Renderer
         }
         if ($params['player']) {
             $params['attr']['controls'] = null;
-            $params['attr']['class'] = 'video-js vjs-default-skin vjs-big-play-centered';
+            /*$params['attr']['class'] = 'video-js vjs-default-skin vjs-big-play-centered';
             $params['attr']['data-setup'] = [];
             if ($params['responsive']) {
                 $params['attr']['data-setup']['fluid'] = true;
                 $params['attr']['data-setup']['textTrackSettings'] = false;
-            }
+            }*/
+        }
+
+        // Poster attribute
+        if (null !== $poster = $this->videoManager->thumb($video, 'video_alt')) {
+            $params['attr']['poster'] = $poster;
+        }
+
+        // Sources
+        $videos = [];
+        foreach (['webm', 'mp4', 'ogg'] as $format) {
+            $videos['video/' . $format] = $this->generator->generateFrontUrl($video, $format);
         }
 
         return $this->renderBlock('video', [
+            'videos'       => $videos,
             'responsive'   => $params['responsive'],
             'aspect_ratio' => $params['aspect_ratio'],
-            'src'          => $this->generator->generateFrontUrl($video),
-            'mime_type'    => $this->generator->getMimeType($video),
             'alt_message'  => $params['alt_message'],
             'attr'         => $params['attr'],
         ]);
@@ -303,13 +320,15 @@ class Renderer
                 'fallback' => $svg->getTitle(),
             ]);
 
-        } else if ($mode === 'image') {
-            $params['attr']['src'] = $path;
-            $params['attr']['alt'] = $svg->getTitle();
+        } else {
+            if ($mode === 'image') {
+                $params['attr']['src'] = $path;
+                $params['attr']['alt'] = $svg->getTitle();
 
-            return $this->renderBlock('image', [
-                'attr' => $params['attr'],
-            ]);
+                return $this->renderBlock('image', [
+                    'attr' => $params['attr'],
+                ]);
+            }
         }
 
         // By Content

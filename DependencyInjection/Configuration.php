@@ -23,8 +23,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('output_dir')->defaultValue('')->end()
-                // TODO import filesystems
+                ->scalarNode('watermark')->defaultValue('')->end()
             ->end()
         ;
 

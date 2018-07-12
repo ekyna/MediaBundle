@@ -24,7 +24,6 @@ class MediaController extends Controller
      * @param Request $request
      *
      * @return Response
-     * @throws NotFoundHttpException
      */
     public function downloadAction(Request $request)
     {
@@ -66,7 +65,7 @@ class MediaController extends Controller
         $lastModified = $media->getUpdatedAt();
 
         $response = new Response();
-        $response->setEtag(md5($file->getPath() . $lastModified->getTimestamp()));
+        $response->setEtag(md5($file->getPath().$lastModified->getTimestamp()));
         $response->setLastModified($lastModified);
         $response->setPublic();
 
@@ -83,12 +82,36 @@ class MediaController extends Controller
     }
 
     /**
-     * Download local file.
+     * Video (conversion) action.
      *
      * @param Request $request
      *
      * @return Response
-     * @throws NotFoundHttpException
+     */
+    public function videoAction(Request $request)
+    {
+        /**
+         * @var \Ekyna\Bundle\MediaBundle\Model\MediaInterface $media
+         */
+        list($media) = $this->findMedia($request->attributes->get('key'));
+
+        $format = $request->attributes->get('_format');
+
+        if (null === $path = $this->get('ekyna_media.video_manager')->convert($media, $format)) {
+            throw $this->createNotFoundException('Video not found.');
+        }
+
+        BinaryFileResponse::trustXSendfileTypeHeader();
+
+        return new BinaryFileResponse($path);
+    }
+
+    /**
+     * Display local file.
+     *
+     * @param Request $request
+     *
+     * @return Response
      */
     public function playerAction(Request $request)
     {
@@ -104,9 +127,9 @@ class MediaController extends Controller
 
         $lastModified = $media->getUpdatedAt();
         if ($request->isXmlHttpRequest()) {
-            $eTag = md5($file->getPath() . '-xhr-' . $lastModified->getTimestamp());
+            $eTag = md5($file->getPath().'-xhr-'.$lastModified->getTimestamp());
         } else {
-            $eTag = md5($file->getPath() . $lastModified->getTimestamp());
+            $eTag = md5($file->getPath().$lastModified->getTimestamp());
         }
 
         $response = new Response();
@@ -125,7 +148,7 @@ class MediaController extends Controller
             $extension = $twig->getExtension('ekyna_media_player');
             $content = $extension->renderMedia($media);
             if ('true' === $request->query->get('fancybox')) {
-                $content = '<div style="width:90%;max-width:1200px;">' . $content . '</div>';
+                $content = '<div style="width:90%;max-width:1200px;">'.$content.'</div>';
             }
         } else {
             $template = "EkynaMediaBundle:Media:{$media->getType()}.html.twig";

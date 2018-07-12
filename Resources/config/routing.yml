@@ -18,6 +18,14 @@ ekyna_media_player:
         key: '[a-z0-9-\./]+'
     options: { expose: true }
 
+ekyna_media_video:
+    path: /media/video/{key}.{_format}
+    defaults: { _controller: "EkynaMediaBundle:Media:video" }
+    methods: [GET]
+    requirements:
+        key: '[a-z0-9-\./]+'
+        _format: mp4|webm|ogg
+
 _liip_imagine:
     resource: "@LiipImagineBundle/Resources/config/routing.xml"
 

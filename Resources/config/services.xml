@@ -6,6 +6,7 @@
 
     <parameters>
         <parameter key="ekyna_media.browser.thumbs_directory">cache/media/media_thumb</parameter>
+        <parameter key="ekyna_media.video.directory">cache/video</parameter>
 
         <parameter key="ekyna_media.media_choice.form_type.class">Ekyna\Bundle\MediaBundle\Form\Type\MediaChoiceType</parameter>
         <parameter key="ekyna_media.media_collection.form_type.class">Ekyna\Bundle\MediaBundle\Form\Type\MediaCollectionType</parameter>
@@ -126,9 +127,22 @@
             <argument type="service" id="local_media_filesystem" />
             <argument type="service" id="liip_imagine" />
             <argument type="service" id="liip_imagine.cache.manager" />
+            <argument type="service" id="ekyna_media.video_manager" />
             <argument type="service" id="router" />
-            <argument>%kernel.root_dir%/../web</argument>
+            <argument>%kernel.project_dir%/web</argument>
             <argument>%ekyna_media.browser.thumbs_directory%</argument>
+        </service>
+        <service id="ekyna_media.video_manager"
+                 class="Ekyna\Bundle\MediaBundle\Service\VideoManager"
+                 lazy="true">
+            <argument type="service" id="local_media_filesystem" />
+            <argument type="service" id="local_video_filesystem" />
+            <argument type="service" id="dubture_ffmpeg.ffmpeg" />
+            <argument type="service" id="dubture_ffmpeg.ffprobe" />
+            <argument type="service" id="liip_imagine.cache.manager" />
+            <argument type="service" id="router" />
+            <argument>%ekyna_media.video.directory%</argument>
+            <argument>%ekyna_media.watermark%</argument>
         </service>
         <service id="ekyna_media.browser"
                  class="Ekyna\Bundle\MediaBundle\Service\Browser"
@@ -142,6 +156,7 @@
                  lazy="true">
             <argument type="service" id="twig" />
             <argument type="service" id="ekyna_media.generator" />
+            <argument type="service" id="ekyna_media.video_manager" />
             <argument type="service" id="liip_imagine.filter.manager" />
         </service>
 

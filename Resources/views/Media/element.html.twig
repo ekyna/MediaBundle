@@ -2,7 +2,9 @@
 {% spaceless %}
 {% if responsive %}<div class="embed-responsive embed-responsive-{{ aspect_ratio }}">{% endif %}
     <video preload="auto" {{ block('attributes') }}>
-        <source src="{{ src }}" type="{{ mime_type }}" />
+        {% for mime_type, src in videos -%}
+            <source src="{{ src }}" type="{{ mime_type }}">
+        {%- endfor %}
         {% if alt_message is not empty -%}
             {{ alt_message|trans }}
         {%- endif %}

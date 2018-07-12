@@ -17,6 +17,8 @@ class EkynaMediaExtension extends AbstractExtension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $this->configure($configs, 'ekyna_media', new Configuration(), $container);
+        $config = $this->configure($configs, 'ekyna_media', new Configuration(), $container);
+
+        $container->setParameter('ekyna_media.watermark', $config['watermark']);
     }
 }
