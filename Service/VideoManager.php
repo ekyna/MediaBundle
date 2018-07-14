@@ -18,6 +18,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class VideoManager
 {
+    const FORMATS = ['webm', 'mp4', 'ogg'];
+
     /**
      * @var Flysystem
      */
@@ -109,7 +111,10 @@ class VideoManager
     public function getBrowserPath(MediaInterface $media, $format)
     {
         $this->assertVideo($media);
-        $this->assertFormat($format);
+
+        if (!in_array($format, static::FORMATS, true)) {
+            $format = 'mp4';
+        }
 
         if (null === $targetKey = $this->getTargetKey($media, $format)) {
             return null;
@@ -353,7 +358,7 @@ class VideoManager
      */
     private function assertFormat(string $format)
     {
-        if (!in_array($format, ['mp4', 'webm', 'ogg'], true)) {
+        if (!in_array($format, static::FORMATS, true)) {
             throw new InvalidArgumentException("Expected format as 'mp4', 'webm' or 'ogg'.");
         }
     }

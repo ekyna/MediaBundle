@@ -160,7 +160,7 @@ class Renderer
 
         // Sources
         $videos = [];
-        foreach (['webm', 'mp4', 'ogg'] as $format) {
+        foreach (VideoManager::FORMATS as $format) {
             $videos['video/' . $format] = $this->generator->generateFrontUrl($video, $format);
         }
 
