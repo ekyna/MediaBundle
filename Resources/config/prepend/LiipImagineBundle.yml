@@ -10,53 +10,53 @@ liip_imagine:
                 data_root: "%kernel.data_dir%/media"
     filter_sets:
         media_front:
-            quality: 85
             cache: local_media
             data_loader: local_media
             filters:
                 thumbnail: { size: [800, 600], mode: inset }
             post_processors:
-                jpegoptim: {}
+                jpegoptim: {strip_all: true, max: "%image.jpeg_quality%", progressive: true}
+                pngquant: {quality: "%image.png_quality%"}
         media_modal:
-            quality: 85
             cache: local_media
             data_loader: local_media
             filters:
                 thumbnail: { size: [800, 600], mode: inset }
                 background: { size: [800, 600], color: '#fff' }
             post_processors:
-                jpegoptim: {}
+                jpegoptim: {strip_all: true, max: "%image.jpeg_quality%", progressive: true}
+                pngquant: {quality: "%image.png_quality%"}
         media_table:
-            quality: 70
             cache: local_media
             data_loader: local_media
             filters:
                 thumbnail: { size: [24, 24], mode: outbound }
             post_processors:
-                jpegoptim: {}
+                jpegoptim: {strip_all: true, max: "%image.jpeg_quality%", progressive: true}
+                pngquant: {quality: "%image.png_quality%"}
         media_thumb:
-            quality: 60
             cache: local_media
             data_loader: local_media
             filters:
                 thumbnail: { size: [120, 90], mode: inset }
                 background: { size: [120, 90], color: '#ffffff' }
             post_processors:
-                jpegoptim: {}
+                jpegoptim: {strip_all: true, max: "%image.jpeg_quality%", progressive: true}
+                pngquant: {quality: "%image.png_quality%"}
         video_thumb:
-            quality: 60
             cache: local_media
             data_loader: local_media
             filters:
                 thumbnail: { size: [120, 90], mode: inset }
                 background: { size: [120, 90], color: '#ffffff' }
             post_processors:
-                jpegoptim: {}
+                jpegoptim: {strip_all: true, max: "%image.jpeg_quality%", progressive: true}
+                pngquant: {quality: "%image.png_quality%"}
         video_alt:
-            quality: 60
             cache: local_media
             data_loader: local_media
             filters:
                 relative_resize: { widen: 720 }
             post_processors:
-                jpegoptim: {}
+                jpegoptim: {strip_all: true, max: "%image.jpeg_quality%", progressive: true}
+                pngquant: {quality: "%image.png_quality%"}

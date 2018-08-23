@@ -27,7 +27,7 @@ ekyna_media_video:
         _format: mp4|webm|ogg
 
 _liip_imagine:
-    resource: "@LiipImagineBundle/Resources/config/routing.xml"
+    resource: "@LiipImagineBundle/Resources/config/routing.yaml"
 
 _oneup_uploader:
     resource: .
