@@ -1,0 +1,10 @@
+ekyna_media:
+    media:
+        invalid_key: Failed to find source file.
+        invalid_type: Invalid media type.
+        type_miss_match: Cannot change the media type, please create a new media for the file.
+    image:
+        invalid_mime_type: Accepted formats are JPEG, GIF and PNG.
+    import:
+        at_least_one_key: Please select at least one file.
+        at_least_one_media: Please add at least one media.

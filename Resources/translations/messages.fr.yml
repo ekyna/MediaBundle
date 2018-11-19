@@ -17,16 +17,13 @@ ekyna_media:
             remove: Supprimer le média
         alert:
             no_item: Aucun média configuré
-            unsupported: Your browser does not support the video tag.
     browser:
         title:
             browse: Gestionnaire de médias
             single_selection: Choisissez un média
             multiple_selection: Sélectionnez des médias
     player:
-        #Your browser does not support the video tag.
         video_not_supported: Votre navigateur ne prend pas en charge la balise "video".
-        #Your browser does not support the audio element.
         audio_not_supported: Votre navigateur ne prend pas en charge la balise "audio".
     import:
         title: Importer des médias

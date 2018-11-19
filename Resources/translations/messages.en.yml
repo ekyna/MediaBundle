@@ -1,0 +1,32 @@
+ekyna_media:
+    media:
+        label:
+            singular: Media
+            plural: Medias
+        header:
+            list: Medias <small>List of the medias</small>
+            show: Media details
+            new: Create a new media
+            edit: Edit the media
+            remove: Remove the media
+        button:
+            list: Medias list
+            show: Media details
+            new: New media
+            edit: Edit the media
+            remove: Remove the media
+        alert:
+            no_item: No media configured
+    browser:
+        title:
+            browse: Media browser
+            single_selection: Select a media
+            multiple_selection: Select some medias
+    player:
+        video_not_supported: Your browser does not support the video tag.
+        audio_not_supported: Your browser does not support the audio tag.
+    import:
+        title: Import medias
+    upload:
+        title: Upload medias
+        drop_zone: Drop media files here
