@@ -32,7 +32,7 @@ class BrowserController extends Controller
     {
         $config = $this->buildConfig($request);
 
-        return $this->render('EkynaMediaBundle:Manager:index.html.twig', ['config' => $config]);
+        return $this->render('@EkynaMedia/Manager/index.html.twig', ['config' => $config]);
     }
 
     /**
@@ -50,7 +50,7 @@ class BrowserController extends Controller
 
         $config = $this->buildConfig($request);
 
-        $browser = $this->renderView('EkynaMediaBundle:Manager:render.html.twig', ['config' => $config]);
+        $browser = $this->renderView('@EkynaMedia/Manager/render.html.twig', ['config' => $config]);
 
         $modal = new Modal();
         $modal->setTitle('ekyna_media.browser.title.' . $config['mode']);
@@ -428,7 +428,7 @@ class BrowserController extends Controller
         $modal = $this->createModal();
         $modal->setTitle('ekyna_media.upload.title');
         $modal->setVars([
-            'form_template' => 'EkynaMediaBundle:Manager:upload.html.twig',
+            'form_template' => '@EkynaMedia/Manager/upload.html.twig',
         ]);
         $modal->setContent($form->createView());
 
@@ -509,7 +509,7 @@ class BrowserController extends Controller
         ]);
         $modal->setVars([
             'resource_name' => 'ekyna_media.media',
-            'form_template' => 'EkynaAdminBundle:Entity/Default:_form.html.twig',
+            'form_template' => '@EkynaAdmin/Entity/Default/_form.html.twig',
         ]);
 
         return $modal;

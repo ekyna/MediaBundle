@@ -48,8 +48,8 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->variableNode('templates')->defaultValue([
-                                    'list.html'  => 'EkynaMediaBundle:Admin/Media:list.html',
-                                    'show.html'  => 'EkynaMediaBundle:Admin/Media:show.html',
+                                    'list.html'  => '@EkynaMedia/Admin/Media/list.html',
+                                    'show.html'  => '@EkynaMedia/Admin/Media/show.html',
                                 ])->end()
                                 ->scalarNode('entity')->defaultValue('Ekyna\Bundle\MediaBundle\Entity\Media')->end()
                                 ->scalarNode('controller')->defaultValue('Ekyna\Bundle\MediaBundle\Controller\Admin\MediaController')->end()

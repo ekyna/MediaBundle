@@ -53,7 +53,7 @@ class Renderer
         Generator $generator,
         VideoManager $videoManager,
         FilterManager $filterManager,
-        $template = 'EkynaMediaBundle:Media:element.html.twig'
+        $template = '@EkynaMedia/Media/element.html.twig'
     ) {
         $this->twig = $twig;
         $this->generator = $generator;

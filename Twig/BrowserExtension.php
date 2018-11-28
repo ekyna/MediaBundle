@@ -9,7 +9,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 /**
  * Class BrowserExtension
  * @package Ekyna\Bundle\MediaBundle\Twig
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class BrowserExtension extends \Twig_Extension
 {
@@ -23,16 +23,6 @@ class BrowserExtension extends \Twig_Extension
      */
     private $serializer;
 
-    /**
-     * @var \Twig_Template
-     */
-    private $managerTemplate;
-
-    /**
-     * @var \Twig_Template
-     */
-    private $thumbTemplate;
-
 
     /**
      * Constructor.
@@ -42,17 +32,8 @@ class BrowserExtension extends \Twig_Extension
      */
     public function __construct(Generator $generator, SerializerInterface $serializer)
     {
-        $this->generator   = $generator;
-        $this->serializer  = $serializer;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function initRuntime(\Twig_Environment $twig)
-    {
-        $this->managerTemplate = $twig->loadTemplate('EkynaMediaBundle:Manager:render.html.twig');
-        $this->thumbTemplate   = $twig->loadTemplate('EkynaMediaBundle::thumb.html.twig');
+        $this->generator = $generator;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -61,7 +42,11 @@ class BrowserExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('render_media_manager', [$this, 'renderManager'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction(
+                'render_media_manager',
+                [$this, 'renderManager'],
+                ['is_safe' => ['html'], 'needs_environment' => true]
+            ),
         ];
     }
 
@@ -71,8 +56,15 @@ class BrowserExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('media_thumb',      [$this, 'renderMediaThumb'],  ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('media_thumb_path', [$this, 'getMediaThumbPath']),
+            new \Twig_SimpleFilter(
+                'media_thumb',
+                [$this, 'renderMediaThumb'],
+                ['is_safe' => ['html'], 'needs_environment' => true]
+            ),
+            new \Twig_SimpleFilter(
+                'media_thumb_path',
+                [$this, 'getMediaThumbPath']
+            ),
         ];
     }
 
@@ -80,22 +72,28 @@ class BrowserExtension extends \Twig_Extension
     /**
      * Renders the media manager.
      *
-     * @param array $config
+     * @param \Twig_Environment $env
+     * @param array             $config
+     *
      * @return string
      */
-    public function renderManager(array $config = array())
+    public function renderManager(\Twig_Environment $env, array $config = [])
     {
-        return $this->managerTemplate->render(array('config' => $config));
+        return $env->render('@EkynaMedia/Manager/render.html.twig', [
+            'config' => $config,
+        ]);
     }
 
     /**
      * Renders the media thumb.
      *
-     * @param MediaInterface $media
-     * @param array          $controls
+     * @param \Twig_Environment $env
+     * @param MediaInterface    $media
+     * @param array             $controls
+     *
      * @return string
      */
-    public function renderMediaThumb(MediaInterface $media = null, array $controls = array())
+    public function renderMediaThumb(\Twig_Environment $env, MediaInterface $media = null, array $controls = [])
     {
         if (null !== $media) {
             $media->setThumb($this->generator->generateThumbUrl($media));
@@ -120,31 +118,23 @@ class BrowserExtension extends \Twig_Extension
             $data = $this->serializer->serialize($media, 'json', ['groups' => ['browser']]);
         }
 
-        return $this->thumbTemplate->render(array(
+        return $env->render('@EkynaMedia/thumb.html.twig', [
             'media'    => $media,
             'data'     => $data,
             'controls' => $controls,
             'selector' => false,
-        ));
+        ]);
     }
 
     /**
      * Renders the media thumb.
      *
      * @param MediaInterface $media
+     *
      * @return string
      */
     public function getMediaThumbPath(MediaInterface $media)
     {
         return $this->generator->generateThumbUrl($media);
     }
-
-    /**
-     * @inheritdoc
-     */
-    public function getName()
-    {
-        return 'ekyna_media_browser';
-    }
 }
-

@@ -6,8 +6,6 @@ config:
             deps: ['twig']
         'fancybox':
             deps: ['jquery']
-        'fancybox':
-            deps: ['jquery']
     paths:
         'ekyna-media-templates': 'bundles/ekynamedia/js/ekyna-media-templates'
         'ekyna-media-browser': 'bundles/ekynamedia/js/media-browser'
@@ -28,5 +26,3 @@ config:
 build:
     include:
         - 'ekyna-media-player'
-#    paths:
-#        'ekyna-media-thumb': 'empty:'

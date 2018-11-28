@@ -22,7 +22,7 @@
     {#<link rel="stylesheet" href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}">#}
     {% endblock stylesheets %}
 
-    {% include 'EkynaCoreBundle:Ui:ie-fix.html.twig' %}
+    {% include '@EkynaCore/Ui/ie-fix.html.twig' %}
 
     {{ require_js(not app.debug) }}
 </head>

@@ -24,7 +24,7 @@
         {{ ui_forms_stylesheets() }}
     {% endblock stylesheets %}
 
-    {% include 'EkynaCoreBundle:Ui:ie-fix.html.twig' %}
+    {% include '@EkynaCore/Ui/ie-fix.html.twig' %}
 
     {{ require_js(not app.debug) }}
 </head>

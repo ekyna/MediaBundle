@@ -173,12 +173,4 @@ class PlayerExtension extends \Twig_Extension
     {
         return $this->renderer->renderFile($file, $params);
     }
-
-    /**
-     * @inheritdoc
-     */
-    public function getName()
-    {
-        return 'ekyna_media_player';
-    }
 }

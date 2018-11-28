@@ -1,19 +1,19 @@
 {% spaceless %}
-<div class="media-thumb"{% if media is not sameas(null) %} title="{{ media.title }}"{% endif %}{% if data is defined %} data-media="{{ data }}"{% endif %}>
-    {% if selector and (media is not sameas(null)) %}
+<div class="media-thumb"{% if media is not null %} title="{{ media.title }}"{% endif %}{% if data is defined %} data-media="{{ data }}"{% endif %}>
+    {% if selector and media is not null %}
         <span class="selector">
             <input type="checkbox" name="thumb_selection[]" value="{{ media.id }}">
        </span>
     {% endif %}
     <div class="thumb" data-role="select">
-        <img src="{{ media is not sameas(null) ? media.thumb : '/bundles/ekynamedia/img/media-add.gif' }}">
+        <img src="{{ media is not null ? media.thumb : '/bundles/ekynamedia/img/media-add.gif' }}">
     </div>
     <div class="controls">
         {% for c in controls %}
         <a href="#" data-role="{{ c.role }}" class="glyphicon glyphicon-{{ c.icon }}"></a>
         {% endfor %}
     </div>
-    {% if media is not sameas(null) %}
+    {% if media is not null %}
     <div class="name" data-role="select">{{ media.filename }}</div>
     {% endif %}
 </div>
