@@ -34,7 +34,7 @@ class Renderer
     private $filterManager;
 
     /**
-     * @var \Twig_Template
+     * @var \Twig_TemplateWrapper
      */
     private $template;
 
@@ -388,13 +388,10 @@ class Renderer
      */
     private function renderBlock($blockName, $blockVars)
     {
-        /** @noinspection PhpInternalEntityUsedInspection */
-        if (!$this->template instanceof \Twig_Template) {
-            /** @noinspection PhpInternalEntityUsedInspection */
-            $this->template = $this->twig->loadTemplate($this->template);
+        if (!$this->template instanceof \Twig_TemplateWrapper) {
+            $this->template = $this->twig->load($this->template);
         }
 
-        /** @noinspection PhpInternalEntityUsedInspection */
         return $this->template->renderBlock($blockName, $blockVars);
     }
 }
