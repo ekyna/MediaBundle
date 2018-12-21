@@ -1,11 +1,9 @@
 module.exports = {
     'cssmin:media': [
-        'cssmin:fancytree',
         'cssmin:media_browser'
     ],
     'copy:media': [
         'copy:media_lib',
-        'copy:media_libs_fix',
         'copy:media_img'
     ],
     'build:media': [
@@ -13,7 +11,7 @@ module.exports = {
         'copy:media',
         'cssmin:media',
         'twig:media',
-        'uglify:media',
+        'uglify:media_js',
         'clean:media_post'
     ]
 };

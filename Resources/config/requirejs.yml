@@ -1,28 +1,35 @@
 config:
     shim:
-        'fancytree':
-            deps: ['jquery', 'jquery-ui/core', 'jquery-ui/effect-blind', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/droppable']
-        'ekyna-media-templates':
-            deps: ['twig']
-        'fancybox':
-            deps: ['jquery']
+        ekyna-media-templates:
+            deps: [twig]
+        fancybox:
+            deps: [jquery]
+        fancytree:
+            deps:
+                - jquery
+                - jquery-ui/core
+                - jquery-ui/effects/effect-blind
+                - jquery-ui/widget
+                - jquery-ui/widgets/contextmenu
+                - jquery-ui/widgets/draggable
+                - jquery-ui/widgets/droppable
     paths:
-        'ekyna-media-templates': 'bundles/ekynamedia/js/ekyna-media-templates'
-        'ekyna-media-browser': 'bundles/ekynamedia/js/media-browser'
-        'ekyna-media-player': 'bundles/ekynamedia/js/media-player'
-        'ekyna-form/media-choice': 'bundles/ekynamedia/js/form-media-choice'
-        'ekyna-form/media-collection': 'bundles/ekynamedia/js/form-media-collection'
-        'ekyna-form/media-upload': 'bundles/ekynamedia/js/form-media-upload'
-        'ekyna-fancybox': 'bundles/ekynamedia/js/fancybox'
-        'fancybox': 'bundles/ekynamedia/lib/fancybox/jquery.fancybox'
-        'fancytree': 'bundles/ekynamedia/lib/fancytree/fancytree'
-        'videojs': 'bundles/ekynamedia/lib/videojs/video'
-        'swfobject': 'bundles/ekynamedia/lib/swfobject/swfobject'
+        ekyna-media-templates: bundles/ekynamedia/js/ekyna-media-templates
+        ekyna-media-browser: bundles/ekynamedia/js/media-browser
+        ekyna-media-player: bundles/ekynamedia/js/media-player
+        ekyna-form/media-choice: bundles/ekynamedia/js/form-media-choice
+        ekyna-form/media-collection: bundles/ekynamedia/js/form-media-collection
+        ekyna-form/media-upload: bundles/ekynamedia/js/form-media-upload
+        ekyna-fancybox: bundles/ekynamedia/js/fancybox
+        fancybox: bundles/ekynamedia/lib/fancybox/jquery.fancybox
+        fancytree: bundles/ekynamedia/lib/fancytree/fancytree
+        videojs: bundles/ekynamedia/lib/videojs/video
+        swfobject: bundles/ekynamedia/lib/swfobject/swfobject
     map:
         '*':
-            'fancybox': 'ekyna-fancybox'
-        'ekyna-fancybox':
-            'fancybox': 'fancybox'
+            fancybox: ekyna-fancybox
+        ekyna-fancybox:
+            fancybox: fancybox
 build:
     include:
-        - 'ekyna-media-player'
+        - ekyna-media-player

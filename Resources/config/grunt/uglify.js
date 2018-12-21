@@ -1,15 +1,13 @@
 module.exports = function (grunt, options) {
     return {
-        media: {
+        media_js: {
             files: [
                 {
                     'src/Ekyna/Bundle/MediaBundle/Resources/public/lib/fancytree/fancytree.js': [
-                        'src/Ekyna/Bundle/MediaBundle/Resources/public/tmp/jquery.ui-contextmenu.js',
-                        'bower_components/jquery.fancytree/dist/src/jquery.fancytree.js',
-                        'bower_components/jquery.fancytree/dist/src/jquery.fancytree.dnd.js',
-                        'bower_components/jquery.fancytree/dist/src/jquery.fancytree.edit.js',
-                        //'bower_components/jquery.fancytree/dist/src/jquery.fancytree.wide.js',
-                        'bower_components/jquery.fancytree/dist/src/jquery.fancytree.glyph.js'
+                        'node_modules/jquery.fancytree/dist/src/jquery.fancytree.js',
+                        'node_modules/jquery.fancytree/dist/src/jquery.fancytree.dnd.js',
+                        'node_modules/jquery.fancytree/dist/src/jquery.fancytree.edit.js',
+                        'node_modules/jquery.fancytree/dist/src/jquery.fancytree.glyph.js'
                     ]
                 },
                 {

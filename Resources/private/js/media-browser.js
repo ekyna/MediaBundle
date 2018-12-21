@@ -455,7 +455,7 @@ define('ekyna-media-browser',
                 activeVisible: true,
                 minExpandLevel: 1,
                 selectMode: 1,
-                extensions: ["edit", "dnd", "glyph"/*, "wide"*/],
+                extensions: ["edit", "dnd", "glyph"],
                 init: function(event, data) {
                     var node = data.tree.getActiveNode();
                     if (node)  {

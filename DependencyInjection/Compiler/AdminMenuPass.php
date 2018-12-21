@@ -31,7 +31,7 @@ class AdminMenuPass implements CompilerPassInterface
         ]]);
         $pool->addMethodCall('createEntry', ['content', [
             'name'     => 'medias',
-            'route'    => 'ekyna_media_media_admin_home',
+            'route'    => 'ekyna_media_media_admin_list',
             'label'    => 'ekyna_media.media.label.plural',
             'resource' => 'ekyna_media_media',
             'position' => 91,

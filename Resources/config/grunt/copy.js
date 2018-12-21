@@ -9,38 +9,27 @@ module.exports = function (grunt, options) {
                     dest: 'src/Ekyna/Bundle/MediaBundle/Resources/public/lib/fancybox'
                 },
                 {
-                    expand: true,
-                    cwd: 'bower_components/swfobject/swfobject',
-                    src: ['swfobject.js', 'expressInstall.swf'],
-                    dest: 'src/Ekyna/Bundle/MediaBundle/Resources/public/lib/swfobject'
+                    src: 'node_modules/swfobject-amd/swfobject.js',
+                    dest: 'src/Ekyna/Bundle/MediaBundle/Resources/public/lib/swfobject/swfobject.js'
+                },
+                {
+                    src: 'node_modules/swfobject-amd/lib/expressInstall.swf',
+                    dest: 'src/Ekyna/Bundle/MediaBundle/Resources/public/lib/swfobject/expressInstall.swf'
                 },
                 {
                     expand: true,
-                    cwd: 'bower_components/video.js/dist',
+                    cwd: 'node_modules/video.js/dist',
                     src: ['font/**', 'lang/**', 'video.min.js', 'video-js.min.css'],
                     dest: 'src/Ekyna/Bundle/MediaBundle/Resources/public/lib/videojs',
                     rename: function (dest, src) {
                         return dest + '/' + src.replace(/\.min/, '');
                     }
+                },
+                {
+                    src: 'node_modules/jquery.fancytree/dist/skin-bootstrap/ui.fancytree.min.css',
+                    dest: 'src/Ekyna/Bundle/MediaBundle/Resources/public/lib/fancytree/fancytree.css'
                 }
             ]
-        },
-        media_libs_fix: {
-            files: [
-                {
-                    src: 'bower_components/ui-contextmenu/jquery.ui-contextmenu.js',
-                    dest: 'src/Ekyna/Bundle/MediaBundle/Resources/public/tmp/jquery.ui-contextmenu.js' // tmp to uglify
-                }
-            ],
-            options: {
-                process: function (content, srcpath) {
-                    if (/jquery\.ui-contextmenu/.test(srcpath)) {
-                        content = content.replace(/jquery-ui\/ui\/widgets\/menu/g, 'jquery-ui/menu');
-                    }
-
-                    return content;
-                }
-            }
         },
         media_img: {
             expand: true,

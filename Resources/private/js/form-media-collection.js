@@ -1,5 +1,5 @@
 define('ekyna-form/media-collection',
-    ['jquery', 'routing', 'ekyna-modal', 'ekyna-media-browser', 'ekyna-media-templates', 'jquery-ui/sortable'],
+    ['jquery', 'routing', 'ekyna-modal', 'ekyna-media-browser', 'ekyna-media-templates', 'jquery-ui/widgets/sortable'],
     function($, Router, Modal, Browser, Templates) {
     "use strict";
 
@@ -52,7 +52,7 @@ define('ekyna-form/media-collection',
                 update: function() {
                     that.updateCollection();
                 }
-            }).disableSelection();
+            });
 
             that.updateCollection();
         },
