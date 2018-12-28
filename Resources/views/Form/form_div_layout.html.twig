@@ -1,72 +1,59 @@
-{% extends '@EkynaAdmin/Form/form_div_layout.html.twig' %}
-
-{% block ekyna_media_media_widget %}
-{% spaceless %}
-{{ form_row(form.translations) }}
+{%- block ekyna_media_media_widget -%}
+{{- form_row(form.translations) -}}
 <div class="upload-widget">
-    {{ form_row(form.file, {'style': 'horizontal'}) }}
-    {% if form.key is defined %}
-        {{ form_row(form.key) }}
-    {% endif %}
-    {% if form.rename is defined %}
-        {{ form_row(form.rename, {'style': 'horizontal'}) }}
-    {% endif %}
-    {% if form.unlink is defined %}
-        {{ form_row(form.unlink, {'style': 'horizontal'}) }}
-    {% endif %}
+    {{- form_row(form.file, {'style': 'horizontal'}) -}}
+    {%- if form.key is defined -%}
+        {{- form_row(form.key) -}}
+    {%- endif -%}
+    {%- if form.rename is defined -%}
+        {{- form_row(form.rename, {'style': 'horizontal'}) -}}
+    {%- endif -%}
+    {%- if form.unlink is defined -%}
+        {{- form_row(form.unlink, {'style': 'horizontal'}) -}}
+    {%- endif -%}
 </div>
-{% endspaceless %}
-{% endblock ekyna_media_media_widget %}
+{%- endblock ekyna_media_media_widget -%}
 
-{% block ekyna_media_choice_widget %}
-{% spaceless %}
-    <div{% if not gallery %}
+{%- block ekyna_media_choice_widget -%}
+    <div{% if not gallery -%}
         class="ekyna-media-choice" data-config="{{ config|json_encode }}" data-empty-thumb="{{ null|media_thumb|escape }}"
     {%- endif %}>
-        {{ media|media_thumb(media is not same as(null) ? config.controls : []) }}
-        {% set type = type|default('hidden') %}
-        {{ block('form_widget_simple') }}
+        {{- media|media_thumb(media is not same as(null) ? config.controls : []) -}}
+        {%- set type = type|default('hidden') -%}
+        {{- block('form_widget_simple') -}}
     </div>
-{% endspaceless %}
-{% endblock ekyna_media_choice_widget %}
+{%- endblock ekyna_media_choice_widget -%}
 
-{% block ekyna_media_choice_row %}
-{% spaceless %}
-{{ block('form_row') }}
-{% endspaceless %}
-{% endblock ekyna_media_choice_row %}
+{%- block ekyna_media_choice_row -%}
+{{- block('form_row') -}}
+{%- endblock ekyna_media_choice_row -%}
 
-{% block ekyna_media_collection_media_widget %}
-{% spaceless %}
-    {% set attr = attr|merge({'class': ('ekyna-media-collection-media ' ~ attr.class|default(''))|trim }) %}
+{%- block ekyna_media_collection_media_widget -%}
+    {%- set attr = attr|merge({'class': ('ekyna-media-collection-media ' ~ attr.class|default(''))|trim }) -%}
     <div {{ block('widget_container_attributes') }}>
-        {{ form_widget(form.media) }}
-        {{ form_widget(form.position) }}
-        {{ form_errors(form) }}
+        {{- form_widget(form.media) -}}
+        {{- form_widget(form.position) -}}
+        {{- form_errors(form) -}}
     </div>
-{% endspaceless %}
-{% endblock ekyna_media_collection_media_widget %}
+{%- endblock ekyna_media_collection_media_widget -%}
 
-{% block ekyna_media_collection_widget %}
-{% spaceless %}
-    {% if prototype is defined %}
-        {% set prototype_vars = {'attr': {'class': 'ekyna-media-collection-add'}} %}
-        {% set prototype_html = form_widget(prototype, prototype_vars) %}
+{%- block ekyna_media_collection_widget -%}
+    {%- if prototype is defined -%}
+        {%- set prototype_vars = {'attr': {'class': 'ekyna-media-collection-add'}} -%}
+        {%- set prototype_html = form_widget(prototype, prototype_vars) -%}
 
-        {% set attr = attr|merge({'data-prototype': prototype_html }) %}
-        {% set attr = attr|merge({'data-prototype-name': prototype_name }) %}
-        {% set attr = attr|merge({'class': 'ekyna-media-collection' }) %}
-    {% endif %}
+        {%- set attr = attr|merge({'data-prototype': prototype_html }) -%}
+        {%- set attr = attr|merge({'data-prototype-name': prototype_name }) -%}
+        {%- set attr = attr|merge({'class': 'ekyna-media-collection' }) -%}
+    {%- endif -%}
     <div {{ block('widget_container_attributes') }} data-config="{{ config|json_encode }}">
-        {% for media in form %}
-            {{ form_widget(media) }}
-        {% endfor %}
+        {%- for media in form -%}
+            {{- form_widget(media) -}}
+        {%- endfor -%}
     </div>
-{% endspaceless %}
-{% endblock ekyna_media_collection_widget %}
+{%- endblock ekyna_media_collection_widget -%}
 
-{% block ekyna_media_upload_widget %}
-{% spaceless %}
+{%- block ekyna_media_upload_widget -%}
     <div class="ekyna-media-upload">
         <input class="ekyna-media-upload-input" type="file" name="files[]" data-url="{{ oneup_uploader_endpoint('local_tmp') }}" multiple>
         <div class="row">
@@ -77,23 +64,21 @@
             </div>
             <div class="col-md-11">
                 <div class="ekyna-media-upload-drop-zone">
-                    {{ 'ekyna_media.upload.drop_zone'|trans }}
+                    {{- 'ekyna_media.upload.drop_zone'|trans -}}
                 </div>
             </div>
         </div>
-        {{ form_errors(form) }}
-        {{ form_widget(form.medias, {'widget_col': 12}) }}
-        {{ form_rest(form) }}
+        {{- form_errors(form) -}}
+        {{- form_widget(form.medias, {'widget_col': 12}) -}}
+        {{- form_rest(form) -}}
     </div>
-{% endspaceless %}
-{% endblock ekyna_media_upload_widget %}
+{%- endblock ekyna_media_upload_widget -%}
 
-{% block ekyna_media_upload_media_widget %}
-{% spaceless %}
-    {{ form_errors(form) }}
+{%- block ekyna_media_upload_media_widget -%}
+    {{- form_errors(form) -}}
     <div class="row">
         <div class="col-md-6">
-            {{ form_widget(form.rename, {'sizing': 'sm'}) }}
+            {{- form_widget(form.rename, {'sizing': 'sm'}) -}}
         </div>
         <div class="col-md-6">
             <div class="progress">
@@ -103,8 +88,7 @@
             </div>
         </div>
     </div>
-    {{ form_row(form.key) }}
-    {{ form_row(form.translations) }}
-    {{ form_rest(form) }}
-{% endspaceless %}
-{% endblock ekyna_media_upload_media_widget %}
+    {{- form_row(form.key) -}}
+    {{- form_row(form.translations) -}}
+    {{- form_rest(form) -}}
+{%- endblock ekyna_media_upload_media_widget -%}
