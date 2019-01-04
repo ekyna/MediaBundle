@@ -15,9 +15,7 @@
 {%- endblock ekyna_media_media_widget -%}
 
 {%- block ekyna_media_choice_widget -%}
-    <div{% if not gallery -%}
-        class="ekyna-media-choice" data-config="{{ config|json_encode }}" data-empty-thumb="{{ null|media_thumb|escape }}"
-    {%- endif %}>
+    <div{% if not gallery %} class="ekyna-media-choice" data-config="{{ config|json_encode }}" data-empty-thumb="{{ null|media_thumb|escape }}"{% endif %}>
         {{- media|media_thumb(media is not same as(null) ? config.controls : []) -}}
         {%- set type = type|default('hidden') -%}
         {{- block('form_widget_simple') -}}
