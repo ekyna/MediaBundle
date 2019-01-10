@@ -252,10 +252,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * Sets the medias.
-     *
-     * @param ArrayCollection|MediaInterface[] $medias
-     * @return Folder
+     * @inheritdoc
      */
     public function setMedias(ArrayCollection $medias)
     {
@@ -304,9 +301,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * Returns the medias.
-     *
-     * @return ArrayCollection|MediaInterface[]
+     * @inheritdoc
      */
     public function getMedias()
     {
@@ -324,49 +319,7 @@ class Folder implements FolderInterface
     }
 
     /**
-     * [Serializer] Returns the key.
-     *
-     * @return string
-     */
-    public function getKey()
-    {
-        return $this->getId();
-    }
-
-    /**
-     * [Serializer] Returns the title.
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->getName();
-    }
-
-    /**
-     * [Serializer] Returns the icon.
-     *
-     * @return string
-     */
-    public function getIcon()
-    {
-        return 'folder';
-    }
-
-    /**
-     * [Serializer/Tree] Folder icon.
-     *
-     * @return string
-     */
-    public function getFolder()
-    {
-        return true;
-    }
-
-    /**
-     * [Serializer/Tree] Active folder.
-     *
-     * @return boolean
+     * @inheritdoc
      */
     public function getActive()
     {

@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Interface FolderInterface
  * @package Ekyna\Bundle\MediaBundle\Model
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 interface FolderInterface
 {
@@ -24,6 +24,7 @@ interface FolderInterface
      * Set name
      *
      * @param string $name
+     *
      * @return FolderInterface|$this
      */
     public function setName($name);
@@ -39,6 +40,7 @@ interface FolderInterface
      * Sets the left.
      *
      * @param int $left
+     *
      * @return FolderInterface|$this
      */
     public function setLeft($left);
@@ -54,6 +56,7 @@ interface FolderInterface
      * Sets the right.
      *
      * @param int $right
+     *
      * @return FolderInterface|$this
      */
     public function setRight($right);
@@ -69,6 +72,7 @@ interface FolderInterface
      * Sets the root.
      *
      * @param int $root
+     *
      * @return FolderInterface|$this
      */
     public function setRoot($root);
@@ -84,6 +88,7 @@ interface FolderInterface
      * Sets the level.
      *
      * @param int $level
+     *
      * @return FolderInterface|$this
      */
     public function setLevel($level);
@@ -99,6 +104,7 @@ interface FolderInterface
      * Sets the parent.
      *
      * @param FolderInterface $parent
+     *
      * @return FolderInterface|$this
      */
     public function setParent(FolderInterface $parent = null);
@@ -114,6 +120,7 @@ interface FolderInterface
      * Sets the children.
      *
      * @param ArrayCollection|FolderInterface[] $children
+     *
      * @return FolderInterface|$this
      */
     public function setChildren(ArrayCollection $children);
@@ -122,6 +129,7 @@ interface FolderInterface
      * Returns whether the folder as the child folder or not.
      *
      * @param FolderInterface $child
+     *
      * @return bool
      */
     public function hasChild(FolderInterface $child);
@@ -130,6 +138,7 @@ interface FolderInterface
      * Adds the child folder.
      *
      * @param FolderInterface $child
+     *
      * @return FolderInterface|$this
      */
     public function addChild(FolderInterface $child);
@@ -138,6 +147,7 @@ interface FolderInterface
      * Removes the child folder.
      *
      * @param FolderInterface $child
+     *
      * @return FolderInterface|$this
      */
     public function removeChild(FolderInterface $child);
@@ -160,6 +170,7 @@ interface FolderInterface
      * Sets the medias.
      *
      * @param ArrayCollection|MediaInterface[] $medias
+     *
      * @return FolderInterface|$this
      */
     public function setMedias(ArrayCollection $medias);
@@ -168,6 +179,7 @@ interface FolderInterface
      * Returns whether the folder has the given media or not.
      *
      * @param MediaInterface $media
+     *
      * @return bool
      */
     public function hasMedia(MediaInterface $media);
@@ -176,6 +188,7 @@ interface FolderInterface
      * Adds the media.
      *
      * @param MediaInterface $media
+     *
      * @return FolderInterface|$this
      */
     public function addMedia(MediaInterface $media);
@@ -184,6 +197,7 @@ interface FolderInterface
      * Removes the media.
      *
      * @param MediaInterface $media
+     *
      * @return FolderInterface|$this
      */
     public function removeMedia(MediaInterface $media);
@@ -206,7 +220,15 @@ interface FolderInterface
      * [Tree] Sets active.
      *
      * @param boolean $active
+     *
      * @return FolderInterface|$this
      */
     public function setActive($active);
+
+    /**
+     * [Tree] Returns whether this folder is active.
+     *
+     * @return boolean
+     */
+    public function getActive();
 }

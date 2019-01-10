@@ -4,7 +4,7 @@ namespace Ekyna\Bundle\MediaBundle\Twig;
 
 use Ekyna\Bundle\MediaBundle\Service\Generator;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
-use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Class BrowserExtension
@@ -19,7 +19,7 @@ class BrowserExtension extends \Twig_Extension
     private $generator;
 
     /**
-     * @var SerializerInterface
+     * @var Serializer
      */
     private $serializer;
 
@@ -27,10 +27,10 @@ class BrowserExtension extends \Twig_Extension
     /**
      * Constructor.
      *
-     * @param Generator           $generator
-     * @param SerializerInterface $serializer
+     * @param Generator  $generator
+     * @param Serializer $serializer
      */
-    public function __construct(Generator $generator, SerializerInterface $serializer)
+    public function __construct(Generator $generator, Serializer $serializer)
     {
         $this->generator = $generator;
         $this->serializer = $serializer;
@@ -95,9 +95,6 @@ class BrowserExtension extends \Twig_Extension
      */
     public function renderMediaThumb(\Twig_Environment $env, MediaInterface $media = null, array $controls = [])
     {
-        if (null !== $media) {
-            $media->setThumb($this->generator->generateThumbUrl($media));
-        }
         /*if (empty($controls)) {
             $controls = array(
                 array('role' => 'edit',     'icon' => 'pencil'),
@@ -111,16 +108,14 @@ class BrowserExtension extends \Twig_Extension
             }
         }
 
-        $data = '{}';
+        $data = null;
         if ($media) {
-            //$context = SerializationContext::create()->setGroups(array('Manager'));
-            //$data = $this->serializer->serialize($media, 'json', $context);
-            $data = $this->serializer->serialize($media, 'json', ['groups' => ['browser']]);
+            $data = $this->serializer->normalize($media, 'json', ['groups' => ['Manager']]);
         }
 
         return $env->render('@EkynaMedia/thumb.html.twig', [
-            'media'    => $media,
-            'data'     => $data,
+            'media'    => $data,
+            'data'     => json_encode($data ?? [], JSON_FORCE_OBJECT),
             'controls' => $controls,
             'selector' => false,
         ]);

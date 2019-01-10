@@ -142,11 +142,7 @@ class MediaController extends Controller
         }
 
         if ($request->isXmlHttpRequest()) {
-            $twig = $this->get('twig');
-            $twig->initRuntime();
-            /** @var \Ekyna\Bundle\MediaBundle\Twig\PlayerExtension $extension */
-            $extension = $twig->getExtension('ekyna_media_player');
-            $content = $extension->renderMedia($media);
+            $content = $this->get('ekyna_media.renderer')->renderMedia($media);
             if ('true' === $request->query->get('fancybox')) {
                 $content = '<div style="width:90%;max-width:1200px;">'.$content.'</div>';
             }

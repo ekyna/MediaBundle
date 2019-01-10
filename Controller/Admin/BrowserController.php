@@ -322,9 +322,8 @@ class BrowserController extends Controller
         $folder = $this->findFolderById($request->attributes->get('id'));
 
         $medias = $this
-            ->get('ekyna_media.browser')
-            ->setFolder($folder)
-            ->findMedias((array)$request->query->get('types'));
+            ->get('ekyna_media.media.repository')
+            ->findByFolderAndTypes($folder, (array)$request->query->get('types'));
 
         $data = ['medias' => $medias];
 
@@ -518,12 +517,6 @@ class BrowserController extends Controller
     private function serializeObject($object)
     {
         return $this->get('serializer')->serialize($object, 'json', ['groups' => ['Manager']]);
-
-        /*return $this->get('jms_serializer')->serialize(
-            $object,
-            'json',
-            SerializationContext::create()->setGroups(array('Manager'))
-        );*/
     }
 
     /**

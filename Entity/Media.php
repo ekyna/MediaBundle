@@ -34,21 +34,6 @@ class Media implements Model\MediaInterface
      */
     protected $type;
 
-    /**
-     * @var string
-     */
-    protected $thumb;
-
-    /**
-     * @var string
-     */
-    protected $front;
-
-    /**
-     * @var string
-     */
-    protected $player;
-
 
     /**
      * Constructor.
@@ -148,68 +133,6 @@ class Media implements Model\MediaInterface
     public function getDescription()
     {
         return $this->translate()->getDescription();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setThumb($url)
-    {
-        $this->thumb = $url;
-
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getThumb()
-    {
-        return $this->thumb;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setFront($url)
-    {
-        $this->front = $url;
-
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getFront()
-    {
-        return $this->front;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setPlayer($url)
-    {
-        $this->player = $url;
-
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getPlayer()
-    {
-        return $this->player;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getFolderId()
-    {
-        return $this->folder ? $this->folder->getId() : null;
     }
 
     /**

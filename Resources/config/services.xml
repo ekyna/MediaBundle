@@ -144,13 +144,6 @@
             <argument>%ekyna_media.video.directory%</argument>
             <argument>%ekyna_media.watermark%</argument>
         </service>
-        <service id="ekyna_media.browser"
-                 class="Ekyna\Bundle\MediaBundle\Service\Browser"
-                 lazy="true">
-            <argument type="service" id="doctrine.orm.default_entity_manager" />
-            <argument type="service" id="ekyna_media.media.repository" />
-            <argument type="service" id="ekyna_media.generator" />
-        </service>
         <service id="ekyna_media.renderer"
                  class="Ekyna\Bundle\MediaBundle\Service\Renderer"
                  lazy="true">
@@ -158,6 +151,27 @@
             <argument type="service" id="ekyna_media.generator" />
             <argument type="service" id="ekyna_media.video_manager" />
             <argument type="service" id="liip_imagine.filter.manager" />
+        </service>
+
+        <!-- Normalizers -->
+        <service id="ekyna_media.media.normalizer"
+                 class="Ekyna\Bundle\MediaBundle\Service\Serializer\MediaNormalizer"
+                 parent="ekyna_resource.serializer.resource_normalizer"
+                 public="false">
+            <call method="setGenerator">
+                <argument type="service" id="ekyna_media.generator"/>
+            </call>
+            <tag name="serializer.normalizer"/>
+            <!--<tag name="serializer.denormalizer"/>-->
+        </service>
+        <service id="ekyna_media.folder.normalizer"
+                 class="Ekyna\Bundle\MediaBundle\Service\Serializer\FolderNormalizer"
+                 public="false">
+            <call method="setSerializer">
+                <argument type="service" id="serializer"/>
+            </call>
+            <tag name="serializer.normalizer"/>
+            <!--<tag name="serializer.denormalizer"/>-->
         </service>
 
         <!-- Schema.org provider -->
