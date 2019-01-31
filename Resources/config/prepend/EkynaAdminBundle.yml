@@ -5,4 +5,4 @@ ekyna_admin:
         - 'bundles/ekynamedia/css/browser.css'
     show:
         templates:
-            - EkynaMediaBundle:Show:show_div_layout.html.twig
+            - '@EkynaMedia/Show/show_div_layout.html.twig'
