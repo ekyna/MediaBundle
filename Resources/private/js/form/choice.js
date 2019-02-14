@@ -1,5 +1,5 @@
-define('ekyna-form/media-choice',
-    ['jquery', 'routing', 'ekyna-modal', 'ekyna-media-browser', 'ekyna-media-templates'],
+define('ekyna-media/form/choice',
+    ['jquery', 'routing', 'ekyna-modal', 'ekyna-media/browser', 'ekyna-media/templates'],
     function($, Router, Modal, Browser, Templates) {
     "use strict";
 
@@ -32,7 +32,7 @@ define('ekyna-form/media-choice',
                     // Handle browser selection
                     $(browser).bind('ekyna.media-browser.selection', function(e) {
                         if (e.hasOwnProperty('media')) {
-                            var $thumb = $(Templates['thumb.html.twig'].render({
+                            var $thumb = $(Templates['@EkynaMedia/Js/thumb.html.twig'].render({
                                 media: e.media,
                                 controls: that.config.controls,
                                 selector: false

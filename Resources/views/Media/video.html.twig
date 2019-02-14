@@ -6,5 +6,5 @@
 
 {% block javascripts %}
     {#<script type="text/javascript">window.VIDEOJS_NO_DYNAMIC_STYLE = true;</script>#}
-    <script type="text/javascript">require(['bundles/ekynamedia/js/player']);</script>
+    <script type="text/javascript">require(['ekyna-media/player'], function(MediaPlayer) { MediaPlayer.init(); });</script>
 {% endblock javascripts %}

@@ -1,4 +1,4 @@
-define('ekyna-form/media-upload', ['jquery', 'jquery/fileupload', 'jquery/qtip'], function ($) {
+define('ekyna-media/form/upload', ['jquery', 'jquery/fileupload', 'jquery/qtip'], function ($) {
     "use strict";
 
     var MediaUploadWidget = function ($elem) {

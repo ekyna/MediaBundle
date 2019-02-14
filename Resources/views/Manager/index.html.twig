@@ -34,7 +34,11 @@
 
     {% block javascripts %}
         {#<script type="text/javascript">window.VIDEOJS_NO_DYNAMIC_STYLE = true;</script>#}
-        <script type="text/javascript">require(['bundles/ekynamedia/js/browser']);</script>
+        <script type="text/javascript">
+            require(['ekyna-media/browser'], function(MediaBrowser) {
+                new MediaBrowser('#media-browser').init();
+            });
+        </script>
     {% endblock javascripts %}
 </body>
 </html>

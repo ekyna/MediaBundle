@@ -113,7 +113,7 @@ class BrowserExtension extends \Twig_Extension
             $data = $this->serializer->normalize($media, 'json', ['groups' => ['Manager']]);
         }
 
-        return $env->render('@EkynaMedia/thumb.html.twig', [
+        return $env->render('@EkynaMedia/Js/thumb.html.twig', [
             'media'    => $data,
             'data'     => json_encode($data ?? [], JSON_FORCE_OBJECT),
             'controls' => $controls,
