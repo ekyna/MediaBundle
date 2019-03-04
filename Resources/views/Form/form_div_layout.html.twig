@@ -19,6 +19,7 @@
         {{- media|media_thumb(media is not same as(null) ? config.controls : []) -}}
         {%- set type = type|default('hidden') -%}
         {{- block('form_widget_simple') -}}
+        {{- form_errors(form) -}}
     </div>
 {%- endblock ekyna_media_choice_widget -%}
 
