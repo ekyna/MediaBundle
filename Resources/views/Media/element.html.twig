@@ -1,7 +1,7 @@
 {% block video -%}
 {% spaceless %}
 {% if responsive %}<div class="embed-responsive embed-responsive-{{ aspect_ratio }}">{% endif %}
-    <video preload="auto" {{ block('attributes') }}>
+    <video {{ block('attributes') }}>
         {% for mime_type, src in videos -%}
             <source src="{{ src }}" type="{{ mime_type }}">
         {%- endfor %}

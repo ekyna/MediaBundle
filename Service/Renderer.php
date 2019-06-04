@@ -114,7 +114,6 @@ class Renderer
             throw new \InvalidArgumentException('Expected media with "video" type.');
         }
 
-
         $params = array_replace_recursive([
             'responsive'   => true,
             'autoplay'     => true,
@@ -136,6 +135,9 @@ class Renderer
             $params['attr']['muted'] = null;
             // https://webkit.org/blog/6784/new-video-policies-for-ios/
             $params['attr']['playsinline'] = null;
+            $params['attr']['preload'] = 'auto';
+        } else {
+            $params['attr']['preload'] = 'none';
         }
         if ($params['loop']) {
             $params['attr']['loop'] = null;

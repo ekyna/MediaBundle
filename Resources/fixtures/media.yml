@@ -1,0 +1,75 @@
+Ekyna\Bundle\MediaBundle\Model\FolderInterface:
+    folder_archive:
+        __factory: { '@ekyna_media.folder.repository::createNew': [] }
+        name: Archive
+    folder_file:
+        __factory: { '@ekyna_media.folder.repository::createNew': [] }
+        name: File
+    folder_flash:
+        __factory: { '@ekyna_media.folder.repository::createNew': [] }
+        name: Flash
+    folder_image:
+        __factory: { '@ekyna_media.folder.repository::createNew': [] }
+        name: Image
+    folder_logo:
+        __factory: { '@ekyna_media.folder.repository::createNew': [] }
+        name: Logo
+    folder_video:
+        __factory: { '@ekyna_media.folder.repository::createNew': [] }
+        name: Video
+
+Ekyna\Bundle\MediaBundle\Model\MediaInterface:
+    media_archive_1:
+        __factory: { '@ekyna_media.media.repository::createNew': [] }
+        title: 'Archive 1'
+        folder: '@folder_archive'
+        file: <uploadMedia("archive/file.zip")>
+        type: archive
+    media_file_1:
+        __factory: { '@ekyna_media.media.repository::createNew': [] }
+        title: 'File 1'
+        folder: '@folder_file'
+        file: <uploadMedia("file/01.md")>
+        type: file
+    media_file_2:
+        __factory: { '@ekyna_media.media.repository::createNew': [] }
+        title: 'File 2'
+        folder: '@folder_file'
+        file: <uploadMedia("file/02.txt")>
+        type: file
+    media_flash_1:
+        __factory: { '@ekyna_media.media.repository::createNew': [] }
+        title: 'Flash 1'
+        folder: '@folder_flash'
+        file: <uploadMedia("flash/01.swf")>
+        type: flash
+    media_image_{1..6}:
+        __factory: { '@ekyna_media.media.repository::createNew': [] }
+        title: 'Image <current()>'
+        folder: '@folder_image'
+        file: <uploadMedia("image/0%d.jpg", <current()>)>
+        type: image
+    media_logo_{1..6}:
+        __factory: { '@ekyna_media.media.repository::createNew': [] }
+        title: 'Logo <current()>'
+        folder: '@folder_logo'
+        file: <uploadMedia("logo/%d.jpg", <current()>)>
+        type: image
+    media_video_1:
+        __factory: { '@ekyna_media.media.repository::createNew': [] }
+        title: 'Video 1'
+        folder: '@folder_video'
+        file: <uploadMedia("video/01.mpg")>
+        type: video
+    media_video_2:
+        __factory: { '@ekyna_media.media.repository::createNew': [] }
+        title: 'Video 2'
+        folder: '@folder_video'
+        file: <uploadMedia("video/02.flv")>
+        type: video
+    media_video_3:
+        __factory: { '@ekyna_media.media.repository::createNew': [] }
+        title: 'Video 3'
+        folder: '@folder_video'
+        file: <uploadMedia("video/03.webm")>
+        type: video
