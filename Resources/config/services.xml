@@ -18,7 +18,7 @@
         <!-- Repositories -->
         <service id="ekyna_media.folder.repository"
                  class="Ekyna\Bundle\MediaBundle\Entity\FolderRepository">
-            <factory service="doctrine.orm.default_entity_manager" method="getRepository" />
+            <factory service="doctrine" method="getRepository" />
             <argument>Ekyna\Bundle\MediaBundle\Entity\Folder</argument>
         </service>
 
