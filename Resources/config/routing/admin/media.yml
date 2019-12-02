@@ -23,11 +23,15 @@ ekyna_media_media_admin_show:
     options: { expose: true }
 
 ekyna_media_media_admin_tinymce:
-    path: /{mediaId}/tinymce
-    defaults: { _controller: "ekyna_media.media.controller:tinymceAction", field: description }
+    path: /{mediaId}/tinymce/{_locale}/{field}
+    controller: "ekyna_media.media.controller:tinymceAction"
     methods: [GET]
     requirements:
+        field: "[a-zA-Z0-9]+"
         mediaId: \d+
+    defaults:
+        _locale: "%locale%"
+        field: description
 
 ekyna_media_media_admin_edit:
     path: /{mediaId}/edit
