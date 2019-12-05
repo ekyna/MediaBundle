@@ -26,7 +26,7 @@ define('ekyna-media/form/choice',
                 browser;
 
             $(modal).on('ekyna.modal.content', function (e) {
-                if (e.contentType == 'html') {
+                if (e.contentType === 'html') {
                     browser = new Browser(e.content);
 
                     // Handle browser selection
@@ -49,7 +49,7 @@ define('ekyna-media/form/choice',
 
                     // Clear media if deleted in browser
                     $(browser).bind('ekyna.media-browser.media_delete', function(e) {
-                        if (e.hasOwnProperty('media') && e.media.id == that.$elem.find('input').val()) {
+                        if (e.hasOwnProperty('media') && (e.media.id === that.$elem.find('input').val())) {
                             that.removeMedia();
                         }
                     });

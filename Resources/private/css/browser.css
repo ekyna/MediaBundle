@@ -69,6 +69,10 @@
     border: none !important;
 }
 
+.media-browser-tree ul.fancytree-container span.fancytree-icon {
+    color: #b3b3b3;
+}
+
 /* ---------------------- CONTENT ---------------------- */
 .media-browser-content {
     overflow: hidden;

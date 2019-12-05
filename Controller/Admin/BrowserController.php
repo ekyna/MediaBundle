@@ -3,10 +3,12 @@
 namespace Ekyna\Bundle\MediaBundle\Controller\Admin;
 
 use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManagerInterface;
 use Ekyna\Bundle\CoreBundle\Controller\Controller;
 use Ekyna\Bundle\CoreBundle\Modal\Modal;
 use Ekyna\Bundle\MediaBundle\Form\Type\UploadType;
 use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
+use Ekyna\Bundle\MediaBundle\Model\FolderRepositoryInterface;
 use Ekyna\Bundle\MediaBundle\Model\Import\MediaImport;
 use Ekyna\Bundle\MediaBundle\Model\Import\MediaUpload;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,6 +23,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class BrowserController extends Controller
 {
+    const SESSION_FOLDER_ID = 'ekyna_media.folder_id';
+
     /**
      * Renders the manager modal
      *
@@ -28,7 +32,7 @@ class BrowserController extends Controller
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
         $config = $this->buildConfig($request);
 
@@ -42,7 +46,7 @@ class BrowserController extends Controller
      *
      * @return Response
      */
-    public function modalAction(Request $request)
+    public function modalAction(Request $request): Response
     {
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
@@ -78,40 +82,20 @@ class BrowserController extends Controller
     }
 
     /**
-     * Builds the browser config.
-     *
-     * @param Request $request
-     *
-     * @return array
-     */
-    private function buildConfig(Request $request)
-    {
-        $config = [
-            'mode' => $request->query->get('mode', 'browse'),
-        ];
-        if (null !== $types = $request->query->get('types', [])) {
-            // TODO validate types
-            $config['types'] = $types;
-        }
-
-        return $config;
-    }
-
-    /**
      * Lists the children folders.
      *
      * @param Request $request
      *
      * @return Response
      */
-    public function listAction(Request $request)
+    public function listAction(Request $request): Response
     {
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
         }
 
         $root = $this->getFolderRepository()->findRoot();
-        if (null !== $id = $request->query->get('folderId')) {
+        if ($id = $this->getRequestFolderId($request)) {
             if (!$this->activateFolderById($id, $root)) {
                 $root->setActive(true);
             }
@@ -126,44 +110,20 @@ class BrowserController extends Controller
     }
 
     /**
-     * Activate the folder by id.
-     *
-     * @param int             $id
-     * @param FolderInterface $folder
-     *
-     * @return bool
-     */
-    private function activateFolderById($id, FolderInterface $folder)
-    {
-        foreach ($folder->getChildren() as $child) {
-            if ($child->getId() == $id) {
-                $child->setActive(true);
-
-                return true;
-            }
-            if ($this->activateFolderById($id, $child)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Creates the folder.
      *
      * @param Request $request
      *
      * @return Response
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request): Response
     {
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
         }
 
         $refFolder = $this->findFolderById($request->attributes->get('id'));
-        $repo = $this->getFolderRepository();
+        $repo      = $this->getFolderRepository();
 
         $newFolder = $repo->createNew();
         $newFolder->setName('New folder');
@@ -181,7 +141,7 @@ class BrowserController extends Controller
                 $repo->persistAsFirstChildOf($newFolder, $refFolder);
             }
 
-            if (true !== $message = $this->validateFolder($newFolder)) {
+            if (null !== $message = $this->validateFolder($newFolder)) {
                 $response = new Response(json_encode([
                     'error'   => true,
                     'message' => $message,
@@ -205,7 +165,7 @@ class BrowserController extends Controller
      *
      * @return Response
      */
-    public function renameAction(Request $request)
+    public function renameAction(Request $request): Response
     {
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
@@ -215,7 +175,7 @@ class BrowserController extends Controller
 
         $folder->setName($request->request->get('name'));
 
-        if (true !== $message = $this->validateFolder($folder)) {
+        if (null !== $message = $this->validateFolder($folder)) {
             $result = [
                 'error'   => true,
                 'message' => $message,
@@ -240,7 +200,7 @@ class BrowserController extends Controller
      *
      * @return Response
      */
-    public function deleteAction(Request $request)
+    public function deleteAction(Request $request): Response
     {
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
@@ -271,7 +231,7 @@ class BrowserController extends Controller
      *
      * @return Response
      */
-    public function moveAction(Request $request)
+    public function moveAction(Request $request): Response
     {
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
@@ -280,7 +240,7 @@ class BrowserController extends Controller
         $folder = $this->findFolderById($request->attributes->get('id'));
 
         $result = [];
-        $mode = $request->request->get('mode');
+        $mode   = $request->request->get('mode');
 
         if (!in_array($mode, ['before', 'after', 'over'])) {
             $result = [
@@ -313,13 +273,14 @@ class BrowserController extends Controller
      *
      * @return Response
      */
-    public function listMediaAction(Request $request)
+    public function listMediaAction(Request $request): Response
     {
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
         }
 
         $folder = $this->findFolderById($request->attributes->get('id'));
+        $request->getSession()->set(self::SESSION_FOLDER_ID, $folder->getId());
 
         $medias = $this
             ->get('ekyna_media.media.repository')
@@ -343,7 +304,7 @@ class BrowserController extends Controller
      *
      * @return Response
      */
-    public function moveMediaAction(Request $request)
+    public function moveMediaAction(Request $request): Response
     {
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
@@ -382,14 +343,14 @@ class BrowserController extends Controller
      *
      * @return Response
      */
-    public function createMediaAction(Request $request)
+    public function createMediaAction(Request $request): Response
     {
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
         }
 
         $folderId = $request->attributes->get('id');
-        $folder = $this->findFolderById($folderId);
+        $folder   = $this->findFolderById($folderId);
 
         $upload = new MediaUpload();
 
@@ -441,14 +402,14 @@ class BrowserController extends Controller
      *
      * @return Response
      */
-    public function importMediaAction(Request $request)
+    public function importMediaAction(Request $request): Response
     {
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
         }
 
         $folderId = $request->attributes->get('id');
-        $folder = $this->findFolderById($folderId);
+        $folder   = $this->findFolderById($folderId);
 
         $import = new MediaImport($folder);
 
@@ -488,7 +449,7 @@ class BrowserController extends Controller
      *
      * @return Modal
      */
-    protected function createModal()
+    protected function createModal(): Modal
     {
         $modal = new Modal('ekyna_media.media.header.new');
         $modal->setButtons([
@@ -514,7 +475,77 @@ class BrowserController extends Controller
         return $modal;
     }
 
-    private function serializeObject($object)
+    /**
+     * Builds the browser config.
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function buildConfig(Request $request): array
+    {
+        $config = [
+            'folderId' => $this->getRequestFolderId($request),
+            'mode'     => $request->query->get('mode', 'browse'),
+        ];
+        if (null !== $types = $request->query->get('types', [])) {
+            // TODO validate types
+            $config['types'] = $types;
+        }
+
+        return $config;
+    }
+
+    /**
+     * Returns the request's folder id.
+     *
+     * @param Request $request
+     *
+     * @return int|null
+     */
+    private function getRequestFolderId(Request $request): ?int
+    {
+        if (0 < $id = (int)$request->query->get('folderId')) {
+            $request->getSession()->set(self::SESSION_FOLDER_ID, $id);
+        } else {
+            $id = $request->getSession()->get(self::SESSION_FOLDER_ID);
+        }
+
+        return $id;
+    }
+
+    /**
+     * Activate the folder by id.
+     *
+     * @param int             $id
+     * @param FolderInterface $folder
+     *
+     * @return bool
+     */
+    private function activateFolderById($id, FolderInterface $folder): bool
+    {
+        foreach ($folder->getChildren() as $child) {
+            if ($child->getId() == $id) {
+                $child->setActive(true);
+
+                return true;
+            }
+            if ($this->activateFolderById($id, $child)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Serializes the given object.
+     *
+     * @param object $object
+     *
+     * @return string
+     */
+    private function serializeObject($object): string
     {
         return $this->get('serializer')->serialize($object, 'json', ['groups' => ['Manager']]);
     }
@@ -524,7 +555,7 @@ class BrowserController extends Controller
      *
      * @param FolderInterface $folder
      */
-    private function persistFolder(FolderInterface $folder)
+    private function persistFolder(FolderInterface $folder): void
     {
         $em = $this->getEntityManager();
         $em->persist($folder);
@@ -536,7 +567,7 @@ class BrowserController extends Controller
      *
      * @param FolderInterface $folder
      */
-    private function removeFolder(FolderInterface $folder)
+    private function removeFolder(FolderInterface $folder): void
     {
         $em = $this->getEntityManager();
         $em->remove($folder);
@@ -546,9 +577,9 @@ class BrowserController extends Controller
     /**
      * Returns the entity manager.
      *
-     * @return \Doctrine\ORM\EntityManager
+     * @return EntityManagerInterface
      */
-    private function getEntityManager()
+    private function getEntityManager(): EntityManagerInterface
     {
         return $this->get('doctrine.orm.default_entity_manager');
     }
@@ -558,16 +589,16 @@ class BrowserController extends Controller
      *
      * @param FolderInterface $folder
      *
-     * @return true|string
+     * @return string|null
      */
-    private function validateFolder(FolderInterface $folder)
+    private function validateFolder(FolderInterface $folder): ?string
     {
         $errorList = $this->get('validator')->validate($folder);
         if ($errorList->count()) {
             return $errorList->get(0)->getMessage();
         }
 
-        return true;
+        return null;
     }
 
     /**
@@ -577,7 +608,7 @@ class BrowserController extends Controller
      *
      * @return FolderInterface
      */
-    private function findFolderById($id)
+    private function findFolderById(int $id): FolderInterface
     {
         /** @var FolderInterface $folder */
         $folder = $this->getFolderRepository()->find($id);
@@ -591,9 +622,9 @@ class BrowserController extends Controller
     /**
      * Returns the folder repository.
      *
-     * @return \Ekyna\Bundle\MediaBundle\Entity\FolderRepository
+     * @return FolderRepositoryInterface
      */
-    private function getFolderRepository()
+    private function getFolderRepository(): FolderRepositoryInterface
     {
         return $this->get('ekyna_media.folder.repository');
     }

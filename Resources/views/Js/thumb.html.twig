@@ -10,7 +10,7 @@
     </div>
     <div class="controls">
         {% for c in controls %}
-        <a href="#" data-role="{{ c.role }}" class="glyphicon glyphicon-{{ c.icon }}"></a>
+        <a href="#" data-role="{{ c.role }}" class="glyphicon glyphicon-{{ c.icon }}" title="{{ c.title }}"></a>
         {% endfor %}
     </div>
     {% if media is not null %}

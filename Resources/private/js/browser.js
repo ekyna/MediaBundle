@@ -1,7 +1,8 @@
 define('ekyna-media/browser',
     [
-        'require', 'jquery', 'routing', 'ekyna-modal', 'ekyna-form', 'ekyna-media/player',
-        'ekyna-media/templates', 'ekyna-string', 'fancybox', 'fancytree'
+        'require', 'jquery', 'routing', 'ekyna-modal', 'ekyna-form',
+        'ekyna-media/player', 'ekyna-media/templates',
+        'ekyna-string', 'fancybox', 'fancytree'
     ],
     function(require, $, Router, Modal, Form, Player, Templates) {
     "use strict";
@@ -179,22 +180,6 @@ define('ekyna-media/browser',
                 }
             });
 
-            // Media show
-            this.$content.on('click', '.media-thumb [data-role="show"]', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var $media = $(e.currentTarget).parents('.media-thumb');
-                that.showMedia($media);
-            });
-
-            // Media download
-            this.$content.on('click', '.media-thumb [data-role="download"]', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var $media = $(e.currentTarget).parents('.media-thumb');
-                that.downloadMedia($media);
-            });
-
             // Media edit
             this.$content.on('click', '.media-thumb [data-role="edit"]', function(e) {
                 e.preventDefault();
@@ -219,7 +204,7 @@ define('ekyna-media/browser',
             var that = this;
 
             that.$content.empty();
-            this.folderId = id || this.folderId;
+            this.folderId = id || this.config.folderId;
 
             if (this.folderId) {
                 that.setBusy(true);
@@ -240,10 +225,10 @@ define('ekyna-media/browser',
                             selector = true;
                         }
                         var controls = [
-                            {role: 'show', icon: 'play'},
-                            {role: 'edit', icon: 'pencil'},
-                            {role: 'delete', icon: 'trash'},
-                            {role: 'download', icon: 'download'}
+                            {role: 'show', icon: 'play', title: 'Preview'},
+                            {role: 'edit', icon: 'pencil', title: 'Edit'},
+                            {role: 'delete', icon: 'trash', title: 'Delete'},
+                            {role: 'download', icon: 'download', title: 'Download'}
                         ];
                         $(d['medias']).each(function (index, media) {
                             $(Templates['@EkynaMedia/Js/thumb.html.twig'].render({media: media, controls: controls, selector: selector}))
@@ -328,39 +313,6 @@ define('ekyna-media/browser',
                 )
             });
         },
-        showMedia: function($media) {
-            if ($media.data('media').type === 'file') {
-                this.downloadMedia($media);
-                return;
-            }
-            var params = {
-                src        : $media.data('media').player
-                // maxWidth    : 1200,
-                // //maxHeight   : 600,
-                // fitToView   : false,
-                // width       : '90%',
-                // height      : '90%',
-                // autoSize    : false,
-                // closeClick  : false,
-                // openEffect  : 'none',
-                // closeEffect : 'none',
-                // padding     : 0
-            };
-            if ($media.data('media').type === 'image') {
-                params.type = 'image';
-            } else {
-                params.type = 'ajax';
-
-                params.beforeShow = function() {
-                    Player.init($('.fancybox-stage'));
-                };
-                params.beforeClose = function() {
-                    Player.destroy($('.fancybox-stage'));
-                };
-            }
-
-            $.fancybox.open(params);
-        },
         editMedia: function($media) {
             //var that = this;
             this.openModal({
@@ -393,10 +345,6 @@ define('ekyna-media/browser',
                     }
                 }
             });
-        },
-        downloadMedia: function($media) {
-            var url = Router.generate('ekyna_media_download', {'key': $media.data('media').path});
-            window.open(url,'_blank');
         },
         filterList: function() {
             var filters = this.$controls.find('input[name="filters[]"]:checked').map(function(_, el) {
@@ -539,6 +487,7 @@ define('ekyna-media/browser',
                                     return;
                                 }
                                 node.moveTo(refNode, data.hitMode);
+                                that.setBusy(false);
                             })
                             .fail(function () {
                                 that.setBusy(false);

@@ -70,7 +70,9 @@ class MediaChoiceType extends AbstractType
                 'types'          => null,
                 'error_bubbling' => false,
                 'controls'       => [
-                    ['role' => 'remove', 'icon' => 'remove'],
+                    ['role' => 'show', 'icon' => 'play', 'title' => 'Preview'],
+                    ['role' => 'download', 'icon' => 'download', 'title' => 'Download'],
+                    ['role' => 'remove', 'icon' => 'remove', 'title' => 'Remove'],
                 ],
                 'gallery'        => false,
             ])

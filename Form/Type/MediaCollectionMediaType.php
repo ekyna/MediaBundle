@@ -24,9 +24,10 @@ class MediaCollectionMediaType extends AbstractType
             ->add('media', MediaChoiceType::class, [
                 'types'    => $options['types'],
                 'controls' => [
-                    ['role' => 'move-left', 'icon' => 'arrow-left'],
-                    ['role' => 'remove', 'icon' => 'remove'],
-                    ['role' => 'move-right', 'icon' => 'arrow-right'],
+                    ['role' => 'show', 'icon' => 'play', 'title' => 'Preview'],
+                    ['role' => 'move-left', 'icon' => 'arrow-left', 'title' => 'Move left'],
+                    ['role' => 'remove', 'icon' => 'remove', 'title' => 'Remove'],
+                    ['role' => 'move-right', 'icon' => 'arrow-right', 'title' => 'Move right'],
                 ],
                 'gallery'  => true,
             ])

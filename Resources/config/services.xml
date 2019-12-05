@@ -107,14 +107,13 @@
         </service>
 
         <!-- Twig extensions -->
-        <service id="ekyna_media.twig.browser_extension"
-                 class="Ekyna\Bundle\MediaBundle\Twig\BrowserExtension">
+        <service id="Ekyna\Bundle\MediaBundle\Twig\BrowserExtension" public="false">
             <argument type="service" id="ekyna_media.generator" />
-            <argument type="service" id="serializer" />
+            <argument type="service" id="Symfony\Component\Serializer\Normalizer\NormalizerInterface" />
+            <argument type="service" id="Symfony\Component\HttpFoundation\Session\SessionInterface" />
             <tag name="twig.extension" />
         </service>
-        <service id="ekyna_media.twig.player_extension"
-                 class="Ekyna\Bundle\MediaBundle\Twig\PlayerExtension">
+        <service id="Ekyna\Bundle\MediaBundle\Twig\PlayerExtension" public="false">
             <argument type="service" id="ekyna_media.generator" />
             <argument type="service" id="ekyna_media.renderer" />
             <tag name="twig.extension" />

@@ -6,13 +6,16 @@ use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
 use Ekyna\Bundle\MediaBundle\Service\Generator;
 use Ekyna\Bundle\MediaBundle\Service\Renderer;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigTest;
 
 /**
  * Class PlayerExtension
  * @package Ekyna\Bundle\MediaBundle\Twig
  * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-class PlayerExtension extends \Twig_Extension
+class PlayerExtension extends AbstractExtension
 {
     /**
      * @var Generator
@@ -34,7 +37,7 @@ class PlayerExtension extends \Twig_Extension
     public function __construct(Generator $generator, Renderer $renderer)
     {
         $this->generator = $generator;
-        $this->renderer = $renderer;
+        $this->renderer  = $renderer;
     }
 
     /**
@@ -43,13 +46,13 @@ class PlayerExtension extends \Twig_Extension
     public function getTests()
     {
         return [
-            new \Twig_SimpleTest('media_image',   [MediaTypes::class, 'isImage']),
-            new \Twig_SimpleTest('media_svg',     [MediaTypes::class, 'isSvg']),
-            new \Twig_SimpleTest('media_flash',   [MediaTypes::class, 'isFlash']),
-            new \Twig_SimpleTest('media_video',   [MediaTypes::class, 'isVideo']),
-            new \Twig_SimpleTest('media_audio',   [MediaTypes::class, 'isAudio']),
-            new \Twig_SimpleTest('media_file',    [MediaTypes::class, 'isFile']),
-            new \Twig_SimpleTest('media_archive', [MediaTypes::class, 'isArchive']),
+            new TwigTest('media_image',   [MediaTypes::class, 'isImage']),
+            new twigTest('media_svg',     [MediaTypes::class, 'isSvg']),
+            new twigTest('media_flash',   [MediaTypes::class, 'isFlash']),
+            new twigTest('media_video',   [MediaTypes::class, 'isVideo']),
+            new twigTest('media_audio',   [MediaTypes::class, 'isAudio']),
+            new twigTest('media_file',    [MediaTypes::class, 'isFile']),
+            new twigTest('media_archive', [MediaTypes::class, 'isArchive']),
         ];
     }
 
@@ -59,14 +62,14 @@ class PlayerExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('media_url',   [$this, 'getMediaUrl']),
-            new \Twig_SimpleFilter('media',       [$this, 'renderMedia'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('media_video', [$this, 'renderVideo'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('media_flash', [$this, 'renderFlash'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('media_audio', [$this, 'renderAudio'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('media_image', [$this, 'renderImage'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('media_svg',   [$this, 'renderSvg'],   ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('media_file',  [$this, 'renderFile'],  ['is_safe' => ['html']]),
+            new TwigFilter('media_url',   [$this, 'getMediaUrl']),
+            new twigFilter('media',       [$this, 'renderMedia'], ['is_safe' => ['html']]),
+            new twigFilter('media_video', [$this, 'renderVideo'], ['is_safe' => ['html']]),
+            new twigFilter('media_flash', [$this, 'renderFlash'], ['is_safe' => ['html']]),
+            new twigFilter('media_audio', [$this, 'renderAudio'], ['is_safe' => ['html']]),
+            new twigFilter('media_image', [$this, 'renderImage'], ['is_safe' => ['html']]),
+            new twigFilter('media_svg',   [$this, 'renderSvg'],   ['is_safe' => ['html']]),
+            new twigFilter('media_file',  [$this, 'renderFile'],  ['is_safe' => ['html']]),
         ];
     }
 

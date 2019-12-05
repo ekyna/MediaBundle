@@ -2,16 +2,22 @@
 
 namespace Ekyna\Bundle\MediaBundle\Twig;
 
-use Ekyna\Bundle\MediaBundle\Service\Generator;
+use Ekyna\Bundle\MediaBundle\Controller\Admin\BrowserController;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
-use Symfony\Component\Serializer\Serializer;
+use Ekyna\Bundle\MediaBundle\Service\Generator;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Twig\Environment;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 /**
  * Class BrowserExtension
  * @package Ekyna\Bundle\MediaBundle\Twig
  * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-class BrowserExtension extends \Twig_Extension
+class BrowserExtension extends AbstractExtension
 {
     /**
      * @var Generator
@@ -19,21 +25,28 @@ class BrowserExtension extends \Twig_Extension
     private $generator;
 
     /**
-     * @var Serializer
+     * @var NormalizerInterface
      */
-    private $serializer;
+    private $normalizer;
+
+    /**
+     * @var SessionInterface
+     */
+    private $session;
 
 
     /**
      * Constructor.
      *
-     * @param Generator  $generator
-     * @param Serializer $serializer
+     * @param Generator           $generator
+     * @param NormalizerInterface $normalizer
+     * @param SessionInterface    $session
      */
-    public function __construct(Generator $generator, Serializer $serializer)
+    public function __construct(Generator $generator, NormalizerInterface $normalizer, SessionInterface $session = null)
     {
-        $this->generator = $generator;
-        $this->serializer = $serializer;
+        $this->generator  = $generator;
+        $this->normalizer = $normalizer;
+        $this->session    = $session;
     }
 
     /**
@@ -42,7 +55,7 @@ class BrowserExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction(
+            new TwigFunction(
                 'render_media_manager',
                 [$this, 'renderManager'],
                 ['is_safe' => ['html'], 'needs_environment' => true]
@@ -56,29 +69,34 @@ class BrowserExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter(
+            new TwigFilter(
                 'media_thumb',
                 [$this, 'renderMediaThumb'],
                 ['is_safe' => ['html'], 'needs_environment' => true]
             ),
-            new \Twig_SimpleFilter(
+            new TwigFilter(
                 'media_thumb_path',
                 [$this, 'getMediaThumbPath']
             ),
         ];
     }
 
-
     /**
      * Renders the media manager.
      *
-     * @param \Twig_Environment $env
-     * @param array             $config
+     * @param Environment $env
+     * @param array       $config
      *
      * @return string
      */
-    public function renderManager(\Twig_Environment $env, array $config = [])
+    public function renderManager(Environment $env, array $config = [])
     {
+        if (!isset($config['folderId']) && $this->session) {
+            if (0 < $id = $this->session->get(BrowserController::SESSION_FOLDER_ID))            {
+                $config['folderId'] = $id;
+            }
+        }
+
         return $env->render('@EkynaMedia/Manager/render.html.twig', [
             'config' => $config,
         ]);
@@ -87,21 +105,21 @@ class BrowserExtension extends \Twig_Extension
     /**
      * Renders the media thumb.
      *
-     * @param \Twig_Environment $env
-     * @param MediaInterface    $media
-     * @param array             $controls
+     * @param Environment    $env
+     * @param MediaInterface $media
+     * @param array          $controls
      *
      * @return string
      */
-    public function renderMediaThumb(\Twig_Environment $env, MediaInterface $media = null, array $controls = [])
+    public function renderMediaThumb(Environment $env, MediaInterface $media = null, array $controls = [])
     {
-        /*if (empty($controls)) {
-            $controls = array(
-                array('role' => 'edit',     'icon' => 'pencil'),
-                //array('role' => 'delete',   'icon' => 'trash'),
-                array('role' => 'download', 'icon' => 'download'),
-            );
-        }*/
+        if ($media && empty($controls)) {
+            $controls = [
+                ['role' => 'show', 'icon' => 'play', 'title' => 'Preview'],
+                ['role' => 'download', 'icon' => 'download', 'title' => 'Download'],
+                ['role' => 'browse', 'icon' => 'folder-open', 'title' => 'Browse'],
+            ];
+        }
         foreach ($controls as $control) {
             if (!(array_key_exists('role', $control) && array_key_exists('icon', $control))) {
                 throw new \InvalidArgumentException('Controls must have "role" and "icon" defined.');
@@ -110,7 +128,7 @@ class BrowserExtension extends \Twig_Extension
 
         $data = null;
         if ($media) {
-            $data = $this->serializer->normalize($media, 'json', ['groups' => ['Manager']]);
+            $data = $this->normalizer->normalize($media, 'json', ['groups' => ['Manager']]);
         }
 
         return $env->render('@EkynaMedia/Js/thumb.html.twig', [

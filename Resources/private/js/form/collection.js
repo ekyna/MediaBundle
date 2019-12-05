@@ -8,9 +8,9 @@ define('ekyna-media/form/collection',
         this.defaults = {
             types: [],
             controls: [
-                {role: 'move-left', icon: 'arrow-left'},
-                {role: 'remove', icon: 'remove'},
-                {role: 'move-right', icon: 'arrow-right'}
+                {role: 'move-left', icon: 'arrow-left', title: 'Move left'},
+                {role: 'remove', icon: 'remove', title: 'Remove'},
+                {role: 'move-right', icon: 'arrow-right', title: 'Move right'}
             ],
             limit: 0
         };
@@ -62,7 +62,7 @@ define('ekyna-media/form/collection',
                 browser;
 
             $(modal).on('ekyna.modal.content', function (e) {
-                if (e.contentType == 'html') {
+                if (e.contentType === 'html') {
                     browser = new Browser(e.content);
 
                     // TODO Update media id edited in browser
@@ -73,7 +73,7 @@ define('ekyna-media/form/collection',
                             var $medias = that.$elem.find('.ekyna-media-collection-media').not('.ekyna-media-collection-add');
                             $medias.each(function () {
                                 var $media = $(this);
-                                if (e.media.id == $media.find('input').val()) {
+                                if (e.media.id === $media.find('input').val()) {
                                     that.removeMedia($media, false);
                                 }
                             });
@@ -89,7 +89,7 @@ define('ekyna-media/form/collection',
             });
 
             $(modal).on('ekyna.modal.button_click', function (e) {
-                if (e.buttonId == 'submit' && browser) {
+                if ((e.buttonId === 'submit') && browser) {
                     var selection = browser.getSelection();
                     for (var i in selection) {
                         if (selection.hasOwnProperty(i)) {
@@ -127,12 +127,12 @@ define('ekyna-media/form/collection',
             $medias.each(function(i) {
                 var $media = $(this);
                 $media.find('input[data-role="position"]').val(i);
-                if (i == 0) {
+                if (i === 0) {
                     $media.find('[data-role="move-left"]').addClass('disabled');
                 } else {
                     $media.find('[data-role="move-left"]').removeClass('disabled');
                 }
-                if (i == max) {
+                if (i === max) {
                     $media.find('[data-role="move-right"]').addClass('disabled');
                 } else {
                     $media.find('[data-role="move-right"]').removeClass('disabled');
@@ -173,7 +173,7 @@ define('ekyna-media/form/collection',
             var that = this;
 
             var $addButton = that.$elem.find('.ekyna-media-collection-add');
-            if ($addButton.length == 1) {
+            if ($addButton.length === 1) {
                 $addButton.detach().appendTo(that.$elem);
                 return;
             } else if ($addButton.length > 1) {
