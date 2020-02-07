@@ -65,7 +65,7 @@ class MediaImportFlow extends FormFlow
             ['id' => $import->getFolder()->getId()]
         );
         $options['method'] = 'post';
-        $options['admin_mode'] = true;
+        //$options['admin_mode'] = true;
         $options['attr'] = [
             'class' => 'form form-horizontal form-with-tabs',
         ];
