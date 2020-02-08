@@ -23,7 +23,7 @@ class MediaTypes extends AbstractConstants
     /**
      * @inheritdoc
      */
-    public static function getConfig()
+    public static function getConfig(): array
     {
         $prefix = '';
 
@@ -72,6 +72,14 @@ class MediaTypes extends AbstractConstants
         }
 
         return static::FILE;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getTheme(string $constant): ?string
+    {
+        return null;
     }
 
     /**
