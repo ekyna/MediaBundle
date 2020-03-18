@@ -2,6 +2,7 @@
 
 namespace Ekyna\Bundle\MediaBundle\DependencyInjection\Compiler;
 
+use Ekyna\Bundle\AdminBundle\Menu\MenuPool;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
@@ -17,11 +18,11 @@ class AdminMenuPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('ekyna_admin.menu.pool')) {
+        if (!$container->hasDefinition(MenuPool::class)) {
             return;
         }
 
-        $pool = $container->getDefinition('ekyna_admin.menu.pool');
+        $pool = $container->getDefinition(MenuPool::class);
 
         $pool->addMethodCall('createGroup', [[
             'name'     => 'content',
