@@ -114,23 +114,10 @@
             <tag name="twig.extension" />
         </service>
         <service id="Ekyna\Bundle\MediaBundle\Twig\PlayerExtension" public="false">
-            <argument type="service" id="ekyna_media.generator" />
-            <argument type="service" id="ekyna_media.renderer" />
             <tag name="twig.extension" />
         </service>
 
         <!-- Services -->
-        <service id="ekyna_media.generator"
-                 class="Ekyna\Bundle\MediaBundle\Service\Generator"
-                 lazy="true">
-            <argument type="service" id="local_media_filesystem" />
-            <argument type="service" id="liip_imagine" />
-            <argument type="service" id="liip_imagine.cache.manager" />
-            <argument type="service" id="ekyna_media.video_manager" />
-            <argument type="service" id="router" />
-            <argument>%kernel.project_dir%/web</argument>
-            <argument>%ekyna_media.browser.thumbs_directory%</argument>
-        </service>
         <service id="ekyna_media.video_manager"
                  class="Ekyna\Bundle\MediaBundle\Service\VideoManager"
                  lazy="true">
@@ -143,6 +130,18 @@
             <argument>%ekyna_media.video.directory%</argument>
             <argument>%ekyna_media.watermark%</argument>
         </service>
+        <service id="ekyna_media.generator"
+                 class="Ekyna\Bundle\MediaBundle\Service\Generator"
+                 lazy="true">
+            <argument type="service" id="local_media_filesystem" />
+            <argument type="service" id="liip_imagine" />
+            <argument type="service" id="liip_imagine.cache.manager" />
+            <argument type="service" id="ekyna_media.video_manager" />
+            <argument type="service" id="router" />
+            <argument>%kernel.project_dir%/web</argument>
+            <argument>%ekyna_media.browser.thumbs_directory%</argument>
+            <tag name="twig.runtime"/>
+        </service>
         <service id="ekyna_media.renderer"
                  class="Ekyna\Bundle\MediaBundle\Service\Renderer"
                  lazy="true">
@@ -150,6 +149,7 @@
             <argument type="service" id="ekyna_media.generator" />
             <argument type="service" id="ekyna_media.video_manager" />
             <argument type="service" id="liip_imagine.filter.manager" />
+            <tag name="twig.runtime"/>
         </service>
 
         <!-- Normalizers -->

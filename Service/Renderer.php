@@ -5,6 +5,8 @@ namespace Ekyna\Bundle\MediaBundle\Service;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
 use Liip\ImagineBundle\Imagine\Filter\FilterManager;
+use Twig\Environment;
+use Twig\TemplateWrapper;
 
 /**
  * Class Renderer
@@ -14,7 +16,7 @@ use Liip\ImagineBundle\Imagine\Filter\FilterManager;
 class Renderer
 {
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     private $twig;
 
@@ -34,7 +36,7 @@ class Renderer
     private $filterManager;
 
     /**
-     * @var \Twig_TemplateWrapper
+     * @var TemplateWrapper
      */
     private $template;
 
@@ -42,14 +44,14 @@ class Renderer
     /**
      * Constructor.
      *
-     * @param \Twig_Environment $twig
-     * @param Generator         $generator
-     * @param VideoManager      $videoManager
-     * @param FilterManager     $filterManager
-     * @param string            $template
+     * @param Environment   $twig
+     * @param Generator     $generator
+     * @param VideoManager  $videoManager
+     * @param FilterManager $filterManager
+     * @param string        $template
      */
     public function __construct(
-        \Twig_Environment $twig,
+        Environment $twig,
         Generator $generator,
         VideoManager $videoManager,
         FilterManager $filterManager,
@@ -67,7 +69,7 @@ class Renderer
      *
      * @return Generator
      */
-    public function getGenerator()
+    public function getGenerator(): Generator
     {
         return $this->generator;
     }
@@ -79,9 +81,8 @@ class Renderer
      * @param array          $params
      *
      * @return string
-     * @throws \InvalidArgumentException
      */
-    public function renderMedia(MediaInterface $media, array $params = [])
+    public function renderMedia(MediaInterface $media, array $params = []): string
     {
         switch ($media->getType()) {
             case MediaTypes::VIDEO :
@@ -106,9 +107,8 @@ class Renderer
      * @param array          $params
      *
      * @return string
-     * @throws \InvalidArgumentException
      */
-    public function renderVideo(MediaInterface $video, array $params = [])
+    public function renderVideo(MediaInterface $video, array $params = []): string
     {
         if (!MediaTypes::isVideo($video)) {
             throw new \InvalidArgumentException('Expected media with "video" type.');
@@ -182,9 +182,8 @@ class Renderer
      * @param array          $params
      *
      * @return string
-     * @throws \InvalidArgumentException
      */
-    public function renderFlash(MediaInterface $flash, array $params = [])
+    public function renderFlash(MediaInterface $flash, array $params = []): string
     {
         if (!MediaTypes::isFlash($flash)) {
             throw new \InvalidArgumentException('Expected media with "flash" type.');
@@ -214,9 +213,8 @@ class Renderer
      * @param array          $params
      *
      * @return string
-     * @throws \InvalidArgumentException
      */
-    public function renderAudio(MediaInterface $audio, array $params = [])
+    public function renderAudio(MediaInterface $audio, array $params = []): string
     {
         if (!MediaTypes::isAudio($audio)) {
             throw new \InvalidArgumentException('Expected media with "audio" type.');
@@ -244,9 +242,8 @@ class Renderer
      * @param array          $params
      *
      * @return string
-     * @throws \InvalidArgumentException
      */
-    public function renderImage(MediaInterface $image, array $params = [])
+    public function renderImage(MediaInterface $image, array $params = []): string
     {
         if (!MediaTypes::isImage($image)) {
             throw new \InvalidArgumentException('Expected media with "image" type.');
@@ -260,29 +257,9 @@ class Renderer
             ],
         ], $params);
 
-        if (!(isset($params['attr']['width']) && isset($params['attr']['height']))) {
-            $filter = $this->filterManager->getFilterConfiguration()->get($params['filter']);
-            if (array_key_exists('filters', $filter)) {
-                // TODO better size resolution
-                $width = $height = 0;
-                foreach ($filter['filters'] as $cfg) {
-                    if (array_key_exists('size', $cfg)) {
-                        $width = $width >= $cfg['size'][0] ?: $cfg['size'][0];
-                        $height = $height >= $cfg['size'][1] ?: $cfg['size'][1];
-                    }
-                }
-                if ($width && $height) {
-                    $params['attr']['width'] = $width;
-                    $params['attr']['height'] = $height;
-                }
-            }
-        }
-
         $params['attr']['src'] = $this->generator->generateFrontUrl($image, $params['filter']);
 
-        return $this->renderBlock('image', [
-            'attr' => $params['attr'],
-        ]);
+        return $this->renderImg($params);
     }
 
     /**
@@ -292,10 +269,8 @@ class Renderer
      * @param array          $params
      *
      * @return string
-     *
-     * @throws \InvalidArgumentException
      */
-    public function renderSvg(MediaInterface $svg, array $params = [])
+    public function renderSvg(MediaInterface $svg, array $params = []): string
     {
         if (!MediaTypes::isSvg($svg)) {
             throw new \InvalidArgumentException('Expected media with "svg" type.');
@@ -357,9 +332,8 @@ class Renderer
      * @param array          $params
      *
      * @return string
-     * @throws \InvalidArgumentException
      */
-    public function renderFile(MediaInterface $file, array $params = [])
+    public function renderFile(MediaInterface $file, array $params = []): string
     {
         if (!(MediaTypes::isFile($file) || MediaTypes::isArchive($file))) {
             throw new \InvalidArgumentException('Expected media with "file" or "archive" type.');
@@ -381,6 +355,78 @@ class Renderer
     }
 
     /**
+     * Renders the video thumb.
+     *
+     * @param MediaInterface $video
+     * @param array          $params
+     *
+     * @return string
+     */
+    public function renderVideoThumb(MediaInterface $video, array $params = []): string
+    {
+        if (!MediaTypes::isVideo($video)) {
+            throw new \InvalidArgumentException('Expected media with "video" type.');
+        }
+
+        $params = array_replace_recursive([
+            'filter' => 'video_alt',
+            'attr'   => [
+                'id'  => 'media-video-' . $video->getId() . '-thumb',
+                'alt' => $video->getTitle(),
+                'src' => null,
+            ],
+        ], $params);
+
+        $params['attr']['src'] = $this->videoManager->thumb($video, $params['filter']);
+
+        return $this->renderImg($params);
+    }
+
+    /**
+     * Renders img element.
+     *
+     * @param array $params
+     *
+     * @return string
+     */
+    private function renderImg(array $params): string
+    {
+        $params = array_replace_recursive([
+            'filter' => 'media_front',
+            'attr'   => [
+                'class' => 'img-responsive',
+                'src'   => null,
+            ],
+        ], $params);
+
+        if (!isset($params['attr']['src'])) {
+            throw new \RuntimeException("The 'src' attribute must be set.");
+        }
+
+        if (!(isset($params['attr']['width']) && isset($params['attr']['height']))) {
+            $filter = $this->filterManager->getFilterConfiguration()->get($params['filter']);
+            if (array_key_exists('filters', $filter)) {
+                // TODO better size resolution
+                $width = $height = 0;
+                foreach ($filter['filters'] as $cfg) {
+                    if (array_key_exists('size', $cfg)) {
+                        $width = $width >= $cfg['size'][0] ?: $cfg['size'][0];
+                        $height = $height >= $cfg['size'][1] ?: $cfg['size'][1];
+                    }
+                }
+                if ($width && $height) {
+                    $params['attr']['width'] = $width;
+                    $params['attr']['height'] = $height;
+                }
+            }
+        }
+
+        return $this->renderBlock('image', [
+            'attr' => $params['attr'],
+        ]);
+    }
+
+    /**
      * Renders the template block.
      *
      * @param $blockName
@@ -388,9 +434,9 @@ class Renderer
      *
      * @return string
      */
-    private function renderBlock($blockName, $blockVars)
+    private function renderBlock($blockName, $blockVars): string
     {
-        if (!$this->template instanceof \Twig_TemplateWrapper) {
+        if (!$this->template instanceof TemplateWrapper) {
             $this->template = $this->twig->load($this->template);
         }
 
