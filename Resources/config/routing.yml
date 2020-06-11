@@ -32,3 +32,4 @@ _liip_imagine:
 _oneup_uploader:
     resource: .
     type: uploader
+    options: { i18n: false }

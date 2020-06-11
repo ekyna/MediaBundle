@@ -16,10 +16,30 @@
     <services>
 
         <!-- Repositories -->
+        <service id="ekyna_media.folder.manager" alias="Doctrine\ORM\EntityManagerInterface"/>
+        <service id="ekyna_media.folder.metadata" class="Doctrine\ORM\Mapping\ClassMetadata">
+            <factory service="ekyna_media.folder.manager" method="getClassMetadata"/>
+            <argument>Ekyna\Bundle\MediaBundle\Entity\Folder</argument>
+        </service>
         <service id="ekyna_media.folder.repository"
                  class="Ekyna\Bundle\MediaBundle\Entity\FolderRepository">
-            <factory service="doctrine" method="getRepository" />
-            <argument>Ekyna\Bundle\MediaBundle\Entity\Folder</argument>
+            <argument type="service" id="ekyna_media.folder.manager"/>
+            <argument type="service" id="ekyna_media.folder.metadata"/>
+            <tag name="doctrine.repository_service"/>
+        </service>
+        <service id="ekyna_media.folder.configuration"
+                 class="%ekyna_resource.configuration.class%">
+            <factory service="ekyna_resource.configuration_factory" method="createConfiguration"/>
+            <argument type="collection">
+                <argument key="namespace">ekyna_media</argument>
+                <argument key="id">folder</argument>
+                <argument key="classes" type="collection">
+                    <argument key="entity">Ekyna\Bundle\MediaBundle\Entity\Folder</argument>
+                    <argument key="form_type"><!-- TODO --></argument>
+                </argument>
+                <argument key="templates" type="collection"/>
+            </argument>
+            <tag name="ekyna_resource.configuration" alias="ekyna_media_folder"/>
         </service>
 
         <!-- Form types -->
