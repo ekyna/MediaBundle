@@ -1,14 +1,14 @@
 {% block widget_attributes -%}{% for key, value in attr %} {{ key }}="{{ value }}"{% endfor -%}{% endblock widget_attributes %}
 
 {% block media_widget %}
-{% spaceless %}
+{% apply spaceless %}
     {{ value|media_thumb }}
-{% endspaceless %}
+{% endapply %}
 {% endblock media_widget %}
 
 
 {% block medias_widget %}
-{% spaceless %}
+{% apply spaceless %}
     {% set attr = attr|merge({'class': ('show-widget show-widget-block ' ~ attr.class|default(''))|trim }) %}
     <div{{ block('widget_attributes') }}>
         {% for media in value %}
@@ -17,5 +17,5 @@
             {{ null|media_thumb }}
         {% endfor %}
     </div>
-{% endspaceless %}
+{% endapply %}
 {% endblock medias_widget %}

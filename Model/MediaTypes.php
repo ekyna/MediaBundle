@@ -9,15 +9,15 @@ use Ekyna\Bundle\ResourceBundle\Model\AbstractConstants;
  * @package Ekyna\Bundle\MediaBundle\Model
  * @author  Étienne Dauvergne <contact@ekyna.com>
  */
-class MediaTypes extends AbstractConstants
+final class MediaTypes extends AbstractConstants
 {
-    const FILE    = 'file';
-    const IMAGE   = 'image';
-    const SVG     = 'svg';
-    const VIDEO   = 'video';
-    const FLASH   = 'flash';
-    const AUDIO   = 'audio';
-    const ARCHIVE = 'archive';
+    public const FILE    = 'file';
+    public const IMAGE   = 'image';
+    public const SVG     = 'svg';
+    public const VIDEO   = 'video';
+    public const FLASH   = 'flash';
+    public const AUDIO   = 'audio';
+    public const ARCHIVE = 'archive';
 
 
     /**

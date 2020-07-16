@@ -6,9 +6,7 @@
     xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                         http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Ekyna\Bundle\MediaBundle\Entity\Media"
-            table="media_media"
-            repository-class="Ekyna\Bundle\MediaBundle\Entity\MediaRepository">
+    <entity name="Ekyna\Bundle\MediaBundle\Entity\Media" table="media_media">
 
         <entity-listeners>
             <entity-listener class="Ekyna\Bundle\MediaBundle\Listener\MediaListener" />

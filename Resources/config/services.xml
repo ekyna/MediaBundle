@@ -6,7 +6,6 @@
 
     <parameters>
         <parameter key="ekyna_media.browser.thumbs_directory">cache/media/media_thumb</parameter>
-        <parameter key="ekyna_media.video.directory">cache/video</parameter>
 
         <parameter key="ekyna_media.media_choice.form_type.class">Ekyna\Bundle\MediaBundle\Form\Type\MediaChoiceType</parameter>
         <parameter key="ekyna_media.media_collection.form_type.class">Ekyna\Bundle\MediaBundle\Form\Type\MediaCollectionType</parameter>
@@ -14,6 +13,12 @@
     </parameters>
 
     <services>
+
+        <!-- Repositories -->
+        <service id="Ekyna\Bundle\MediaBundle\Repository\ConversionRequestRepository">
+            <argument type="service" id="Symfony\Bridge\Doctrine\RegistryInterface"/>
+            <tag name="doctrine.repository_service"/>
+        </service>
 
         <!-- Repositories -->
         <service id="ekyna_media.folder.manager" alias="Doctrine\ORM\EntityManagerInterface"/>
@@ -126,6 +131,14 @@
             <tag name="doctrine.orm.entity_listener" />
         </service>
 
+        <!-- Resource vent subscribers -->
+        <service id="Ekyna\Bundle\MediaBundle\EventListener\MediaEventSubscriber" public="false">
+            <argument type="service" id="Ekyna\Bundle\MediaBundle\Repository\ConversionRequestRepository"/>
+            <argument type="service" id="ekyna_resource.doctrine.orm.persistence_helper"/>
+            <argument type="service" id="local_video_filesystem" />
+            <tag name="resource.event_subscriber"/>
+        </service>
+
         <!-- Twig extensions -->
         <service id="Ekyna\Bundle\MediaBundle\Twig\BrowserExtension" public="false">
             <argument type="service" id="ekyna_media.generator" />
@@ -138,8 +151,7 @@
         </service>
 
         <!-- Services -->
-        <service id="ekyna_media.video_manager"
-                 class="Ekyna\Bundle\MediaBundle\Service\VideoManager"
+        <service id="Ekyna\Bundle\MediaBundle\Service\VideoManager"
                  lazy="true">
             <argument type="service" id="local_media_filesystem" />
             <argument type="service" id="local_video_filesystem" />
@@ -147,9 +159,9 @@
             <argument type="service" id="dubture_ffmpeg.ffprobe" />
             <argument type="service" id="liip_imagine.cache.manager" />
             <argument type="service" id="router" />
-            <argument>%ekyna_media.video.directory%</argument>
-            <argument>%ekyna_media.watermark%</argument>
+            <argument>%ekyna_media.video%</argument>
         </service>
+        <service id="ekyna_media.video_manager" alias="Ekyna\Bundle\MediaBundle\Service\VideoManager"/>
         <service id="ekyna_media.generator"
                  class="Ekyna\Bundle\MediaBundle\Service\Generator"
                  lazy="true">
@@ -205,6 +217,19 @@
                  class="Ekyna\Bundle\MediaBundle\Validator\Constraints\MediaValidator">
             <argument type="service" id="oneup_flysystem.mount_manager" />
             <tag name="validator.constraint_validator" alias="ekyna_media_media" />
+        </service>
+
+        <!-- Commands -->
+        <service id="Ekyna\Bundle\MediaBundle\Command\ConversionRequestCommand">
+            <argument type="service" id="Ekyna\Bundle\MediaBundle\Repository\ConversionRequestRepository"/>
+            <argument type="service" id="ekyna_media.video_manager"/>
+            <argument type="service" id="Doctrine\ORM\EntityManagerInterface"/>
+            <tag name="console.command"/>
+        </service>
+        <service id="Ekyna\Bundle\MediaBundle\Command\ConvertVideoCommand">
+            <argument type="service" id="ekyna_media.media.repository"/>
+            <argument type="service" id="ekyna_media.video_manager"/>
+            <tag name="console.command"/>
         </service>
 
     </services>

@@ -23,7 +23,13 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('watermark')->defaultValue('')->end()
+                ->arrayNode('video')
+                    ->children()
+                        ->scalarNode('directory')->defaultValue('cache/video')->end()
+                        ->scalarNode('watermark')->defaultNull()->end()
+                        ->scalarNode('pending')->defaultNull()->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 

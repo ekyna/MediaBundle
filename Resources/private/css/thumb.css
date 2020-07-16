@@ -4,6 +4,21 @@
     position: relative;
     width: 120px;
     background: #fff;
+    overflow: hidden;
+}
+
+.media-thumb > em {
+    position: absolute;
+    top: -14px;
+    right: 0;
+    color: #777;
+    font-size: 11px;
+    font-style: normal;
+    line-height: 14px;
+    display: block;
+    padding: 0 2px;
+    background: #f5f5f5;
+    transition: box-shadow .2s linear, top .2s ease;
 }
 
 .media-thumb:hover {
@@ -23,7 +38,6 @@
     padding: 8px;
     position: absolute;
     text-align: center;
-    text-shadow: 0 1px 0 #fff;
     width: 120px;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -36,6 +50,11 @@
     height: auto;
     max-height: 90px;
     white-space: normal;
+}
+
+.media-thumb:hover > em {
+    box-shadow: 0 1px 3px #ccc;
+    top: 0;
 }
 
 .media-thumb .thumb {

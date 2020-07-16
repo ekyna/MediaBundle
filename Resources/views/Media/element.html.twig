@@ -1,5 +1,5 @@
 {% block video -%}
-{% spaceless %}
+{% apply spaceless %}
 {% if responsive %}<div class="embed-responsive embed-responsive-{{ aspect_ratio }}">{% endif %}
     <video {{ block('attributes') }}>
         {% for mime_type, src in videos -%}
@@ -10,22 +10,22 @@
         {%- endif %}
     </video>
 {% if responsive %}</div>{% endif %}
-{% endspaceless %}
+{% endapply %}
 {%- endblock video %}
 
 {% block audio -%}
-{% spaceless %}
+{% apply spaceless %}
 <audio{{ block('attributes') }} controls>
     <source src="{{ src }}" type="{{ mime_type }}">
     {% if alt_message is not empty -%}
         {{ alt_message|trans }}
     {%- endif %}
 </audio>
-{% endspaceless %}
+{% endapply %}
 {%- endblock audio %}
 
 {% block flash -%}
-{% spaceless %}
+{% apply spaceless %}
 <object{{ block('attributes') }}>
     <param name="movie" value="{{ src }}" />
     <param name="bgcolor" value="ffffff" />
@@ -46,27 +46,27 @@
     </object>
     <!--<![endif]-->
 </object>
-{% endspaceless %}
+{% endapply %}
 {%- endblock flash %}
 
 {% block image -%}
-{% spaceless %}
+{% apply spaceless %}
 <img{{ block('attributes') }}>
-{% endspaceless %}
+{% endapply %}
 {%- endblock image %}
 
 {% block object -%}
-{% spaceless %}
+{% apply spaceless %}
 <object type="{{ type }}" {{ block('attributes') }}>
     {{ fallback }}
 </object>
-{% endspaceless %}
+{% endapply %}
 {%- endblock object %}
 
 {% block file -%}
-{% spaceless %}
+{% apply spaceless %}
 <a{{ block('attributes') }}>{{ name }}</a>
-{% endspaceless %}
+{% endapply %}
 {%- endblock file %}
 
 {% block attributes %}

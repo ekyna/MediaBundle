@@ -25,13 +25,13 @@ class MediaController extends Controller
      *
      * @return Response
      */
-    public function downloadAction(Request $request)
+    public function downloadAction(Request $request): Response
     {
         /**
          * @var \Ekyna\Bundle\MediaBundle\Model\MediaInterface $media
          * @var \League\Flysystem\File                         $file
          */
-        list($media, $file) = $this->findMedia($request->attributes->get('key'));
+        [$media, $file] = $this->findMedia($request->attributes->get('key'));
 
         // ---- BINARY ---- //
 
@@ -88,22 +88,32 @@ class MediaController extends Controller
      *
      * @return Response
      */
-    public function videoAction(Request $request)
+    public function videoAction(Request $request): Response
     {
         /**
          * @var \Ekyna\Bundle\MediaBundle\Model\MediaInterface $media
          */
-        list($media) = $this->findMedia($request->attributes->get('key'));
+        [$media] = $this->findMedia($request->attributes->get('key'));
 
         $format = $request->attributes->get('_format');
 
-        if (null === $path = $this->get('ekyna_media.video_manager')->convert($media, $format)) {
-            throw $this->createNotFoundException('Video not found.');
+        $manager = $this->get('ekyna_media.video_manager');
+
+        $path = $manager->getConvertedPath($media, $format);
+        $public = true;
+
+        if (!(file_exists($path) && is_readable($path))) {
+            $path = $manager->getPendingVideoPath($format);
+            $public = false;
+
+            if (!(file_exists($path) && is_readable($path))) {
+                throw $this->createNotFoundException('Video not found.');
+            }
         }
 
         BinaryFileResponse::trustXSendfileTypeHeader();
 
-        return new BinaryFileResponse($path);
+        return new BinaryFileResponse($path, Response::HTTP_OK, [], $public);
     }
 
     /**
@@ -113,13 +123,13 @@ class MediaController extends Controller
      *
      * @return Response
      */
-    public function playerAction(Request $request)
+    public function playerAction(Request $request): Response
     {
         /**
          * @var \Ekyna\Bundle\MediaBundle\Model\MediaInterface $media
          * @var \League\Flysystem\File                         $file
          */
-        list ($media, $file) = $this->findMedia($request->attributes->get('key'));
+        [$media, $file] = $this->findMedia($request->attributes->get('key'));
 
         if (in_array($media->getType(), [MediaTypes::FILE, MediaTypes::ARCHIVE])) {
             return $this->redirect($this->generateUrl('ekyna_media_download', ['key' => $media->getPath()]));
@@ -164,10 +174,10 @@ class MediaController extends Controller
      *
      * @param string $path
      *
-     * @return array
+     * @return array [\Ekyna\Bundle\MediaBundle\Model\MediaInterface, \League\Flysystem\File]
      * @throws NotFoundHttpException
      */
-    private function findMedia($path)
+    private function findMedia(string $path): array
     {
         /** @var \Ekyna\Bundle\MediaBundle\Model\MediaInterface $media */
         $media = $this

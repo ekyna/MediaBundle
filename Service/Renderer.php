@@ -2,6 +2,7 @@
 
 namespace Ekyna\Bundle\MediaBundle\Service;
 
+use Ekyna\Bundle\MediaBundle\Model\MediaFormats;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
 use Liip\ImagineBundle\Imagine\Filter\FilterManager;
@@ -162,7 +163,7 @@ class Renderer
 
         // Sources
         $videos = [];
-        foreach (VideoManager::FORMATS as $format) {
+        foreach (MediaFormats::getFormatsByType(MediaTypes::VIDEO) as $format) {
             $videos['video/' . $format] = $this->generator->generateFrontUrl($video, $format);
         }
 

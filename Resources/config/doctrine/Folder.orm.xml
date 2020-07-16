@@ -6,9 +6,7 @@
         xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                             http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Ekyna\Bundle\MediaBundle\Entity\Folder"
-            repository-class="Ekyna\Bundle\MediaBundle\Entity\FolderRepository"
-            table="media_folder">
+    <entity name="Ekyna\Bundle\MediaBundle\Entity\Folder" table="media_folder">
 
         <indexes>
             <index name="idx_media_folder_name" columns="name" />

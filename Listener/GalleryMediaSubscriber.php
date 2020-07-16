@@ -10,16 +10,15 @@ use Ekyna\Bundle\MediaBundle\Model;
 /**
  * Class GalleryMediaSubscriber
  * @package Ekyna\Bundle\MediaBundle\Listener
- * @author Étienne Dauvergne <contact@ekyna.com>
+ * @author  Étienne Dauvergne <contact@ekyna.com>
  */
 class GalleryMediaSubscriber implements EventSubscriber
 {
     /**
      * @param LoadClassMetadataEventArgs $eventArgs
      */
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
     {
-        /** @var \Doctrine\ORM\Mapping\ClassMetadataInfo $metadata */
         $metadata = $eventArgs->getClassMetadata();
 
         // Prevent doctrine:generate:entities bug
@@ -38,15 +37,15 @@ class GalleryMediaSubscriber implements EventSubscriber
         }
 
         $metadata->mapManyToOne([
-            'fieldName'     => 'media',
-            'targetEntity'  => Model\MediaInterface::class,
-            'cascade'       => ['persist', 'detach'],
-            'joinColumns' => [
+            'fieldName'    => 'media',
+            'targetEntity' => Model\MediaInterface::class,
+            'cascade'      => ['persist', 'detach'],
+            'joinColumns'  => [
                 [
-                    'name'                  => 'media_id',
-                    'referencedColumnName'  => 'id',
-                    'onDelete'              => 'CASCADE',
-                    'nullable'              => true,
+                    'name'                 => 'media_id',
+                    'referencedColumnName' => 'id',
+                    'onDelete'             => 'CASCADE',
+                    'nullable'             => true,
                 ],
             ],
         ]);

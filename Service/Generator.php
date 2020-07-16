@@ -161,11 +161,6 @@ class Generator
 
         if (MediaTypes::isVideo($media)) {
             return $this->videoManager->getBrowserPath($media, $format);
-            /*return $this->urlGenerator->generate(
-                'ekyna_media_video',
-                ['key' => $media->getPath(), '_format' => $format ? $format : 'mp4'],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );*/
         }
 
         return $this->urlGenerator->generate(

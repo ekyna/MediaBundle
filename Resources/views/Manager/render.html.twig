@@ -1,4 +1,4 @@
-{% spaceless %}
+{% apply spaceless %}
 <div id="media-browser" data-config="{{ config|json_encode }}">
     <div class="media-browser-controls">
         {# --- CREATE --- #}
@@ -103,4 +103,4 @@
         <div class="media-browser-content"></div>
     </div>
 </div>
-{% endspaceless %}
+{% endapply %}
