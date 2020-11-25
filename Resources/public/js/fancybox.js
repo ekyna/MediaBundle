@@ -1,1 +1,1 @@
-define(["jquery","fancybox"],function(a){a("<link>").attr("media","all").attr("rel","stylesheet").attr("href","/bundles/ekynamedia/lib/fancybox/jquery.fancybox.css").appendTo(a("head"))});
+define(["fancybox"],function(){const a="media-fancybox-stylesheet";if(!document.getElementById(a)){var b=document.createElement("link");b.id=a,b.href=document.documentElement.getAttribute("data-asset-base-url")+"/bundles/ekynamedia/lib/fancybox/jquery.fancybox.css",b.media="screen",b.rel="stylesheet",b.type="text/css",document.head.appendChild(b)}});

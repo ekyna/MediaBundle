@@ -6,14 +6,19 @@ define(['require', 'jquery'], function(require, $) {
             return
         }
 
-        if (0 === $('link#videojs-css').length) {
-            $('<link>')
-                .attr('id', 'videojs-css')
-                .attr('media', 'all')
-                .attr('rel', 'stylesheet')
-                .attr('href', '/bundles/ekynamedia/lib/videojs/video-js.css')
-                .appendTo($('head'));
+        const ID = 'media-player-stylesheet';
+
+        if (!document.getElementById(ID)) {
+            return;
         }
+
+        var stylesheet = document.createElement('link');
+        stylesheet.id = ID;
+        stylesheet.href = document.documentElement.getAttribute('data-asset-base-url') + '/bundles/ekynamedia/lib/videojs/video-js.css';
+        stylesheet.media = 'screen';
+        stylesheet.rel = 'stylesheet';
+        stylesheet.type = 'text/css';
+        document.head.appendChild(stylesheet);
 
         require(['videojs'], function() {
             var vJsI = setInterval(function() {
@@ -62,7 +67,11 @@ define(['require', 'jquery'], function(require, $) {
                 $flashes.each(function () {
                     var id = $(this).attr('id');
                     if (id) {
-                        swfobject.registerObject(id, "9.0.0", "/bundles/ekynamedia/lib/swfobject/expressInstall.swf");
+                        swfobject.registerObject(
+                            id, "9.0.0",
+                            document.documentElement.getAttribute('data-asset-base-url') +
+                            "/bundles/ekynamedia/lib/swfobject/expressInstall.swf"
+                        );
                     }
                 });
             }, 50);
