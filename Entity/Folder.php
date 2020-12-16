@@ -78,9 +78,9 @@ class Folder implements FolderInterface
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->name;
+        return $this->name ?: 'New folder';
     }
 
     /**

@@ -48,9 +48,10 @@ class Media implements Model\MediaInterface
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->guessFilename();
+        // TODO Return translation title ?
+        return $this->guessFilename() ?: 'New media';
     }
 
     /**
@@ -58,7 +59,7 @@ class Media implements Model\MediaInterface
      *
      * @return int
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }

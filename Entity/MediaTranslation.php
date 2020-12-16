@@ -13,11 +13,6 @@ use Ekyna\Component\Resource\Model\AbstractTranslation;
 class MediaTranslation extends AbstractTranslation implements MediaTranslationInterface
 {
     /**
-     * @var int
-     */
-    protected $id;
-
-    /**
      * @var string
      */
     protected $title;
@@ -27,16 +22,6 @@ class MediaTranslation extends AbstractTranslation implements MediaTranslationIn
      */
     protected $description;
 
-
-    /**
-     * Returns the id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Sets the title.
