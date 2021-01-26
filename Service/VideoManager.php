@@ -242,11 +242,12 @@ class VideoManager
 
             $dimensions = $video
                 ->getStreams()
+                ->videos()
                 ->first()
                 ->getDimensions();
 
             if (1280 < $dimensions->getWidth()) {
-                $dimensions = new FFMpeg\Coordinate\Dimension(1280, 1280 / $dimensions->getRatio(false));
+                $dimensions = new FFMpeg\Coordinate\Dimension(1280, 1280 / $dimensions->getRatio(false)->getValue());
                 $video
                     ->filters()
                     ->resize($dimensions, FFMpeg\Filters\Video\ResizeFilter::RESIZEMODE_INSET)
@@ -298,16 +299,17 @@ class VideoManager
 
         $dimensions = $video
             ->getStreams()
+            ->videos()
             ->first()
             ->getDimensions();
 
-        $realRatio = $dimensions->getRatio(false);
-        $normRatio = $dimensions->getRatio();
+        $realRatio = $dimensions->getRatio(false)->getValue();
+        $normRatio = $dimensions->getRatio()->getValue();
 
         // Resize / use standard ratio
-        if (720 < $dimensions->getWidth() || $realRatio->getValue() !== $normRatio->getValue()) {
+        if (720 < $dimensions->getWidth() || $realRatio !== $normRatio) {
             $width  = min(720, $dimensions->getWidth());
-            $resize = new FFMpeg\Coordinate\Dimension($width, floor($width / $dimensions->getRatio()->getValue()));
+            $resize = new FFMpeg\Coordinate\Dimension($width, floor($width / $normRatio));
             $video
                 ->filters()
                 ->resize($resize, FFMpeg\Filters\Video\ResizeFilter::RESIZEMODE_INSET)

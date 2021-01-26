@@ -7,6 +7,7 @@ use Ekyna\Bundle\MediaBundle\Entity\ConversionRequest;
 use Ekyna\Bundle\MediaBundle\Repository\ConversionRequestRepository;
 use Ekyna\Bundle\MediaBundle\Service\VideoManager;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
@@ -58,19 +59,57 @@ class ConversionRequestCommand extends Command
     /**
      * @inheritDoc
      */
+    protected function configure()
+    {
+        $this->addArgument('id', InputArgument::OPTIONAL, 'The request ID');
+    }
+
+    /**
+     * @inheritDoc
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $id = $input->getArgument('id');
+
+        if (0 < $id) {
+            /** @var ConversionRequest $request */
+            if (null === $request = $this->repository->find($id)) {
+                $output->writeln('Request not found');
+
+                return 1;
+            }
+
+            if ($request->getState() === ConversionRequest::STATE_RUNNING) {
+                $output->writeln('Request is already running');
+
+                return 0;
+            }
+
+            $this->convert($request);
+
+            return 0;
+        }
+
         // Abort if another request is running
         if ($this->repository->findRunning()) {
-            return;
+            return 0;
         }
 
         // Abort if no other request to run
         if (!$request = $this->repository->findNext()) {
-            return;
+            return 0;
         }
 
+        $this->convert($request);
+
+        return 0;
+    }
+
+    private function convert(ConversionRequest $request): void
+    {
         set_time_limit(5 * 60);
+
+        $id = $request->getId();
 
         // Set request as running
         $request->setState(ConversionRequest::STATE_RUNNING);
@@ -89,7 +128,7 @@ class ConversionRequestCommand extends Command
         }
 
         // If request has been deleted, abort
-        if (!$request = $this->repository->find($request->getId())) {
+        if (!$request = $this->repository->find($id)) {
             // The media has been deleted -> clear converted video
             @unlink($this->converter->getConvertedPath($media, $format));
 
