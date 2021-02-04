@@ -3,6 +3,7 @@
 namespace Ekyna\Bundle\MediaBundle\Form\Type;
 
 use Doctrine\ORM\EntityRepository;
+use Ekyna\Bundle\CoreBundle\Form\DataTransformer\IdentifierToObjectTransformer;
 use Ekyna\Bundle\CoreBundle\Form\DataTransformer\ObjectToIdentifierTransformer;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
 use Symfony\Component\Form\AbstractType;
@@ -40,10 +41,11 @@ class MediaChoiceType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $transformer = new ObjectToIdentifierTransformer($this->repository);
-        $builder->addViewTransformer($transformer);
+        if ($options['transform']) {
+            $builder->addModelTransformer(new IdentifierToObjectTransformer($this->repository));
+        }
 
-        // TODO Constraint against types
+        $builder->addViewTransformer(new ObjectToIdentifierTransformer($this->repository));
     }
 
     /**
@@ -75,10 +77,12 @@ class MediaChoiceType extends AbstractType
                     ['role' => 'remove', 'icon' => 'remove', 'title' => 'Remove'],
                 ],
                 'gallery'        => false,
+                'transform'      => false,
             ])
             ->setAllowedTypes('types', ['null', 'string', 'array'])
             ->setAllowedTypes('controls', 'array')
             ->setAllowedTypes('gallery', 'bool')
+            ->setAllowedTypes('transform', 'bool')
             ->setAllowedValues('types', function ($value) {
                 if (is_string($value)) {
                     return MediaTypes::isValid($value);

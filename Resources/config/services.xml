@@ -99,6 +99,7 @@
         <!-- Show types -->
         <service id="ekyna_cms.show.media_type"
                  class="Ekyna\Bundle\MediaBundle\Show\Type\MediaType">
+            <argument type="service" id="ekyna_media.media.repository"/>
             <tag name="ekyna_admin.show.type" alias="media"/>
         </service>
         <service id="ekyna_cms.show.medias_type"
@@ -181,6 +182,7 @@
             <argument type="service" id="ekyna_media.generator" />
             <argument type="service" id="ekyna_media.video_manager" />
             <argument type="service" id="liip_imagine.filter.manager" />
+            <argument type="service" id="ekyna_media.media.repository" />
             <tag name="twig.runtime"/>
         </service>
 

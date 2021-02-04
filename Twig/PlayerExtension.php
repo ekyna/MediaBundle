@@ -39,6 +39,7 @@ class PlayerExtension extends AbstractExtension
     {
         return [
             new TwigFilter('media_url',   [Generator::class, 'generateFrontUrl']),
+            new TwigFilter('media_find',  [Renderer::class, 'findMedia']),
             new twigFilter('media',       [Renderer::class, 'renderMedia'], ['is_safe' => ['html']]),
             new twigFilter('media_video', [Renderer::class, 'renderVideo'], ['is_safe' => ['html']]),
             new twigFilter('media_flash', [Renderer::class, 'renderFlash'], ['is_safe' => ['html']]),

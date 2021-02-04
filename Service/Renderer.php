@@ -2,6 +2,7 @@
 
 namespace Ekyna\Bundle\MediaBundle\Service;
 
+use Ekyna\Bundle\MediaBundle\Entity\MediaRepository;
 use Ekyna\Bundle\MediaBundle\Model\MediaFormats;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
@@ -37,6 +38,11 @@ class Renderer
     private $filterManager;
 
     /**
+     * @var MediaRepository
+     */
+    private $repository;
+
+    /**
      * @var TemplateWrapper
      */
     private $template;
@@ -45,23 +51,26 @@ class Renderer
     /**
      * Constructor.
      *
-     * @param Environment   $twig
-     * @param Generator     $generator
-     * @param VideoManager  $videoManager
-     * @param FilterManager $filterManager
-     * @param string        $template
+     * @param Environment     $twig
+     * @param Generator       $generator
+     * @param VideoManager    $videoManager
+     * @param FilterManager   $filterManager
+     * @param MediaRepository $repository
+     * @param string          $template
      */
     public function __construct(
         Environment $twig,
         Generator $generator,
         VideoManager $videoManager,
         FilterManager $filterManager,
+        MediaRepository $repository,
         $template = '@EkynaMedia/Media/element.html.twig'
     ) {
         $this->twig = $twig;
         $this->generator = $generator;
         $this->videoManager = $videoManager;
         $this->filterManager = $filterManager;
+        $this->repository = $repository;
         $this->template = $template;
     }
 
@@ -73,6 +82,31 @@ class Renderer
     public function getGenerator(): Generator
     {
         return $this->generator;
+    }
+
+    /**
+     * Finds the media by its id and type.
+     *
+     * @param int|null $id
+     * @param string   $type
+     *
+     * @return MediaInterface|null
+     */
+    public function findMedia(int $id = null, string $type = MediaTypes::IMAGE): ?MediaInterface
+    {
+        if (!$id) {
+            return null;
+        }
+
+        if (null === $media = $this->repository->find($id)) {
+            return null;
+        }
+
+        if ($media->getType() !== $type) {
+            return null;
+        }
+
+        return $media;
     }
 
     /**
@@ -297,16 +331,13 @@ class Renderer
                 'attr'     => $params['attr'],
                 'fallback' => $svg->getTitle(),
             ]);
+        } elseif ($mode === 'image') {
+            $params['attr']['src'] = $path;
+            $params['attr']['alt'] = $svg->getTitle();
 
-        } else {
-            if ($mode === 'image') {
-                $params['attr']['src'] = $path;
-                $params['attr']['alt'] = $svg->getTitle();
-
-                return $this->renderBlock('image', [
-                    'attr' => $params['attr'],
-                ]);
-            }
+            return $this->renderBlock('image', [
+                'attr' => $params['attr'],
+            ]);
         }
 
         // By Content
