@@ -151,12 +151,13 @@ class Renderer
 
         $params = array_replace_recursive([
             'responsive'   => true,
+            'aspect_ratio' => '16by9',
+            'min_height'   => null,
             'autoplay'     => true,
             'loop'         => false,
             'muted'        => false,
             'player'       => true,
             'alt_message'  => 'ekyna_media.player.video_not_supported',
-            'aspect_ratio' => '16by9',
             'attr'         => [
                 'id'     => 'media-video-' . $video->getId(),
                 'height' => '100%',
@@ -205,6 +206,7 @@ class Renderer
             'videos'       => $videos,
             'responsive'   => $params['responsive'],
             'aspect_ratio' => $params['aspect_ratio'],
+            'min_height'   => $params['min_height'],
             'alt_message'  => $params['alt_message'],
             'attr'         => $params['attr'],
         ]);

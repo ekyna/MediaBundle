@@ -1,6 +1,9 @@
 {% block video -%}
 {% apply spaceless %}
-{% if responsive %}<div class="embed-responsive embed-responsive-{{ aspect_ratio }}">{% endif %}
+{% if responsive -%}
+    <div class="embed-responsive embed-responsive-{{ aspect_ratio }}"
+    {%- if min_height %} style="min-height:{{ min_height }}"{% endif %}>
+{%- endif %}
     <video {{ block('attributes') }}>
         {% for mime_type, src in videos -%}
             <source src="{{ src }}" type="{{ mime_type }}">
