@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Doctrine\ORM\Events;
 use Ekyna\Bundle\MediaBundle\EventListener\MediaEventSubscriber;
 use Ekyna\Bundle\MediaBundle\Listener\GalleryMediaSubscriber;
 use Ekyna\Bundle\MediaBundle\Listener\MediaListener;
@@ -16,14 +17,14 @@ return static function (ContainerConfigurator $container) {
         // Media subject metadata event listener
         ->set('ekyna_media.listener.media_subject_metadata', MediaSubjectSubscriber::class)
             ->tag('doctrine.event_listener', [
-                'event'      => 'loadClassMetadata',
+                'event'      => Events::loadClassMetadata,
                 'connection' => 'default',
             ])
 
         // Gallery media metadata event listener
         ->set('ekyna_media.listener.gallery_media_metadata', GalleryMediaSubscriber::class)
             ->tag('doctrine.event_listener', [
-                'event'      => 'loadClassMetadata',
+                'event'      => Events::loadClassMetadata,
                 'connection' => 'default',
             ])
 
