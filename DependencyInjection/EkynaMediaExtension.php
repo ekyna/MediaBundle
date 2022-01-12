@@ -77,7 +77,7 @@ class EkynaMediaExtension extends Extension implements PrependExtensionInterface
         $container
             ->getDefinition('ekyna_media.ffmpeg')
             ->replaceArgument(0, [
-                'ffprobe.binaries' => [$config['ffmpeg_binary']],
+                'ffmpeg.binaries' => [$config['ffmpeg_binary']],
                 'timeout'          => $config['binary_timeout'],
                 'ffmpeg.threads'   => $config['threads_count'],
             ]);

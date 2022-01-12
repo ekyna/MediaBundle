@@ -19,9 +19,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class UploadType extends AbstractType
 {
-    /**
-     * @inheritDoc
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('medias', CollectionType::class, [
@@ -47,9 +44,6 @@ class UploadType extends AbstractType
         ));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
@@ -58,9 +52,6 @@ class UploadType extends AbstractType
             ->setAllowedTypes('folder', FolderInterface::class);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getBlockPrefix(): string
     {
         return 'ekyna_media_upload';

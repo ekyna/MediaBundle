@@ -398,7 +398,8 @@ class BrowserController
 
         $modal = $this->createModal();
         $modal
-            ->setTitle('ekyna_media.upload.title')
+            ->setTitle('upload.title')
+            ->setDomain('EkynaMedia')
             ->setForm($form->createView())
             ->setVars([
                 'form_template' => '@EkynaMedia/Manager/upload.html.twig',
@@ -450,7 +451,8 @@ class BrowserController
 
         $modal = $this->createModal();
         $modal
-            ->setTitle('ekyna_media.import.title')
+            ->setTitle('import.title')
+            ->setDomain('EkynaMedia')
             ->setForm($form->createView())
             ->setVars([
                 'flow'          => $this->importFlow,
@@ -487,7 +489,7 @@ class BrowserController
             'folderId' => $this->getRequestFolderId($request),
             'mode'     => $request->query->get('mode', 'browse'),
         ];
-        if (null !== $types = $request->query->get('types', [])) {
+        if (null !== $types = $request->query->get('types')) {
             // TODO validate types
             $config['types'] = $types;
         }
