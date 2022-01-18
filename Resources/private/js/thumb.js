@@ -102,7 +102,7 @@ define(
             });
 
             modal.load({
-                url: Router.generate('ekyna_media_browser_admin_modal', {
+                url: Router.generate('admin_ekyna_media_browser_modal', {
                     folderId: data.folderId
                 })
             });

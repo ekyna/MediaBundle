@@ -28,7 +28,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Throwable;
 use Twig\Environment;
 
-use function Symfony\Component\Translation\t;
+use function array_replace;
 
 /**
  * Class BrowserController
@@ -111,19 +111,10 @@ class BrowserController
 
         if ($config['mode'] == 'multiple_selection') {
             $modal->setButtons([
-                [
-                    'id'       => 'submit',
-                    'label'    => t('button.validate', [], 'EkynaUi'),
-                    'icon'     => 'glyphicon glyphicon-ok',
-                    'cssClass' => 'btn-success',
-                    'autospin' => true,
-                ],
-                [
-                    'id'       => 'close',
-                    'label'    => t('button.close', [], 'EkynaUi'),
-                    'icon'     => 'glyphicon glyphicon-remove',
-                    'cssClass' => 'btn-default',
-                ],
+                array_replace(Modal::BTN_SUBMIT, [
+                    'label' => 'button.validate',
+                ]),
+                Modal::BTN_CLOSE,
             ]);
         }
 

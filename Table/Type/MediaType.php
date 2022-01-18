@@ -23,13 +23,9 @@ class MediaType extends AbstractResourceType
     {
         $builder
             ->addColumn('title', BType\Column\AnchorType::class, [
-                'label'                => t('field.title', [], 'EkynaUi'),
-                'sortable'             => true,
-                'route_name'           => 'ekyna_media_media_admin_show',
-                'route_parameters_map' => [
-                    'mediaId' => 'id',
-                ],
-                'position'             => 10,
+                'label'    => t('field.title', [], 'EkynaUi'),
+                'sortable' => true,
+                'position' => 10,
             ])
             ->addColumn('updatedAt', CType\Column\DateTimeType::class, [
                 'label'    => t('field.updated_at', [], 'EkynaUi'),
