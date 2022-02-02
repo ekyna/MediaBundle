@@ -13,35 +13,11 @@ use Ekyna\Component\Resource\Model\TranslationInterface;
  */
 interface MediaTranslationInterface extends TranslationInterface
 {
-    /**
-     * Returns the title.
-     *
-     * @return string
-     */
     public function getTitle(): ?string;
 
-    /**
-     * Sets the title.
-     *
-     * @param string|null $title
-     *
-     * @return $this|MediaTranslationInterface
-     */
-    public function setTitle(string $title = null): MediaTranslationInterface;
+    public function setTitle(?string $title): MediaTranslationInterface;
 
-    /**
-     * Returns the description.
-     *
-     * @return string
-     */
     public function getDescription(): ?string;
 
-    /**
-     * Sets the description.
-     *
-     * @param string|null $description
-     *
-     * @return $this|MediaTranslationInterface
-     */
-    public function setDescription(string $description = null): MediaTranslationInterface;
+    public function setDescription(?string $description): MediaTranslationInterface;
 }

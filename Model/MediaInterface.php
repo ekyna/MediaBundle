@@ -19,67 +19,19 @@ interface MediaInterface extends
     RM\TranslatableInterface,
     RM\TaggedEntityInterface
 {
-    /**
-     * Sets the folder.
-     *
-     * @param FolderInterface|null $folder
-     *
-     * @return $this|MediaInterface
-     */
-    public function setFolder(FolderInterface $folder = null): MediaInterface;
+    public function setFolder(?FolderInterface $folder): MediaInterface;
 
-    /**
-     * Returns the folder.
-     *
-     * @return FolderInterface|null
-     */
     public function getFolder(): ?FolderInterface;
 
-    /**
-     * Sets the type.
-     *
-     * @param string $type
-     *
-     * @return $this|MediaInterface
-     */
-    public function setType(string $type): MediaInterface;
+    public function setType(?string $type): MediaInterface;
 
-    /**
-     * Returns the type.
-     *
-     * @return string|null
-     */
     public function getType(): ?string;
 
-    /**
-     * Sets the title.
-     *
-     * @param string $title
-     *
-     * @return $this|MediaInterface
-     */
-    public function setTitle(string $title): MediaInterface;
+    public function setTitle(?string $title): MediaInterface;
 
-    /**
-     * Returns the title.
-     *
-     * @return string|null
-     */
     public function getTitle(): ?string;
 
-    /**
-     * Sets the description.
-     *
-     * @param string|null $description
-     *
-     * @return $this|MediaInterface
-     */
-    public function setDescription(string $description = null): MediaInterface;
+    public function setDescription(?string $description): MediaInterface;
 
-    /**
-     * Returns the description.
-     *
-     * @return string|null
-     */
     public function getDescription(): ?string;
 }
