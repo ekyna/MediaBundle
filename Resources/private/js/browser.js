@@ -2,7 +2,12 @@ define('ekyna-media/browser',
     [
         'require', 'jquery', 'routing', 'ekyna-modal', 'ekyna-form',
         'ekyna-media/player', 'ekyna-media/templates',
-        'ekyna-string', 'fancybox', 'fancytree'
+        'ekyna-string',
+        'fancybox',
+        'fancytree/jquery.fancytree.dnd',
+        'fancytree/jquery.fancytree.edit',
+        'fancytree/jquery.fancytree.glyph',
+        'fancytree/jquery.fancytree.contextMenu'
     ],
     function(require, $, Router, Modal, Form, Player, Templates) {
     "use strict";
@@ -394,6 +399,59 @@ define('ekyna-media/browser',
             });
             return result;
         },
+        createFolder: function(node, mode) {
+            this.setBusy(true);
+            mode = mode || "child";
+            $.ajax({
+                url: Router.generate('admin_ekyna_media_browser_create', {'id': node.key}),
+                data : {
+                    'mode' : mode
+                },
+                method: 'POST',
+                dataType: 'json'
+            })
+            .done(function (d) {
+                if (d.error) {
+                    alert(d.message);
+                    return;
+                }
+                node.editCreateNode(mode, d.node);
+            })
+            .always(() => {
+                this.setBusy(false);
+            });
+        },
+        deleteFolder: function(node) {
+            this.setBusy(true);
+            var message = 'Êtes-vous sûr de vouloir supprimer le dossier "' + node.title + '"';
+            if (node.children && node.children.length) {
+                message = message + ' et tous ses sous-dossiers';
+            }
+            message = message + ' ?';
+            if (!confirm(message)) {
+                return;
+            }
+
+            $.ajax({
+                url: Router.generate('admin_ekyna_media_browser_delete', {'id': node.key}),
+                method: 'POST',
+                dataType: 'json'
+            })
+            .done(function (d) {
+                if (d.error) {
+                    alert(d.message);
+                    return;
+                }
+                var refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
+                node.remove();
+                if (refNode) {
+                    refNode.setActive();
+                }
+            })
+            .always(() => {
+                this.setBusy(false);
+            });
+        },
         initTree: function() {
             var that = this;
             this.$tree.addClass('fancytree-expander').fancytree({
@@ -403,7 +461,7 @@ define('ekyna-media/browser',
                 activeVisible: true,
                 minExpandLevel: 1,
                 selectMode: 1,
-                extensions: ["edit", "dnd", "glyph"],
+                extensions: ["edit", "dnd", "glyph", "contextMenu"],
                 init: function(event, data) {
                     var node = data.tree.getActiveNode();
                     if (node)  {
@@ -539,10 +597,34 @@ define('ekyna-media/browser',
                             $(data.node.span).addClass("pending");
                         }
                     }
+                },
+                contextMenu: {
+                    menu: (node) => {
+                        return {
+                            edit: { name: "Modifier", icon: "fa-pencil", disabled: node.data.level === 0 },
+                            delete: { name: "Supprimer", icon: "fa-trash", disabled: node.data.level === 0 },
+                            addSibling: { name: "Créer dossier", icon: "fa-plus", disabled: node.data.level === 0 },
+                            addChild: { name: "Créer sous-dossier", icon: "fa-arrow-down" }
+                        };
+                    },
+                    actions: {
+                        edit: (node) => {
+                            node.editStart();
+                        },
+                        delete: (node) => {
+                            that.deleteFolder(node);
+                        },
+                        addSibling: (node) => {
+                            that.createFolder(node, 'after');
+                        },
+                        addChild: (node) => {
+                            that.createFolder(node, 'child');
+                        }
+                    }
                 }
             });
 
-            var createNode = function(node, mode) {
+            /*var createNode = function(node, mode) {
                 that.setBusy(true);
                 mode = mode || "child";
                 $.ajax({
@@ -563,9 +645,9 @@ define('ekyna-media/browser',
                 .always(function () {
                     that.setBusy(false);
                 });
-            };
+            };*/
 
-            var removeNode = function(node) {
+            /*var removeNode = function(node) {
                 that.setBusy(true);
                 var message = 'Êtes-vous sûr de vouloir supprimer le dossier "' + node.title + '"';
                 if (node.children && node.children.length) {
@@ -593,9 +675,9 @@ define('ekyna-media/browser',
                         that.setBusy(false);
                     });
                 }
-            };
+            };*/
 
-            this.$tree.on("nodeCommand", function(event, data){
+            /*this.$tree.on("nodeCommand", function(event, data){
                 var node = $(this).fancytree("getTree").getActiveNode();
 
                 switch( data.cmd ) {
@@ -615,38 +697,38 @@ define('ekyna-media/browser',
                         alert("Unhandled command: " + data.cmd);
                         return;
                 }
-            });
+            });*/
 
             /*
              * Context menu (https://github.com/mar10/jquery-ui-contextmenu)
              */
-            this.$tree.contextmenu({
-                delegate: "span.fancytree-node",
-                menu: [
-                    {title: "Modifier", cmd: "rename", uiIcon: "ui-icon-pencil" },
-                    {title: "Supprimer", cmd: "remove", uiIcon: "ui-icon-trash" },
-                    /*{title: "----"},*/
-                    {title: "Ajouter suivant", cmd: "addSibling", uiIcon: "ui-icon-plus" },
-                    {title: "Ajouter enfant", cmd: "addChild", uiIcon: "ui-icon-arrowreturn-1-e" }
-                ],
-                beforeOpen: function(event, ui) {
-                    var node = $.ui.fancytree.getNode(ui.target);
-                    node.setActive();
-                    $(that.$tree)
-                        .contextmenu("showEntry", "addSibling", node.data.level > 0)
-                        .contextmenu("showEntry", "rename", node.data.level > 0)
-                        .contextmenu("showEntry", "remove", node.data.level > 0)
-                    ;
-                },
-                select: function(event, ui) {
-                    var that = this;
-                    // delay the event, so the menu can close and the click event does
-                    // not interfere with the edit control
-                    setTimeout(function(){
-                        $(that).trigger("nodeCommand", {cmd: ui.cmd});
-                    }, 100);
-                }
-            });
+            // this.$tree.contextmenu({
+            //     delegate: "span.fancytree-node",
+            //     menu: [
+            //         {title: "Modifier", cmd: "rename", uiIcon: "ui-icon-pencil" },
+            //         {title: "Supprimer", cmd: "remove", uiIcon: "ui-icon-trash" },
+            //         /*{title: "----"},*/
+            //         {title: "Ajouter suivant", cmd: "addSibling", uiIcon: "ui-icon-plus" },
+            //         {title: "Ajouter enfant", cmd: "addChild", uiIcon: "ui-icon-arrowreturn-1-e" }
+            //     ],
+            //     /*beforeOpen: function(event, ui) {
+            //         var node = $.ui.fancytree.getNode(ui.target);
+            //         node.setActive();
+            //         $(that.$tree)
+            //             .contextmenu("showEntry", "addSibling", node.data.level > 0)
+            //             .contextmenu("showEntry", "rename", node.data.level > 0)
+            //             .contextmenu("showEntry", "remove", node.data.level > 0)
+            //         ;
+            //     },
+            //     select: function(event, ui) {
+            //         var that = this;
+            //         // delay the event, so the menu can close and the click event does
+            //         // not interfere with the edit control
+            //         setTimeout(function(){
+            //             $(that).trigger("nodeCommand", {cmd: ui.cmd});
+            //         }, 100);
+            //     }*/
+            // });
         }
     };
 

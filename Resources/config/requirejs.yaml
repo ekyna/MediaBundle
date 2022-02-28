@@ -1,25 +1,18 @@
 config:
     packages:
-        -   name: 'ekyna-media'
-            location: 'bundles/ekynamedia/js'
-            main: 'player'
+        -   name: ekyna-media
+            location: bundles/ekynamedia/js
+            main: player
+        -   name: fancytree
+            location: bundles/ekynamedia/lib/fancytree
+            main: jquery.fancytree
     shim:
         ekyna-media/templates:
             deps: [twig]
         fancybox:
             deps: [jquery]
-        fancytree:
-            deps:
-                - jquery
-                - jquery-ui/core
-                - jquery-ui/effects/effect-blind
-                - jquery-ui/widget
-                - jquery-ui/widgets/contextmenu
-                - jquery-ui/widgets/draggable
-                - jquery-ui/widgets/droppable
     paths:
         fancybox: bundles/ekynamedia/lib/fancybox/jquery.fancybox
-        fancytree: bundles/ekynamedia/lib/fancytree/fancytree
         videojs: bundles/ekynamedia/lib/videojs/video
         swfobject: bundles/ekynamedia/lib/swfobject/swfobject
     map:

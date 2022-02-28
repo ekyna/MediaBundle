@@ -1,5 +1,5 @@
 define('ekyna-media/form/collection',
-    ['jquery', 'routing', 'ekyna-modal', 'ekyna-media/browser', 'ekyna-media/templates', 'jquery-ui/widgets/sortable'],
+    ['jquery', 'routing', 'ekyna-modal', 'ekyna-media/browser', 'ekyna-media/templates', 'jquery-ui/ui/widgets/sortable'],
     function($, Router, Modal, Browser, Templates) {
     "use strict";
 
@@ -122,7 +122,7 @@ define('ekyna-media/form/collection',
         updateCollection: function() {
             var that = this,
                 $medias = that.$elem.find('.ekyna-media-collection-media').not('.ekyna-media-collection-add'),
-                max = $medias.size() - 1;
+                max = $medias.length - 1;
 
             $medias.each(function(i) {
                 var $media = $(this);
@@ -145,10 +145,10 @@ define('ekyna-media/form/collection',
             var that = this;
             var child = this.$elem.attr('data-prototype'),
                 prototypeName = this.$elem.attr('data-prototype-name'),
-                count = this.$elem.find('.ekyna-media-collection-media').size();
+                count = this.$elem.find('.ekyna-media-collection-media').length;
             var childName = child.match(/id="(.*?)"/);
             var re = new RegExp(prototypeName, "g");
-            while ($('#' + childName[1].replace(re, count)).size() > 0) {
+            while ($('#' + childName[1].replace(re, count)).length > 0) {
                 count++;
             }
             child = child.replace(re, count);
@@ -182,13 +182,13 @@ define('ekyna-media/form/collection',
 
             var child = this.$elem.attr('data-prototype'),
                 prototypeName = this.$elem.attr('data-prototype-name'),
-                count = this.$elem.find('.ekyna-media-collection-media').size();
+                count = this.$elem.find('.ekyna-media-collection-media').length;
 
             // Check if an element with this ID already exists.
             // If it does, increase the count by one and try again
             var childName = child.match(/id="(.*?)"/);
             var re = new RegExp(prototypeName, "g");
-            while ($('#' + childName[1].replace(re, count)).size() > 0) {
+            while ($('#' + childName[1].replace(re, count)).length > 0) {
                 count++;
             }
 

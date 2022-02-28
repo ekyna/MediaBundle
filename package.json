@@ -5,10 +5,10 @@
     "license": "UNLICENSED",
     "devDependencies": {
         "@types/fancybox": "^2.1.28",
-        "@types/jquery.fancytree": "0.0.0",
-        "jquery.fancytree": "^2.30.1",
+        "@types/jquery.fancytree": "0.0.7",
+        "jquery.fancytree": "^2.38.1",
         "swfobject-amd": "^2.3.1",
-        "ui-contextmenu": "^1.18.1",
-        "video.js": "^5.19.2"
+        "jquery-contextmenu": "^2.9.2",
+        "video.js": "^7.17.0"
     }
 }

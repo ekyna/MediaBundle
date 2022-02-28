@@ -26,6 +26,22 @@ module.exports = function (grunt, options) {
                     }
                 },
                 {
+                    expand: true,
+                    cwd: 'node_modules/jquery.fancytree/dist/modules',
+                    src: [
+                        'jquery.fancytree.js',
+                        'jquery.fancytree.dnd.js',
+                        'jquery.fancytree.edit.js',
+                        'jquery.fancytree.glyph.js',
+                        'jquery.fancytree.ui-deps.js'
+                    ],
+                    dest: 'src/Ekyna/Bundle/MediaBundle/Resources/public/tmp/fancytree'
+                },
+                {
+                    src: 'src/Ekyna/Bundle/MediaBundle/Resources/private/lib/fancytree/jquery.fancytree.contextMenu.js',
+                    dest: 'src/Ekyna/Bundle/MediaBundle/Resources/public/tmp/fancytree/jquery.fancytree.contextMenu.js'
+                },
+                {
                     src: 'node_modules/jquery.fancytree/dist/skin-bootstrap/ui.fancytree.min.css',
                     dest: 'src/Ekyna/Bundle/MediaBundle/Resources/public/lib/fancytree/fancytree.css'
                 }

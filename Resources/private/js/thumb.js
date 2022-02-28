@@ -3,10 +3,10 @@ define(
     ['require', 'jquery', 'routing', 'ekyna-modal', 'ekyna-media/player', 'fancybox'],
     function (require, $, Router, Modal, Player) {
 
-    var initialized = false, modal;
+    let initialized = false, modal;
 
     function show($media) {
-        var data = $media.data('media');
+        let data = $media.data('media');
 
         if (!data.hasOwnProperty('type')) {
             console.error('Type data is not set.');
@@ -14,7 +14,7 @@ define(
         }
 
         if (data.type === 'file') {
-            this.downloadMedia($media);
+            download($media);
             return;
         }
 
@@ -23,7 +23,7 @@ define(
             return;
         }
 
-        var params = {
+        const params = {
             src: data.player
             // maxWidth    : 1200,
             // //maxHeight   : 600,
@@ -53,7 +53,7 @@ define(
     }
 
     function download($media) {
-        var data = $media.data('media');
+        const data = $media.data('media');
 
         if (!data.hasOwnProperty('path')) {
             console.error('Path data is not set.');
@@ -64,14 +64,14 @@ define(
     }
 
     function browse($media) {
-        var data = $media.data('media');
+        const data = $media.data('media');
 
         if (!data.hasOwnProperty('folderId')) {
             console.error('Folder id data is not set.');
             return;
         }
 
-        var browser;
+        let browser;
 
         if (modal) {
             modal.hide();
