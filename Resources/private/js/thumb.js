@@ -36,7 +36,7 @@ define(
             // closeEffect : 'none',
             // padding     : 0
         };
-        if (data.type === 'image') {
+        if (data.type === 'image' || data.type === 'svg') {
             params.type = 'image';
         } else {
             params.type = 'ajax';
