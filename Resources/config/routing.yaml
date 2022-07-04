@@ -4,7 +4,7 @@ admin_media:
 
 ekyna_media_download:
     path: /media/download/{key}
-    controller: Ekyna\Bundle\MediaBundle\Controller\MediaController::download
+    controller: Ekyna\Bundle\MediaBundle\Controller\Media\DownloadController
     methods: [GET]
     requirements:
         key: '[a-z0-9-\./]+'
@@ -12,7 +12,7 @@ ekyna_media_download:
 
 ekyna_media_player:
     path: /media/player/{key}
-    controller: Ekyna\Bundle\MediaBundle\Controller\MediaController::player
+    controller: Ekyna\Bundle\MediaBundle\Controller\Media\PlayerController
     methods: [GET]
     requirements:
         key: '[a-z0-9-\./]+'
@@ -20,7 +20,7 @@ ekyna_media_player:
 
 ekyna_media_video:
     path: /media/video/{key}.{_format}
-    controller: Ekyna\Bundle\MediaBundle\Controller\MediaController::download
+    controller: Ekyna\Bundle\MediaBundle\Controller\Media\VideoController
     methods: [GET]
     requirements:
         key: '[a-z0-9-\./]+'

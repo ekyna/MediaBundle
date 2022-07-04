@@ -29,6 +29,8 @@ use function md5;
  * Class MediaController
  * @package Ekyna\Bundle\MediaBundle\Controller
  * @author  Étienne Dauvergne <contact@ekyna.com>
+ *
+ * @TODO Remove
  */
 class MediaController
 {
@@ -137,6 +139,8 @@ class MediaController
         $public = true;
 
         if (!(file_exists($path) && is_readable($path))) {
+            // TODO Send ConvertVideo message
+
             $path = $this->videoManager->getPendingVideoPath($format);
             $public = false;
 

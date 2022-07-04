@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Doctrine\ORM\Events;
+use Ekyna\Bundle\MediaBundle\Event\MediaEvents;
 use Ekyna\Bundle\MediaBundle\EventListener\MediaEventSubscriber;
 use Ekyna\Bundle\MediaBundle\Listener\GalleryMediaSubscriber;
 use Ekyna\Bundle\MediaBundle\Listener\MediaListener;
@@ -35,10 +36,21 @@ return static function (ContainerConfigurator $container) {
         // Media (resource) event listener
         ->set('ekyna_media.listener.media_resource', MediaEventSubscriber::class)
             ->args([
-                service('ekyna_media.repository.conversion_request'),
                 service('ekyna_resource.orm.persistence_helper'),
                 service('ekyna_media.filesystem.video'),
             ])
-            ->tag('resource.event_subscriber')
+            ->call('setMessageQueue', [service('ekyna_resource.queue.message')])
+            ->tag('resource.event_listener', [
+                'event'  => MediaEvents::INSERT,
+                'method' => 'onInsert',
+            ])
+            ->tag('resource.event_listener', [
+                'event'  => MediaEvents::UPDATE,
+                'method' => 'onUpdate',
+            ])
+            ->tag('resource.event_listener', [
+                'event'  => MediaEvents::DELETE,
+                'method' => 'onDelete',
+            ])
     ;
 };

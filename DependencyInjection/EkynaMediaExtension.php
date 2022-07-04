@@ -24,7 +24,6 @@ class EkynaMediaExtension extends Extension implements PrependExtensionInterface
 {
     use PrependBundleConfigTrait;
 
-
     public function prepend(ContainerBuilder $container): void
     {
         $configs = $container->getExtensionConfig($this->getAlias());
@@ -52,6 +51,7 @@ class EkynaMediaExtension extends Extension implements PrependExtensionInterface
         $loader->load('services/ffmpeg.php');
         $loader->load('services/form.php');
         $loader->load('services/listener.php');
+        $loader->load('services/message.php');
         $loader->load('services/show.php');
         $loader->load('services/twig.php');
         $loader->load('services.php');

@@ -17,6 +17,7 @@ return static function (ContainerConfigurator $container) {
             ->args([
                 abstract_arg('FFMpeg configuration'),
                 service('logger'),
+                service('ekyna_media.ffprobe'),
             ])
 
         // FFProbe

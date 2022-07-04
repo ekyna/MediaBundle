@@ -7,7 +7,6 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use Ekyna\Bundle\MediaBundle\Action\Admin\MediaListAction;
 use Ekyna\Bundle\MediaBundle\Factory\FolderFactory;
 use Ekyna\Bundle\MediaBundle\Install\MediaInstaller;
-use Ekyna\Bundle\MediaBundle\Repository\ConversionRequestRepository;
 use Ekyna\Bundle\MediaBundle\Service\Generator;
 use Ekyna\Bundle\MediaBundle\Service\Renderer;
 use Ekyna\Bundle\MediaBundle\Service\Serializer\MediaNormalizer;
@@ -29,13 +28,6 @@ return static function (ContainerConfigurator $container) {
             ->args([
                 service('ekyna_media.repository.folder'),
             ])
-
-        // Conversion request repository
-        ->set('ekyna_media.repository.conversion_request', ConversionRequestRepository::class)
-            ->args([
-                service('doctrine'),
-            ])
-            ->tag('doctrine.repository_service')
 
         // Uploader
         ->set('ekyna_media.uploader', Uploader::class)

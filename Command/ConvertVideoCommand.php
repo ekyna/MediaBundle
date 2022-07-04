@@ -23,16 +23,11 @@ class ConvertVideoCommand extends Command
 {
     protected static $defaultName = 'ekyna:media:convert_video';
 
-    private MediaRepositoryInterface $repository;
-    private VideoManager $manager;
-
-
-    public function __construct(MediaRepositoryInterface $repository, VideoManager $manager)
-    {
+    public function __construct(
+        private readonly MediaRepositoryInterface $repository,
+        private readonly VideoManager $manager
+    ) {
         parent::__construct();
-
-        $this->repository = $repository;
-        $this->manager    = $manager;
     }
 
     protected function configure(): void
@@ -47,7 +42,7 @@ class ConvertVideoCommand extends Command
     {
         $id = (int)$input->getArgument('id');
 
-        if (!$video = $this->repository->find($id)) {
+        if (null === $video = $this->repository->find($id)) {
             $output->writeln('Media not found');
 
             return Command::FAILURE;

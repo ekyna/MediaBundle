@@ -11,11 +11,6 @@ use Ekyna\Component\Resource\Doctrine\ORM\Repository\TranslatableRepository;
  * Class MediaRepository
  * @package Ekyna\Bundle\MediaBundle\Entity
  * @author  Étienne Dauvergne <contact@ekyna.com>
- *
- * @method Model\MediaInterface|null find(int $id)
- * @method Model\MediaInterface|null findOneBy(array $criteria, array $sorting = [])
- * @method Model\MediaInterface[] findAll()
- * @method Model\MediaInterface[] findBy(array $criteria, array $sorting = [], int $limit = null, int $offset = null)
  */
 class MediaRepository extends TranslatableRepository implements MediaRepositoryInterface
 {

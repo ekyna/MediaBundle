@@ -12,26 +12,12 @@ use Ekyna\Component\Resource\Doctrine\ORM\Repository\ResourceRepositoryTrait;
  * Class FolderRepository
  * @package Ekyna\Bundle\MediaBundle\Entity
  * @author  Étienne Dauvergne <contact@ekyna.com>
- *
- * @method FolderInterface|null find(int $id)
- * @method FolderInterface|null findOneBy(array $criteria, array $sorting = null)
- * @method FolderInterface[] findBy(array $criteria, array $sorting = null, int $limit = null, int $offset = null)
- * @method FolderInterface[] findAll()
- * @method persistAsFirstChild($node)
- * @method persistAsFirstChildOf($node, $parent)
- * @method persistAsLastChild($node)
- * @method persistAsLastChildOf($node, $parent)
- * @method persistAsNextSibling($node)
- * @method persistAsNextSiblingOf($node, $sibling)
- * @method persistAsPrevSibling($node)
- * @method persistAsPrevSiblingOf($node, $sibling)
  */
 class FolderRepository implements FolderRepositoryInterface
 {
     use ResourceRepositoryTrait;
 
     private ?FolderInterface $root = null;
-
 
     /**
      * @inheritDoc

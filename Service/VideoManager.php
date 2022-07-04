@@ -39,44 +39,20 @@ use function pathinfo;
  */
 class VideoManager
 {
-    private Flysystem             $mediaFilesystem;
-    private Flysystem             $videoFilesystem;
-    private FFMpeg                $ffMpeg;
-    private FFProbe               $ffProbe;
-    private CacheManager          $cacheManager;
-    private UrlGeneratorInterface $urlGenerator;
-    private array                 $config;
+    private array                     $config;
+    private readonly Filesystem       $fs;
+    private readonly FilesystemHelper $mediaHelper;
+    private readonly FilesystemHelper $videoHelper;
 
-    private Filesystem       $fs;
-    private FilesystemHelper $mediaHelper;
-    private FilesystemHelper $videoHelper;
-
-    /**
-     * Constructor.
-     *
-     * @param Flysystem             $mediaFilesystem
-     * @param Flysystem             $videoFilesystem
-     * @param FFMpeg                $ffMpeg
-     * @param FFProbe               $ffProbe
-     * @param CacheManager          $cacheManager
-     * @param UrlGeneratorInterface $urlGenerator
-     * @param array                 $config
-     */
     public function __construct(
-        Flysystem $mediaFilesystem,
-        Flysystem $videoFilesystem,
-        FFMpeg $ffMpeg,
-        FFProbe $ffProbe,
-        CacheManager $cacheManager,
-        UrlGeneratorInterface $urlGenerator,
-        array $config = []
+        private readonly Flysystem $mediaFilesystem,
+        private readonly Flysystem $videoFilesystem,
+        private readonly FFMpeg $ffMpeg,
+        private readonly FFProbe $ffProbe,
+        private readonly CacheManager $cacheManager,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        array   $config = []
     ) {
-        $this->mediaFilesystem = $mediaFilesystem;
-        $this->videoFilesystem = $videoFilesystem;
-        $this->ffMpeg = $ffMpeg;
-        $this->ffProbe = $ffProbe;
-        $this->cacheManager = $cacheManager;
-        $this->urlGenerator = $urlGenerator;
         $this->config = array_replace([
             'directory' => 'cache/video',
             'watermark' => null,
@@ -90,11 +66,6 @@ class VideoManager
 
     /**
      * Returns the browser path.
-     *
-     * @param MediaInterface $media
-     * @param string         $format
-     *
-     * @return null|string
      */
     public function getBrowserPath(MediaInterface $media, string $format): ?string
     {
@@ -122,9 +93,6 @@ class VideoManager
     /**
      * Returns the path of the converted video file for the given format.
      *
-     * @param MediaInterface $media  The video media
-     * @param string         $format The video format
-     *
      * @return string The converted video absolute file path (that may not exist).
      */
     public function getConvertedPath(MediaInterface $media, string $format): string
@@ -138,48 +106,7 @@ class VideoManager
     }
 
     /**
-     * Converts the video media to the given format.
-     *
-     * @param MediaInterface $media
-     * @param string         $format
-     * @param bool           $override
-     *
-     * @return string
-     * @noinspection PhpDocMissingThrowsInspection
-     */
-    public function convertVideo(MediaInterface $media, string $format, bool $override = false): string
-    {
-        $this->assertVideo($media);
-        $this->assertFormat($format);
-
-        $sourceKey = $media->getPath();
-
-        if (null === $targetKey = $this->getTargetKey($sourceKey, $format)) {
-            throw new LogicException('Video file not found');
-        }
-
-        $targetPath = $this->getVideoAbsolutePath($targetKey, false);
-
-        if ($this->videoHelper->fileExists($targetKey, false)) {
-            if ($override) {
-                // Remove the file
-                /** @noinspection PhpUnhandledExceptionInspection */
-                $this->videoFilesystem->delete($targetKey);
-            } else {
-                // Conversion has been made.
-                return $targetPath;
-            }
-        }
-
-        return $this->convert($this->getMediaAbsolutePath($sourceKey), $targetPath);
-    }
-
-    /**
      * Returns the pending video absolute path.
-     *
-     * @param string $format
-     *
-     * @return string|null
      */
     public function getPendingVideoPath(string $format): ?string
     {
@@ -200,12 +127,36 @@ class VideoManager
     }
 
     /**
+     * Converts the video media to the given format.
+     */
+    public function convertVideo(MediaInterface $media, string $format, bool $override = false): string
+    {
+        $this->assertVideo($media);
+        $this->assertFormat($format);
+
+        $sourceKey = $media->getPath();
+
+        if (null === $targetKey = $this->getTargetKey($sourceKey, $format)) {
+            throw new LogicException('Video file not found');
+        }
+
+        $targetPath = $this->getVideoAbsolutePath($targetKey, false);
+
+        if ($this->videoHelper->fileExists($targetKey, false)) {
+            if ($override) {
+                // Remove the file
+                $this->videoFilesystem->delete($targetKey);
+            } else {
+                // Conversion has been made.
+                return $targetPath;
+            }
+        }
+
+        return $this->convert($this->getMediaAbsolutePath($sourceKey), $targetPath);
+    }
+
+    /**
      * Returns the video thumb's path.
-     *
-     * @param MediaInterface $media
-     * @param string         $filter
-     *
-     * @return string|null
      */
     public function thumb(MediaInterface $media, string $filter = 'video_alt'): ?string
     {
@@ -253,7 +204,7 @@ class VideoManager
             $video
                 ->frame(TimeCode::fromSeconds($second))
                 ->save($targetPath);
-        } catch (FFMpegException $exception) {
+        } catch (FFMpegException) {
             return null;
         }
 
@@ -262,29 +213,17 @@ class VideoManager
 
     /**
      * Converts the video key to the given format.
-     *
-     * @param string $sourcePath
-     * @param string $targetPath
-     *
-     * @return string
      */
     private function convert(string $sourcePath, string $targetPath): string
     {
         $this->checkDir(dirname($targetPath));
 
-        switch (pathinfo($targetPath)['extension']) {
-            case MediaFormats::WEBM:
-                $codec = new WebM();
-                break;
-            case MediaFormats::MP4:
-                $codec = new X264();
-                break;
-            case MediaFormats::OGG:
-                $codec = new Ogg();
-                break;
-            default:
-                throw new InvalidArgumentException('Unexpected video format.');
-        }
+        $codec = match (pathinfo($targetPath)['extension']) {
+            MediaFormats::WEBM => new WebM(),
+            MediaFormats::MP4 => new X264(),
+            MediaFormats::OGG => new Ogg(),
+            default => throw new InvalidArgumentException('Unexpected video format.'),
+        };
 
         $video = $this->ffMpeg->open($sourcePath);
 
@@ -327,11 +266,6 @@ class VideoManager
 
     /**
      * Returns the absolute path for the given file key.
-     *
-     * @param string $key
-     * @param bool   $check
-     *
-     * @return string|null
      */
     private function getMediaAbsolutePath(string $key, bool $check = true): ?string
     {
@@ -344,11 +278,6 @@ class VideoManager
 
     /**
      * Returns the absolute path for the given file key.
-     *
-     * @param string $key
-     * @param bool   $check
-     *
-     * @return string|null
      */
     private function getVideoAbsolutePath(string $key, bool $check = true): ?string
     {
@@ -361,8 +290,6 @@ class VideoManager
 
     /**
      * Asserts that the media is of video type.
-     *
-     * @param MediaInterface $media
      */
     private function assertVideo(MediaInterface $media): void
     {
@@ -373,8 +300,6 @@ class VideoManager
 
     /**
      * Asserts that the format is supported.
-     *
-     * @param string $format
      */
     private function assertFormat(string $format): void
     {
@@ -385,12 +310,6 @@ class VideoManager
 
     /**
      * Builds and returns the target key.
-     *
-     * @param string $sourceKey
-     * @param string $format
-     * @param bool   $check
-     *
-     * @return string|null
      */
     private function getTargetKey(string $sourceKey, string $format, bool $check = true): ?string
     {
@@ -404,9 +323,7 @@ class VideoManager
     }
 
     /**
-     * Creates the directory if it does not exists.
-     *
-     * @param string $dir
+     * Creates the directory if it does not exist.
      */
     private function checkDir(string $dir): void
     {

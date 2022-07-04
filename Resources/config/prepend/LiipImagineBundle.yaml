@@ -1,5 +1,7 @@
 # Liip Imagine
 liip_imagine:
+    twig:
+        mode: lazy
     resolvers:
         local_media:
             web_path:

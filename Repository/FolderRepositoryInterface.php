@@ -12,10 +12,8 @@ use Ekyna\Component\Resource\Repository\ResourceRepositoryInterface;
  * @package Ekyna\Bundle\MediaBundle\Model
  * @author  Etienne Dauvergne <contact@ekyna.com>
  *
- * @method FolderInterface|null find(int $id)
- * @method FolderInterface|null findOneBy(array $criteria, array $sorting = null)
- * @method FolderInterface[] findBy(array $criteria, array $sorting = null, int $limit = null, int $offset = null)
- * @method FolderInterface[] findAll()
+ * @implements ResourceRepositoryInterface<FolderInterface>
+ *
  * @method persistAsFirstChild($node)
  * @method persistAsFirstChildOf($node, $parent)
  * @method persistAsLastChild($node)
