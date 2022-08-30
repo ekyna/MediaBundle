@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ekyna\Bundle\MediaBundle\Table\Type;
 
-use Ekyna\Bundle\AdminBundle\Action;
 use Ekyna\Bundle\ResourceBundle\Table\Type\AbstractResourceType;
 use Ekyna\Bundle\TableBundle\Extension\Type as BType;
 use Ekyna\Component\Table\Extension\Core\Type as CType;
@@ -34,10 +33,6 @@ class MediaType extends AbstractResourceType
             ])
             ->addColumn('actions', BType\Column\ActionsType::class, [
                 'resource' => $this->dataClass,
-                'actions'  => [
-                    Action\UpdateAction::class,
-                    Action\DeleteAction::class,
-                ],
             ]);
     }
 }

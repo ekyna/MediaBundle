@@ -13,6 +13,7 @@ use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
+use League\Flysystem\UnableToRetrieveMetadata;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -29,43 +30,20 @@ class Generator
     public const DEFAULT_THUMB = '/bundles/ekynamedia/img/file.jpg';
     public const NONE_THUMB    = '/bundles/ekynamedia/img/media-none.jpg';
 
-    private FilesystemOperator    $filesystem;
-    private ImagineInterface      $imagine;
-    private CacheManager          $cacheManager;
-    private VideoManager          $videoManager;
-    private UrlGeneratorInterface $urlGenerator;
-    private string                $webRootDirectory;
-    private string                $thumbsDirectory;
-    private string                $iconsSourcePath;
-    private Filesystem            $fs;
+    private readonly string     $webRootDirectory;
+    private readonly string     $thumbsDirectory;
+    private readonly string     $iconsSourcePath;
+    private readonly Filesystem $fs;
 
-
-    /**
-     * Constructor.
-     *
-     * @param FilesystemOperator    $filesystem
-     * @param ImagineInterface      $imagine
-     * @param CacheManager          $cacheManager
-     * @param VideoManager          $videoManager
-     * @param UrlGeneratorInterface $urlGenerator
-     * @param string                $webRootDirectory
-     * @param string                $thumbsDirectory
-     */
     public function __construct(
-        FilesystemOperator $filesystem,
-        ImagineInterface $imagine,
-        CacheManager $cacheManager,
-        VideoManager $videoManager,
-        UrlGeneratorInterface $urlGenerator,
-        string $webRootDirectory,
-        string $thumbsDirectory
+        private readonly FilesystemOperator    $filesystem,
+        private readonly ImagineInterface      $imagine,
+        private readonly CacheManager          $cacheManager,
+        private readonly VideoManager          $videoManager,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        string                                 $webRootDirectory,
+        string                                 $thumbsDirectory
     ) {
-        $this->filesystem = $filesystem;
-        $this->imagine = $imagine;
-        $this->cacheManager = $cacheManager;
-        $this->videoManager = $videoManager;
-        $this->urlGenerator = $urlGenerator;
-
         $this->webRootDirectory = realpath($webRootDirectory);
         $this->thumbsDirectory = $thumbsDirectory;
         $this->iconsSourcePath = realpath(__DIR__ . '/../Resources/extensions');
@@ -221,7 +199,7 @@ class Generator
 
             $thumb->paste($icon, $start);
             $thumb->save($destination);
-        } catch (ImagineException $exception) {
+        } catch (ImagineException) {
             // Image thumb generation failed
             return null;
         }
@@ -238,8 +216,14 @@ class Generator
      */
     public function isImagineFilterable(MediaInterface $media): bool
     {
+        try {
+            $mime = $this->getMimeType($media);
+        } catch (UnableToRetrieveMetadata) {
+            return false;
+        }
+
         return $media->getType() === MediaTypes::IMAGE
-            && 0 < preg_match('~^image/(jpe?g|gif|png)$~', $this->getMimeType($media));
+            && 0 < preg_match('~^image/(jpe?g|gif|png)$~', $mime);
     }
 
     /**
@@ -275,11 +259,9 @@ class Generator
     }
 
     /**
-     * Creates the directory if it does not exists.
-     *
-     * @param $dir
+     * Creates the directory if it does not exist.
      */
-    private function checkDir($dir)
+    private function checkDir(string $dir): void
     {
         if (!$this->fs->exists($dir)) {
             $this->fs->mkdir($dir);

@@ -15,6 +15,7 @@ return static function (ContainerConfigurator $container) {
             ->args([
                 service('ekyna_media.repository.media'),
                 service('ekyna_media.manager.video'),
+                abstract_arg('Timeout in seconds'),
             ])
             ->tag('messenger.message_handler')
     ;

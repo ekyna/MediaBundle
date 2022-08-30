@@ -88,6 +88,10 @@ class EkynaMediaExtension extends Extension implements PrependExtensionInterface
                 'ffprobe.binaries' => [$config['ffprobe_binary']],
                 'timeout'          => $config['binary_timeout'],
             ]);
+
+        $container
+            ->getDefinition('ekyna_media.message_handler.convert_video')
+            ->replaceArgument(2, $config['binary_timeout']);
     }
 
     private function configureSchemaOrg(ContainerBuilder $container): void

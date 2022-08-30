@@ -21,6 +21,7 @@ class ConvertVideoHandler
     public function __construct(
         private readonly MediaRepositoryInterface $repository,
         private readonly VideoManager $converter,
+        private readonly int $timeout
     ) {
     }
 
@@ -32,7 +33,7 @@ class ConvertVideoHandler
             throw new RuntimeException('Media (video) not found.');
         }
 
-        set_time_limit(5 * 60);
+        set_time_limit($this->timeout);
 
         $this->converter->convertVideo($media, $message->getFormat(), $message->isOverride());
     }
