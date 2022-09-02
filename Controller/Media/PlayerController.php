@@ -6,7 +6,7 @@ namespace Ekyna\Bundle\MediaBundle\Controller\Media;
 
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
 use Ekyna\Bundle\MediaBundle\Repository\MediaRepositoryInterface;
-use Ekyna\Bundle\MediaBundle\Service\Renderer;
+use Ekyna\Bundle\MediaBundle\Service\MediaRenderer;
 use League\Flysystem\Filesystem;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +28,7 @@ class PlayerController extends AbstractMediaController
                            MediaRepositoryInterface $repository,
                            Filesystem               $filesystem,
         protected readonly UrlGeneratorInterface    $urlGenerator,
-        protected readonly Renderer                 $renderer,
+        protected readonly MediaRenderer            $renderer,
         protected readonly Environment              $twig,
     ) {
         parent::__construct($repository, $filesystem);

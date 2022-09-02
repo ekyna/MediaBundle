@@ -8,7 +8,6 @@ use Ekyna\Bundle\MediaBundle\Controller\Admin\BrowserController;
 use Ekyna\Bundle\MediaBundle\Controller\Media\DownloadController;
 use Ekyna\Bundle\MediaBundle\Controller\Media\PlayerController;
 use Ekyna\Bundle\MediaBundle\Controller\Media\VideoController;
-use Ekyna\Bundle\MediaBundle\Controller\MediaController;
 
 return static function (ContainerConfigurator $container) {
     $container

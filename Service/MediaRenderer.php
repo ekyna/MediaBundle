@@ -21,52 +21,23 @@ use Twig\TemplateWrapper;
  * @package Ekyna\Bundle\MediaBundle\Service
  * @author  Etienne Dauvergne <contact@ekyna.com>
  */
-class Renderer
+class MediaRenderer
 {
-    private Environment              $twig;
-    private Generator                $generator;
-    private VideoManager             $videoManager;
-    private FilterManager            $filterManager;
-    private MediaRepositoryInterface $repository;
-    private TranslatorInterface      $translator;
-    private string                   $templatePath;
-
     private ?TemplateWrapper $template = null;
 
-
-    /**
-     * Constructor.
-     *
-     * @param Environment              $twig
-     * @param Generator                $generator
-     * @param VideoManager             $videoManager
-     * @param FilterManager            $filterManager
-     * @param MediaRepositoryInterface $repository
-     * @param TranslatorInterface      $translator
-     * @param string                   $templatePath
-     */
     public function __construct(
-        Environment $twig,
-        Generator $generator,
-        VideoManager $videoManager,
-        FilterManager $filterManager,
-        MediaRepositoryInterface $repository,
-        TranslatorInterface $translator,
-        string $templatePath = '@EkynaMedia/Media/element.html.twig'
+        private readonly Environment              $twig,
+        private readonly Generator                $generator,
+        private readonly VideoManager             $videoManager,
+        private readonly FilterManager            $filterManager,
+        private readonly MediaRepositoryInterface $repository,
+        private readonly TranslatorInterface      $translator,
+        private readonly string                   $templatePath = '@EkynaMedia/Media/element.html.twig'
     ) {
-        $this->twig = $twig;
-        $this->generator = $generator;
-        $this->videoManager = $videoManager;
-        $this->filterManager = $filterManager;
-        $this->repository = $repository;
-        $this->translator = $translator;
-        $this->templatePath = $templatePath;
     }
 
     /**
      * Returns the generator.
-     *
-     * @return Generator
      */
     public function getGenerator(): Generator
     {
@@ -75,11 +46,6 @@ class Renderer
 
     /**
      * Finds the media by its id and type.
-     *
-     * @param int|null $id
-     * @param string   $type
-     *
-     * @return MediaInterface|null
      */
     public function findMedia(int $id = null, string $type = MediaTypes::IMAGE): ?MediaInterface
     {
@@ -100,37 +66,21 @@ class Renderer
 
     /**
      * Renders the media.
-     *
-     * @param MediaInterface $media
-     * @param array          $params
-     *
-     * @return string
      */
     public function renderMedia(MediaInterface $media, array $params = []): string
     {
-        switch ($media->getType()) {
-            case MediaTypes::VIDEO:
-                return $this->renderVideo($media, $params);
-            case MediaTypes::FLASH:
-                return $this->renderFlash($media, $params);
-            case MediaTypes::AUDIO:
-                return $this->renderAudio($media, $params);
-            case MediaTypes::IMAGE:
-                return $this->renderImage($media, $params);
-            case MediaTypes::SVG:
-                return $this->renderSvg($media, $params);
-        }
-
-        return $this->renderFile($media, $params);
+        return match ($media->getType()) {
+            MediaTypes::VIDEO => $this->renderVideo($media, $params),
+            MediaTypes::FLASH => $this->renderFlash($media, $params),
+            MediaTypes::AUDIO => $this->renderAudio($media, $params),
+            MediaTypes::IMAGE => $this->renderImage($media, $params),
+            MediaTypes::SVG   => $this->renderSvg($media, $params),
+            default           => $this->renderFile($media, $params),
+        };
     }
 
     /**
      * Renders the video.
-     *
-     * @param MediaInterface $video
-     * @param array          $params
-     *
-     * @return string
      */
     public function renderVideo(MediaInterface $video, array $params = []): string
     {
@@ -203,11 +153,6 @@ class Renderer
 
     /**
      * Renders the flash swf.
-     *
-     * @param MediaInterface $flash
-     * @param array          $params
-     *
-     * @return string
      */
     public function renderFlash(MediaInterface $flash, array $params = []): string
     {
@@ -234,11 +179,6 @@ class Renderer
 
     /**
      * Renders the audio.
-     *
-     * @param MediaInterface $audio
-     * @param array          $params
-     *
-     * @return string
      */
     public function renderAudio(MediaInterface $audio, array $params = []): string
     {
@@ -263,11 +203,6 @@ class Renderer
 
     /**
      * Renders the image.
-     *
-     * @param MediaInterface $image
-     * @param array          $params
-     *
-     * @return string
      */
     public function renderImage(MediaInterface $image, array $params = []): string
     {
@@ -290,11 +225,6 @@ class Renderer
 
     /**
      * Renders the svg.
-     *
-     * @param MediaInterface $svg
-     * @param array          $params
-     *
-     * @return string
      */
     public function renderSvg(MediaInterface $svg, array $params = []): string
     {
@@ -307,11 +237,11 @@ class Renderer
         $params = array_replace_recursive([
             'attr' => [
                 'id'    => 'media-svg-' . $svg->getId(),
-                'title' => $svg->getTitle(),
+                'title' => $svg->getTitle() ?? '',
             ],
         ], $params);
 
-        $mode = isset($params['mode']) ? $params['mode'] : 'content';
+        $mode = $params['mode'] ?? 'content';
         unset($params['mode']);
 
         if ($mode === 'object') {
@@ -320,11 +250,11 @@ class Renderer
 
             return $this->renderBlock('object', [
                 'attr'     => $params['attr'],
-                'fallback' => $svg->getTitle(),
+                'fallback' => $svg->getTitle() ?? '',
             ]);
         } elseif ($mode === 'image') {
             $params['attr']['src'] = $path;
-            $params['attr']['alt'] = $svg->getTitle();
+            $params['attr']['alt'] = $svg->getTitle() ?? '';
 
             return $this->renderBlock('image', [
                 'attr' => $params['attr'],
@@ -351,11 +281,6 @@ class Renderer
 
     /**
      * Renders the file (link).
-     *
-     * @param MediaInterface $file
-     * @param array          $params
-     *
-     * @return string
      */
     public function renderFile(MediaInterface $file, array $params = []): string
     {
@@ -380,11 +305,6 @@ class Renderer
 
     /**
      * Renders the video thumb.
-     *
-     * @param MediaInterface $video
-     * @param array          $params
-     *
-     * @return string
      */
     public function renderVideoThumb(MediaInterface $video, array $params = []): string
     {
@@ -408,10 +328,6 @@ class Renderer
 
     /**
      * Renders img element.
-     *
-     * @param array $params
-     *
-     * @return string
      */
     private function renderImg(array $params): string
     {
@@ -434,8 +350,8 @@ class Renderer
                 $width = $height = 0;
                 foreach ($filter['filters'] as $cfg) {
                     if (array_key_exists('size', $cfg)) {
-                        $width = $width >= $cfg['size'][0] ?: $cfg['size'][0];
-                        $height = $height >= $cfg['size'][1] ?: $cfg['size'][1];
+                        $width = max($width, $cfg['size'][0]);
+                        $height = max($height, $cfg['size'][1]);
                     }
                 }
                 if ($width && $height) {
@@ -453,13 +369,9 @@ class Renderer
     /**
      * Renders the template block.
      *
-     * @param $blockName
-     * @param $blockVars
-     *
-     * @return string
      * @noinspection PhpDocMissingThrowsInspection
      */
-    private function renderBlock($blockName, $blockVars): string
+    private function renderBlock(string $blockName, array $blockVars): string
     {
         if (null === $this->template) {
             /** @noinspection PhpUnhandledExceptionInspection */

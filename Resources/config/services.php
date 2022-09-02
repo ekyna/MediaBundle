@@ -8,7 +8,7 @@ use Ekyna\Bundle\MediaBundle\Action\Admin\MediaListAction;
 use Ekyna\Bundle\MediaBundle\Factory\FolderFactory;
 use Ekyna\Bundle\MediaBundle\Install\MediaInstaller;
 use Ekyna\Bundle\MediaBundle\Service\Generator;
-use Ekyna\Bundle\MediaBundle\Service\Renderer;
+use Ekyna\Bundle\MediaBundle\Service\MediaRenderer;
 use Ekyna\Bundle\MediaBundle\Service\Serializer\MediaNormalizer;
 use Ekyna\Bundle\MediaBundle\Service\VideoManager;
 use Ekyna\Bundle\MediaBundle\Validator\Constraints\MediaValidator;
@@ -63,7 +63,7 @@ return static function (ContainerConfigurator $container) {
             ->tag('twig.runtime')
 
         // Media renderer
-        ->set('ekyna_media.renderer', Renderer::class)
+        ->set('ekyna_media.renderer', MediaRenderer::class)
             ->args([
                 service('twig'),
                 service('ekyna_media.generator'),

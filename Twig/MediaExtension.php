@@ -6,7 +6,7 @@ namespace Ekyna\Bundle\MediaBundle\Twig;
 
 use Ekyna\Bundle\MediaBundle\Model\MediaTypes;
 use Ekyna\Bundle\MediaBundle\Service\Generator;
-use Ekyna\Bundle\MediaBundle\Service\Renderer;
+use Ekyna\Bundle\MediaBundle\Service\MediaRenderer;
 use Ekyna\Bundle\MediaBundle\Service\TwigRenderer;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -69,46 +69,46 @@ class MediaExtension extends AbstractExtension
             ),
             new TwigFilter(
                 'media_find',
-                [Renderer::class, 'findMedia']
+                [MediaRenderer::class, 'findMedia']
             ),
             new TwigFilter(
                 'media',
-                [Renderer::class, 'renderMedia'],
+                [MediaRenderer::class, 'renderMedia'],
                 ['is_safe' => ['html']]
             ),
             new TwigFilter(
                 'media_video',
-                [Renderer::class, 'renderVideo'],
+                [MediaRenderer::class, 'renderVideo'],
                 ['is_safe' => ['html']]
             ),
             new TwigFilter(
                 'media_flash',
-                [Renderer::class, 'renderFlash'],
+                [MediaRenderer::class, 'renderFlash'],
                 ['is_safe' => ['html']]
             ),
             new TwigFilter(
                 'media_audio',
-                [Renderer::class, 'renderAudio'],
+                [MediaRenderer::class, 'renderAudio'],
                 ['is_safe' => ['html']]
             ),
             new TwigFilter(
                 'media_image',
-                [Renderer::class, 'renderImage'],
+                [MediaRenderer::class, 'renderImage'],
                 ['is_safe' => ['html']]
             ),
             new TwigFilter(
                 'media_svg',
-                [Renderer::class, 'renderSvg'],
+                [MediaRenderer::class, 'renderSvg'],
                 ['is_safe' => ['html']]
             ),
             new TwigFilter(
                 'media_file',
-                [Renderer::class, 'renderFile'],
+                [MediaRenderer::class, 'renderFile'],
                 ['is_safe' => ['html']]
             ),
             new TwigFilter(
                 'media_video_thumb',
-                [Renderer::class, 'renderVideoThumb'],
+                [MediaRenderer::class, 'renderVideoThumb'],
                 ['is_safe' => ['html']]
             ),
             new TwigFilter(
