@@ -11,6 +11,9 @@ liip_imagine:
             filesystem:
                 data_root: "%kernel.data_dir%/media"
     filter_sets:
+        media_original:
+            cache: local_media
+            data_loader: local_media
         media_front:
             cache: local_media
             data_loader: local_media
