@@ -45,7 +45,7 @@ class MediaNormalizer extends ResourceNormalizer
             'folderId' => $folder ? $folder->getId() : null,
         ];
 
-        if ($this->contextHasGroup('Manager', $context)) {
+        if (self::contextHasGroup('Manager', $context)) {
             $data['path'] = $object->getPath();
             $data['size'] = $object->getSize();
             $data['type'] = $object->getType();

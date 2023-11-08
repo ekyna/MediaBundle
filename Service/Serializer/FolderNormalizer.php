@@ -22,7 +22,7 @@ class FolderNormalizer extends ResourceNormalizer
      */
     public function normalize($object, $format = null, array $context = [])
     {
-        if ($this->contextHasGroup('Manager', $context)) {
+        if (self::contextHasGroup('Manager', $context)) {
             $data = [
                 'level'    => $object->getLevel(),
                 'key'      => $object->getId(),
