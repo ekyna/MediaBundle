@@ -8,21 +8,22 @@ use Ekyna\Bundle\MediaBundle\Service\TwigRenderer;
 use Ekyna\Bundle\MediaBundle\Twig\MediaExtension;
 
 return static function (ContainerConfigurator $container) {
-    $container
-        ->services()
+    $services = $container->services();
 
-        // Media twig renderer
+    // Media twig renderer
+    $services
         ->set('ekyna_media.twig.renderer', TwigRenderer::class)
-            ->args([
-                service('ekyna_media.generator'),
-                service('serializer'),
-                service('twig'),
-                service('request_stack'),
-            ])
-            ->tag('twig.runtime')
+        ->args([
+            service('ekyna_media.generator'),
+            service('security.authorization_checker'),
+            service('serializer'),
+            service('twig'),
+            service('request_stack'),
+        ])
+        ->tag('twig.runtime');
 
-        // Media twig extension
+    // Media twig extension
+    $services
         ->set('ekyna_media.twig.media_extension', MediaExtension::class)
-            ->tag('twig.extension')
-    ;
+        ->tag('twig.extension');
 };

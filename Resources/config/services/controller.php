@@ -10,54 +10,61 @@ use Ekyna\Bundle\MediaBundle\Controller\Media\PlayerController;
 use Ekyna\Bundle\MediaBundle\Controller\Media\VideoController;
 
 return static function (ContainerConfigurator $container) {
-    $container
-        ->services()
+    $services = $container->services();
 
-        // Browser controller
+    // Browser controller
+    $services
         ->set('ekyna_media.controller.browser', BrowserController::class)
-            ->args([
-                service('ekyna_media.factory.folder'),
-                service('ekyna_media.repository.folder'),
-                service('ekyna_media.manager.folder'),
-                service('ekyna_media.repository.media'),
-                service('ekyna_media.manager.media'),
-                service('ekyna_ui.modal.renderer'),
-                service('twig'),
-                service('validator'),
-                service('serializer'),
-                service('form.factory'),
-                service('router'),
-                service('ekyna_media.form_flow.media_import'),
-            ])
-            ->alias(BrowserController::class, 'ekyna_media.controller.browser')->public()
+        ->args([
+            service('ekyna_media.factory.folder'),
+            service('ekyna_media.repository.folder'),
+            service('ekyna_media.manager.folder'),
+            service('ekyna_media.repository.media'),
+            service('ekyna_media.manager.media'),
+            service('ekyna_ui.modal.renderer'),
+            service('security.authorization_checker'),
+            service('twig'),
+            service('validator'),
+            service('serializer'),
+            service('form.factory'),
+            service('router'),
+            //service('ekyna_media.form_flow.media_import'),
+        ])
+        ->alias(BrowserController::class, 'ekyna_media.controller.browser')
+        ->public();
 
-        // Media Download controller
+    // Media Download controller
+    $services
         ->set('ekyna_media.controller.media.download', DownloadController::class)
-            ->args([
-                service('ekyna_media.repository.media'),
-                service('ekyna_media.filesystem.media'),
-            ])
-            ->alias(DownloadController::class, 'ekyna_media.controller.media.download')->public()
+        ->args([
+            service('ekyna_media.repository.media'),
+            service('ekyna_media.filesystem.media'),
+        ])
+        ->alias(DownloadController::class, 'ekyna_media.controller.media.download')
+        ->public();
 
-        // Media Player controller
+    // Media Player controller
+    $services
         ->set('ekyna_media.controller.media.player', PlayerController::class)
-            ->args([
-                service('ekyna_media.repository.media'),
-                service('ekyna_media.filesystem.media'),
-                service('router'),
-                service('ekyna_media.renderer'),
-                service('twig'),
-            ])
-            ->alias(PlayerController::class, 'ekyna_media.controller.media.player')->public()
+        ->args([
+            service('ekyna_media.repository.media'),
+            service('ekyna_media.filesystem.media'),
+            service('router'),
+            service('ekyna_media.renderer'),
+            service('twig'),
+        ])
+        ->alias(PlayerController::class, 'ekyna_media.controller.media.player')
+        ->public();
 
-        // Media Video controller
+    // Media Video controller
+    $services
         ->set('ekyna_media.controller.media.video', VideoController::class)
-            ->args([
-                service('ekyna_media.repository.media'),
-                service('ekyna_media.filesystem.media'),
-                service('ekyna_media.manager.video'),
-            ])
-            ->call('setMessageQueue', [service('ekyna_resource.queue.message')])
-            ->alias(VideoController::class, 'ekyna_media.controller.media.video')->public()
-    ;
+        ->args([
+            service('ekyna_media.repository.media'),
+            service('ekyna_media.filesystem.media'),
+            service('ekyna_media.manager.video'),
+        ])
+        ->call('setMessageQueue', [service('ekyna_resource.queue.message')])
+        ->alias(VideoController::class, 'ekyna_media.controller.media.video')
+        ->public();
 };

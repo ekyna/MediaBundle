@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Ekyna\Bundle\MediaBundle\Service;
 
+use Ekyna\Bundle\AdminBundle\Action\ListAction;
 use Ekyna\Bundle\MediaBundle\Controller\Admin\BrowserController;
 use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Twig\Environment;
 
@@ -24,22 +26,13 @@ use const JSON_FORCE_OBJECT;
  */
 class TwigRenderer
 {
-    private Generator           $generator;
-    private NormalizerInterface $normalizer;
-    private Environment  $twig;
-    private RequestStack $requestStack;
-
-
     public function __construct(
-        Generator $generator,
-        NormalizerInterface $normalizer,
-        Environment $twig,
-        RequestStack $requestStack
+        private readonly Generator                     $generator,
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
+        private readonly NormalizerInterface           $normalizer,
+        private readonly Environment                   $twig,
+        private readonly RequestStack                  $requestStack
     ) {
-        $this->generator = $generator;
-        $this->normalizer = $normalizer;
-        $this->twig = $twig;
-        $this->requestStack = $requestStack;
     }
 
     /**
@@ -75,8 +68,10 @@ class TwigRenderer
             $controls = [
                 ['role' => 'show', 'icon' => 'play', 'title' => 'Preview'],
                 ['role' => 'download', 'icon' => 'download', 'title' => 'Download'],
-                ['role' => 'browse', 'icon' => 'folder-open', 'title' => 'Browse'],
             ];
+            if ($this->authorizationChecker->isGranted(ListAction::class, MediaInterface::class)) {
+                $controls[] = ['role' => 'browse', 'icon' => 'folder-open', 'title' => 'Browse'];
+            }
         }
 
         foreach ($controls as $control) {

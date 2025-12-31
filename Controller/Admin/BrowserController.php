@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Ekyna\Bundle\MediaBundle\Controller\Admin;
 
+use Ekyna\Bundle\AdminBundle\Action\CreateAction;
+use Ekyna\Bundle\AdminBundle\Action\DeleteAction;
+use Ekyna\Bundle\AdminBundle\Action\ListAction;
+use Ekyna\Bundle\AdminBundle\Action\UpdateAction;
 use Ekyna\Bundle\MediaBundle\Factory\FolderFactoryInterface;
 use Ekyna\Bundle\MediaBundle\Form\Type\MediaImportFlow;
 use Ekyna\Bundle\MediaBundle\Form\Type\UploadType;
@@ -12,6 +16,7 @@ use Ekyna\Bundle\MediaBundle\Manager\MediaManagerInterface;
 use Ekyna\Bundle\MediaBundle\Model\FolderInterface;
 use Ekyna\Bundle\MediaBundle\Model\Import\MediaImport;
 use Ekyna\Bundle\MediaBundle\Model\Import\MediaUpload;
+use Ekyna\Bundle\MediaBundle\Model\MediaInterface;
 use Ekyna\Bundle\MediaBundle\Repository\FolderRepositoryInterface;
 use Ekyna\Bundle\MediaBundle\Repository\MediaRepositoryInterface;
 use Ekyna\Bundle\UiBundle\Model\Modal;
@@ -23,6 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Throwable;
@@ -41,49 +47,29 @@ class BrowserController
 {
     public const SESSION_FOLDER_ID = 'ekyna_media.folder_id';
 
-    private FolderFactoryInterface    $folderFactory;
-    private FolderRepositoryInterface $folderRepository;
-    private FolderManagerInterface    $folderManager;
-    private MediaRepositoryInterface  $mediaRepository;
-    private MediaManagerInterface     $mediaManager;
-    private ModalRenderer             $modal;
-    private Environment               $twig;
-    private ValidatorInterface        $validator;
-    private Serializer                $serializer;
-    private FormFactoryInterface      $formFactory;
-    private UrlGeneratorInterface     $urlGenerator;
-    private MediaImportFlow           $importFlow;
-
     public function __construct(
-        FolderFactoryInterface    $folderFactory,
-        FolderRepositoryInterface $folderRepository,
-        FolderManagerInterface    $folderManager,
-        MediaRepositoryInterface  $mediaRepository,
-        MediaManagerInterface     $mediaManager,
-        ModalRenderer             $modal,
-        Environment               $twig,
-        ValidatorInterface        $validator,
-        Serializer                $serializer,
-        FormFactoryInterface      $formFactory,
-        UrlGeneratorInterface     $urlGenerator,
-        MediaImportFlow           $importFlow
+        private readonly FolderFactoryInterface        $folderFactory,
+        private readonly FolderRepositoryInterface     $folderRepository,
+        private readonly FolderManagerInterface        $folderManager,
+        private readonly MediaRepositoryInterface      $mediaRepository,
+        private readonly MediaManagerInterface         $mediaManager,
+        private readonly ModalRenderer                 $modal,
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
+        private readonly Environment                   $twig,
+        private readonly ValidatorInterface            $validator,
+        private readonly Serializer                    $serializer,
+        private readonly FormFactoryInterface          $formFactory,
+        private readonly UrlGeneratorInterface         $urlGenerator,
+        //private readonly MediaImportFlow               $importFlow
     ) {
-        $this->folderFactory = $folderFactory;
-        $this->folderRepository = $folderRepository;
-        $this->folderManager = $folderManager;
-        $this->mediaRepository = $mediaRepository;
-        $this->mediaManager = $mediaManager;
-        $this->modal = $modal;
-        $this->twig = $twig;
-        $this->validator = $validator;
-        $this->serializer = $serializer;
-        $this->formFactory = $formFactory;
-        $this->urlGenerator = $urlGenerator;
-        $this->importFlow = $importFlow;
     }
 
     public function index(Request $request): Response
     {
+        if (!$this->authorizationChecker->isGranted(ListAction::class, MediaInterface::class)) {
+            return new Response(null, Response::HTTP_FORBIDDEN);
+        }
+
         $config = $this->buildConfig($request);
 
         /** @noinspection PhpUnhandledExceptionInspection */
@@ -94,6 +80,10 @@ class BrowserController
 
     public function modal(Request $request): Response
     {
+        if (!$this->authorizationChecker->isGranted(ListAction::class, MediaInterface::class)) {
+            return new Response(null, Response::HTTP_FORBIDDEN);
+        }
+
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
         }
@@ -126,6 +116,10 @@ class BrowserController
      */
     public function list(Request $request): Response
     {
+        /* TODO if (!$this->authorizationChecker->isGranted(ListAction::class, FolderInterface::class)) {
+            return new Response(null, Response::HTTP_FORBIDDEN);
+        }*/
+
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
         }
@@ -150,6 +144,10 @@ class BrowserController
      */
     public function create(Request $request): Response
     {
+        /* TODO if (!$this->authorizationChecker->isGranted(CreateAction::class, FolderInterface::class)) {
+            return new Response(null, Response::HTTP_FORBIDDEN);
+        }*/
+
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
         }
@@ -194,6 +192,10 @@ class BrowserController
      */
     public function rename(Request $request): Response
     {
+        /* TODO if (!$this->authorizationChecker->isGranted(UpdateAction::class, FolderInterface::class)) {
+            return new Response(null, Response::HTTP_FORBIDDEN);
+        }*/
+
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
         }
@@ -225,6 +227,10 @@ class BrowserController
      */
     public function delete(Request $request): Response
     {
+        /* TODO if (!$this->authorizationChecker->isGranted(DeleteAction::class, FolderInterface::class)) {
+            return new Response(null, Response::HTTP_FORBIDDEN);
+        }*/
+
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
         }
@@ -252,6 +258,10 @@ class BrowserController
      */
     public function move(Request $request): Response
     {
+        /* TODO if (!$this->authorizationChecker->isGranted(UpdateAction::class, FolderInterface::class)) {
+            return new Response(null, Response::HTTP_FORBIDDEN);
+        }*/
+
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
         }
@@ -290,6 +300,10 @@ class BrowserController
      */
     public function listMedia(Request $request): Response
     {
+        if (!$this->authorizationChecker->isGranted(ListAction::class, MediaInterface::class)) {
+            return new Response(null, Response::HTTP_FORBIDDEN);
+        }
+
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
         }
@@ -313,6 +327,10 @@ class BrowserController
      */
     public function moveMedia(Request $request): Response
     {
+        if (!$this->authorizationChecker->isGranted(UpdateAction::class, MediaInterface::class)) {
+            return new Response(null, Response::HTTP_FORBIDDEN);
+        }
+
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
         }
@@ -348,6 +366,10 @@ class BrowserController
      */
     public function createMedia(Request $request): Response
     {
+        if (!$this->authorizationChecker->isGranted(CreateAction::class, MediaInterface::class)) {
+            return new Response(null, Response::HTTP_FORBIDDEN);
+        }
+
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
         }
@@ -405,6 +427,10 @@ class BrowserController
     public function importMedia(Request $request): Response
     {
         throw new NotFoundHttpException('Broken code');
+
+        if (!$this->authorizationChecker->isGranted(CreateAction::class, MediaInterface::class)) {
+            return new Response(null, Response::HTTP_FORBIDDEN);
+        }
 
         if (!$request->isXmlHttpRequest()) {
             throw new NotFoundHttpException();
